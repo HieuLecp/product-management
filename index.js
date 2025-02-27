@@ -36,8 +36,7 @@ app.set('view engine', 'pug');
 
 // app local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
-
-console.log(__dirname);
+// console.log(__dirname);
 
 app.use(express.static(`${__dirname}/public`));
 
