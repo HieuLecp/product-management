@@ -1,0 +1,159 @@
+/* start header */
+.header{
+    background: #202020;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header .inner-logo a{
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+}
+/* end header */
+
+/* Body */
+.body .sider{
+    width: 150px;
+    background: #323232;
+    color: #fff;
+    height: calc(100vh - 56px);
+    position: fixed;
+    top: 56px;
+    left: 0;
+}
+
+.body .main{
+    margin: 15px;
+    position: relative;
+    left: 150px;
+    width: calc(100% - 180px);
+}
+/* end body */
+
+/* start sider */
+.sider .inner-menu ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sider .inner-menu ul li a{
+    color: #fff;
+    display: block;
+    padding: 6px 10px;
+    border-bottom: 1px solid #515151;
+}
+/* end sider */
+
+
+.input-group-append{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.form-group {
+    margin-bottom: 20px; /* Tạo khoảng cách 20px bên dưới mỗi nhóm form */
+}
+
+
+/* show alert */
+[show-alert] {
+    position: fixed;
+    top: 70px;
+    right: 15px;
+    z-index: 9999;
+}
+
+[show-alert].alert-hidden {
+    animation-name: alert-hidden;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+
+@keyframes alert-hidden {
+    from{
+        right: 15px;
+    }
+    to {
+        right: -100%;
+        display: none;
+    }
+}
+
+[show-alert] [close-alert] {
+    background: #ffffffc4;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* end show leart */
+
+.card-body {
+    position: relative;
+}
+
+.input-group {
+    width: auto;
+    position: absolute;
+    margin-top: 10px;
+    right: 0;
+    top: 0;
+}
+
+/* Image preview */
+
+
+.image-preview{
+    width: 150px;
+    height: auto;
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.image-preview[src=""] {
+    display: none;
+}
+
+/* end Immage preview */
+
+
+#form-create-product{
+    padding-left: 20px;
+}
+
+.form-image{
+    position: relative;
+    display: inline-block;
+}
+
+.close-image{
+    position: absolute;
+    top: 3px; /* Đưa nút vào trong ảnh */
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
