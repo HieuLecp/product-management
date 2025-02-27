@@ -148,14 +148,10 @@ module.exports.createItem = async (req, res) => {
         req.body.position = parseInt(req.body.position);
     }
 
-    if(req.file){
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-    }
-
     const product = new Product(req.body);
     await product.save();
 
-    // console.log(req.body.thumbnail);
+    // console.log(req.body);
 
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
