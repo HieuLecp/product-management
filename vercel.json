@@ -11,5 +11,8 @@
         "src": "/(.*)",
         "dest": "index.js"
       }
-    ]
+    ],
+    "build": {
+    "includeFiles": ["node_modules/mongodb/**", "node_modules/mongoose/**"]
+    }
   }
