@@ -11,5 +11,10 @@
         "src": "/(.*)",
         "dest": "index.js"
       }
-    ]
+    ],
+    "functions": {
+      "index": {
+        "includeFiles": ["node_modules/mongodb/**", "node_modules/mongoose/**"]
+      }
+    }
   }
