@@ -49,7 +49,7 @@ if(formSearch){
 
 // end form search
 
-// phan trang
+// pagination
 const buttonPagination = document.querySelectorAll("[button-pagination]");
 // console.log(buttonPagination);
 if(buttonPagination){
@@ -66,8 +66,7 @@ if(buttonPagination){
         })
     })
 }
-// end phan trang
-
+// end paginatio
 // checkbox multi
 const checkboxMulti = document.querySelector("[checkbox-multi]");
     if(checkboxMulti){
@@ -199,8 +198,6 @@ if(uploadImage){
         uploadImagePreview.src="";
 
     });
-    
-
 }
 // end preview Image
 
@@ -221,3 +218,47 @@ if(uploadImage){
 
 // }
 // end close image
+
+// sort
+const sort = document.querySelector("[sort]");
+console.log(sort);
+if(sort){
+    let url = new URL(window.location.href);
+
+    const sortSelect = sort.querySelector("[sort-select]");
+    const sortClear = sort.querySelector("[sort-clear]");
+
+    sortSelect.addEventListener("change", (e) => {
+        const value = e.target.value;
+        const [sortKey, sortValue] = value.split("-");
+
+        url.searchParams.set("sortKey", sortKey);
+        url.searchParams.set("sortValue", sortValue);
+
+        window.location.href = url.href;
+
+    });
+
+    // end sort
+    sortClear.addEventListener("click", () => {
+        url.searchParams.delete("sortKey");
+        url.searchParams.delete("sortValue");
+        window.location.href = url.href;
+    })
+
+    // selected cho option
+    const sortKey = url.searchParams.get("sortKey");
+    const sortValue = url.searchParams.get("sortValue");
+
+    // console.log(sortKey);
+    // console.log(sortValue);
+    if(sortKey && sortValue){
+        const stringSort = `${sortKey}-${sortValue}`;
+        console.log(stringSort);
+
+        const optionSelected = sortSelect.querySelector(`option[value='${stringSort}']`);
+        optionSelected.selected = true;
+    }
+
+}
+// end sort

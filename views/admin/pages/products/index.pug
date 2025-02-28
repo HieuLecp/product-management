@@ -4,6 +4,7 @@ include ../../mixins/search
 include ../../mixins/pagination
 include ../../mixins/formChangeMulti
 include ../../mixins/alert
+include ../../mixins/sort
 
 block main 
 
@@ -20,6 +21,13 @@ block main
                 .col-6 
                     +search(keyword)
 
+    .card.mb-3 
+        .card-header Sắp xếp
+        .card-body 
+            .row 
+                .col-4
+                    +sort()
+                    
 
     .card.mb-3 
         .card-header Danh sách sản phẩm

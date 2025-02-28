@@ -28,7 +28,7 @@ module.exports.index = async (req, res) => {
         find.title = objectSearch.regex;
     }
 
-    // phân trang
+    // pagination
     const countProducts = await Product.countDocuments(find);
 
     let objectPagination = paginationHelper(
@@ -39,9 +39,21 @@ module.exports.index = async (req, res) => {
         req.query,
         countProducts
     )
+    // end pagination
+
+    // sort 
+    let sort = {};
+
+    if(req.query.sortKey && req.query.sortValue){
+        sort[req.query.sortKey] = req.query.sortValue;
+    }   
+    else{
+        sort.position = "desc";
+    }
+    // end sort
 
     const products= await Product.find(find)
-    .sort({position: "desc"})   // desc: giảm dần, asc: tăng dần
+    .sort(sort)   // desc: giảm dần, asc: tăng dần
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip);
     // console.log(products);
@@ -231,4 +243,4 @@ module.exports.detail = async (req, res) => {
 
 };
 
-// B26-21p
+// B27-1h17p
