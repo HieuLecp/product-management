@@ -242,4 +242,4 @@ module.exports.detail = async (req, res) => {
 
 };
 
-// B28-28p
+// B29
