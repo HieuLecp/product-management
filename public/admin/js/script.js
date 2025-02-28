@@ -192,12 +192,6 @@ if(uploadImage){
             uploadImagePreview.src= URL.createObjectURL(file);
         }
     });
-
-    closeImage.addEventListener("click", () => {
-        uploadImageInput.value= "";
-        uploadImagePreview.src="";
-
-    });
 }
 // end preview Image
 

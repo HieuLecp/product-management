@@ -221,13 +221,12 @@ module.exports.editItem = async (req, res) => {
 
 // [GET] /admin/products/edit/:id
 module.exports.detail = async (req, res) => {
-    // console.log(req.params.id);
-
+    console.log(req.params.id);
     try{
         const find= {
             deleted: false,
             _id: req.params.id,
-            status: active
+            status: "active"
         };
     
         const product = await Product.findOne(find);
@@ -238,9 +237,9 @@ module.exports.detail = async (req, res) => {
             product: product
         });
     } catch(error) {
-        res.redirect(`${systemConfig.prefixAdmin/products}`);
+        res.redirect(`${systemConfig.prefixAdmin}/products`);
     }
 
 };
 
-// B27-1h17p
+// B28-28p
