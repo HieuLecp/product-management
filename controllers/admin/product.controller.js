@@ -1,10 +1,10 @@
-const Product= require("../../models/product.model")
+const Product= require("../../models/product.model");
 
-const systemConfig = require("../../config/system")
+const systemConfig = require("../../config/system");
 
-const filterStatusHelper = require("../../helpers/filterStatus")
-const searchHepler = require("../../helpers/search")
-const paginationHelper = require("../../helpers/pagination")
+const filterStatusHelper = require("../../helpers/filterStatus");
+const searchHepler = require("../../helpers/search");
+const paginationHelper = require("../../helpers/pagination");
 
 
 // [GET] /admin/products
@@ -65,7 +65,7 @@ module.exports.index = async (req, res) => {
         keyword: objectSearch.keyword,
         pagination: objectPagination
     })
-}
+};
 
 // [PATCH] /admin/products/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
@@ -78,7 +78,7 @@ module.exports.changeStatus = async (req, res) => {
     req.flash("success", "Cập nhập trạng thái thành công!");
 
     res.redirect("back");
-}
+};
 
 // [PATCH] /admin/products/change-multi
 module.exports.changeMulti = async (req, res) => {
@@ -123,7 +123,7 @@ module.exports.changeMulti = async (req, res) => {
     // console.log(type);
     // console.log(ids);
     res.redirect("back");
-}
+};
 
 // [DELETE] /admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
@@ -138,7 +138,7 @@ module.exports.deleteItem = async (req, res) => {
     req.flash("success", "Xoá thành công sản phẩm!");
 
     res.redirect("back");
-}
+};
 
 // [GET] /admin/products/create
 module.exports.create = async (req, res) => {
