@@ -1,0 +1,49 @@
+extends ../../layouts/default
+
+block main 
+    h1(class="mb-4")  Nhóm quyền
+
+    .card.mb-3 
+        .card-header Danh sách
+        .card-body
+            .row
+                .col-8 
+                .col-4.text-right 
+                    a(
+                        href=`${prefixAdmin}/roles/create`
+                        class="btn btn-outline-success"
+                    ) Thêm mới
+            table(
+                class= "table table-hover table-sm"
+                checkbox-multi
+            )
+                thead 
+                    tr 
+                        th STT 
+                        th Tiêu đề
+                        th Mô tả ngắn
+                        th Hành động
+                
+                tbody
+                    if(records.length > 0)
+                        each item, index in records 
+                            tr  
+                                td #{index + 1}
+                                td #{item.title}
+                                td #{item.description}
+                                td 
+                                    a(
+                                        href=`${prefixAdmin}/roles/detail/${item.id}`
+                                        class = "btn btn-secondary btn-sm"
+                                    ) Chi tiết
+                                    a(
+                                        href=`${prefixAdmin}/roles/edit/${item.id}`
+                                        class = "btn btn-warning btn-sm"
+                                    ) Sửa
+                                    button(
+                                        class= "btn btn-dark btn-sm ml-1"
+                                        data-id = item.id 
+                                        button-delete
+                                    ) Xoá
+                    else 
+                        td(colspan="4" class="text-center") chưa có nhóm quyền nào được tạo
