@@ -174,5 +174,35 @@
 
 /* end detail product */
 
+/* detail product */
+.discount-newPrice{
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 10px; /* Tạo khoảng cách giữa giá và % giảm giá */
+}
+.price-new-detail {
+    font-size: 70px;
+    font-weight: bold;
+    color: black;
+}
 
+/* Giá cũ (bị gạch ngang) */
+.price-old-detail {
+    font-size: 50px;
+    color: gray;
+    text-decoration: line-through;
+    margin-top: -5px;
+}
+
+/* Phần trăm giảm giá */
+.detail-discount {
+    background: rgba(255, 165, 0, 0.2); /* Cam nhạt */
+    color: #ff7800; /* Cam đậm */
+    padding: 4px 8px;
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+/* end detail product */
 

@@ -14,7 +14,7 @@ module.exports.index = async (req, res) => {
         return item
     })
 
-    console.log(newproducts);
+    // console.log(newproducts);
 
     res.render('client/pages/products/index',  {
         pageTitle: "Danh sách sản phẩm",
@@ -31,13 +31,17 @@ module.exports.detail = async (req, res) => {
             deleted: false,
             slug: req.params.slug
         };
-    
-        const product = await Product.findOne(find);
-        console.log(product);
+
+        const products= await Product.findOne(find);
+
+        const priceNew= (products.price * (100-products.discountPercentage)/100).toFixed(0);
+
+        console.log(products);
     
         res.render("client/pages/products/detail", {
-            pageTitle : product.title,
-            product: product
+            pageTitle : products.title,
+            products: products,
+            priceNew: priceNew
         });
     } catch(error) {
         res.redirect(`/products}`);
