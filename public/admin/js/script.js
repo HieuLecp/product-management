@@ -215,7 +215,7 @@ if(uploadImage){
 
 // sort
 const sort = document.querySelector("[sort]");
-console.log(sort);
+// console.log(sort);
 if(sort){
     let url = new URL(window.location.href);
 
