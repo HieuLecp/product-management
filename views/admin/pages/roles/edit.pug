@@ -1,0 +1,40 @@
+extends ../../layouts/default
+include ../../mixins/alert
+include ../../mixins/select-tree
+
+block main
+    +alert-error(5000)
+    +alert-success(5000)
+
+    h1(class="mb-4") Chỉnh sửa nhóm quyền
+
+    form(
+        action=`${prefixAdmin}/roles/edit/${data.id}?_method=PATCH` 
+        method="POST"
+    )
+        div(class="form-group")
+            label(for="title") Tiêu đề
+            input(
+                type="text"
+                class="form-control"
+                id="title"
+                name="title"
+                value= data.title
+                required
+            )
+        div(class="form-group")
+            label(for="desc") Mô tả
+            textarea(
+                type= "text"
+                class="form-control"
+                id="desc"
+                name="description"
+            ) #{data.description}
+        div(class="form-group")
+            label(for="position") 
+            button(
+                type= "submit"
+                class="btn btn-primary"
+            ) Cập nhập
+
+    script(src="/admin/js/product.js")
