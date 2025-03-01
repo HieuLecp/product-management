@@ -17,7 +17,11 @@ block main
         .card-body
             .rol
                 .col-6 
-                    +filterStatus(filterStatus)
+                    +filterStatus(filterStatus) 
+                    a(
+                        href=`${prefixAdmin}/products/bin`
+                        class="btn btn-sm ml-1 btn-outline-success"
+                    ) Đã xoá                  
                 .col-6 
                     +search(keyword)
 

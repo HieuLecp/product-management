@@ -44,7 +44,7 @@ if(formSearch){
         }
 
         window.location.href = url.href;
-    })
+    });
 }
 
 // end form search

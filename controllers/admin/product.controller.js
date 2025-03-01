@@ -142,6 +142,75 @@ module.exports.deleteItem = async (req, res) => {
     res.redirect("back");
 };
 
+// [GET] /admin/products/bin
+module.exports.bin = async (req, res) => {
+
+    const filterStatus = filterStatusHelper(req.query);
+
+    let find = {
+        deleted: true
+    }
+    if(req.query.status){
+        find.status = req.query.status;
+    }
+
+    const objectSearch = searchHepler(req.query);
+    // console.log(objectSearch);
+
+    if(objectSearch.regex){
+        
+        find.title = objectSearch.regex;
+    }
+
+    // phân trang
+    const countProducts = await Product.countDocuments(find);
+
+    let objectPagination = paginationHelper(
+        {
+            currentPage: 1,
+            limitItems : 4
+        },
+        req.query,
+        countProducts
+    )
+
+    const binProducts= await Product.find(find)
+    .sort({position: "desc"})   // desc: giảm dần, asc: tăng dần
+    .limit(objectPagination.limitItems)
+    .skip(objectPagination.skip);
+
+    res.render("admin/pages/products/bin", {
+        pageTitle : "Sản phẩm đã xoá",
+        binProducts: binProducts,
+        filterStatus: filterStatus,
+        keyword: objectSearch.keyword,
+        pagination: objectPagination
+    })
+}
+
+// [PATCH] /admin/products/bin/restore/:id
+module.exports.restoreItem = async (req, res) => {
+    // console.log(req.params.id)
+    const id = req.params.id;
+    // console.log(id);
+
+    await Product.updateOne({_id: id}, {deleted: false});
+    req.flash("success", `Khôi phục thành công!`);
+
+    res.redirect("back");
+}
+
+// [PATCH] /admin/products/bin/delete/:id
+module.exports.deleteItemBin = async (req, res) => {
+    // console.log(req.params.id)
+
+    await Product.deleteOne({_id: req.params.id});
+
+    req.flash("success", "Xoá hẳn thành công");
+
+    res.redirect("back");
+}
+
 // [GET] /admin/products/create
 module.exports.create = async (req, res) => {
 
@@ -258,4 +327,3 @@ module.exports.detail = async (req, res) => {
 
 };
 
-// B30-1h8p
