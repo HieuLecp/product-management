@@ -5,6 +5,7 @@ include ../../mixins/pagination
 include ../../mixins/formChangeMulti
 include ../../mixins/alert
 include ../../mixins/sort
+include ../../mixins/moment
 
 block main 
 
@@ -33,7 +34,6 @@ block main
                     .col-4
                         +sort()
                         
-
         .card.mb-3 
             .card-header Danh sách sản phẩm
                 .card-body
@@ -54,16 +54,17 @@ block main
                         thead 
                             tr 
                                 th 
-                                input(
-                                    type="checkbox"
-                                    name="checkall"
-                                    ) 
+                                    input(
+                                        type="checkbox"
+                                        name="checkall"
+                                        ) 
                                 th STT 
                                 th Hình ảnh
                                 th Tiêu đề
                                 th Giá
                                 th Vị trí
                                 th Trạng thái
+                                th Người tạo
                                 th Hành động
                         
                         tbody
@@ -115,6 +116,10 @@ block main
                                                 span(class="btn btn-success") Hoạt động
                                             else 
                                                 span(class="btn btn-danger") Dừng hoạt động
+                                    td 
+                                        p #{item.accountFullName}
+                                        p 
+                                            +formatDate(item.createdBy.createdAt)
                                     td
                                         a(
                                             href=`${prefixAdmin}/products/detail/${item.id}`
@@ -148,5 +153,5 @@ block main
             data-path= `${prefixAdmin}/products/delete`
         )
 
-        script(src="/admin/js/product.js")
+    script(src="/admin/js/product.js")
 
