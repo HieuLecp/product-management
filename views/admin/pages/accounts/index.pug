@@ -2,19 +2,21 @@ extends ../../layouts/default
 include ../../mixins/pagination
 include ../../mixins/alert
 
-block main 
-    h1(class="mb-4")  Danh sách tài khoản
+block main
+    if(role.permissions.includes("accounts_view"))
 
+    h1(class="mb-4")  Danh sách tài khoản
     .card.mb-3 
         .card-header Danh sách
             .card-body
                 .row
                     .col-8 
-                    .col-4.text-right 
-                        a(
-                            href=`${prefixAdmin}/accounts/create`
-                            class="btn btn-outline-success"
-                        ) Thêm mới
+                    .col-4.text-right
+                        if(role.permissions.includes("accounts_create"))
+                            a(
+                                href=`${prefixAdmin}/accounts/create`
+                                class="btn btn-outline-success"
+                            ) Thêm mới
                 table(
                     class= "table table-hover table-sm"
                     checkbox-multi
@@ -55,35 +57,43 @@ block main
                                 td #{item.role.title}
                                 td #{item.email}
                                 td #{item.phone}
-                                td 
-                                    if(item.status == "active")
-                                        a(
-                                            href="javascript:;"
-                                            data-status= item.status
-                                            data-id= item.id
-                                            button-change-status
-                                            class="btn btn-success"
-                                        ) Hoạt động
+                                td
+                                    if(role.permissions.includes("accounts_edit"))
+                                        if(item.status == "active")
+                                            a(
+                                                href="javascript:;"
+                                                data-status= item.status
+                                                data-id= item.id
+                                                button-change-status
+                                                class="btn btn-success"
+                                            ) Hoạt động
+                                        else 
+                                            a(
+                                                href="javascript:;"
+                                                data-status= item.status
+                                                data-id=item.id
+                                                button-change-status
+                                                class="btn btn-danger"
+                                            ) Dừng hoạt động
                                     else 
-                                        a(
-                                            href="javascript:;"
-                                            data-status= item.status
-                                            data-id=item.id
-                                            button-change-status
-                                            class="btn btn-danger"
-                                        ) Dừng hoạt động
+                                        if(item.status == "active")
+                                            span(class="btn btn-success") Hoạt động
+                                        else 
+                                            span(class="btn btn-danger") Dừng hoạt động
                                 td
                                     a(
                                         href=`${prefixAdmin}/accounts/detail/${item.id}`
                                         class = "btn btn-secondary btn-sm"
                                     ) Chi tiết
-                                    a(
-                                        href=`${prefixAdmin}/accounts/edit/${item.id}`
-                                        class = "btn btn-warning btn-sm"
-                                    ) Sửa
-                                    button(
-                                        class= "btn btn-dark btn-sm ml-1"
-                                        data-id = item.id 
-                                        button-delete
-                                    ) Xoá
+                                    if(role.permissions.includes("accounts_edit"))
+                                        a(
+                                            href=`${prefixAdmin}/accounts/edit/${item.id}`
+                                            class = "btn btn-warning btn-sm"
+                                        ) Sửa
+                                    if(role.permissions.includes("accounts_delete"))
+                                        button(
+                                            class= "btn btn-dark btn-sm ml-1"
+                                            data-id = item.id 
+                                            button-delete
+                                        ) Xoá
         
