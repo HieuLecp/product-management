@@ -1,0 +1,89 @@
+extends ../../layouts/default
+include ../../mixins/pagination
+include ../../mixins/alert
+
+block main 
+    h1(class="mb-4")  Danh sách tài khoản
+
+    .card.mb-3 
+        .card-header Danh sách
+            .card-body
+                .row
+                    .col-8 
+                    .col-4.text-right 
+                        a(
+                            href=`${prefixAdmin}/accounts/create`
+                            class="btn btn-outline-success"
+                        ) Thêm mới
+                table(
+                    class= "table table-hover table-sm"
+                    checkbox-multi
+                )
+                    thead 
+                        tr 
+                            th 
+                               input(
+                                type="checkbox"
+                                name="checkall"
+                                ) 
+                            th STT 
+                            th Ảnh đại diện
+                            th Họ tên 
+                            th Phân quyền
+                            th email
+                            th Số điện thoại
+                            th Trạng thái
+                            th Hành động
+                    
+                    tbody
+                        each item, index in records 
+                            tr
+                                td 
+                                    input(
+                                        type="checkbox"
+                                        name="id"
+                                        value=item.id  
+                                    )
+                                td #{index + 1}
+                                td 
+                                    img(src=item.avatar, 
+                                        alt= item.title
+                                        width= "100px"
+                                        height= "auto"
+                                    )
+                                td #{item.fullName}
+                                td #{item.role.title}
+                                td #{item.email}
+                                td #{item.phone}
+                                td 
+                                    if(item.status == "active")
+                                        a(
+                                            href="javascript:;"
+                                            data-status= item.status
+                                            data-id= item.id
+                                            button-change-status
+                                            class="btn btn-success"
+                                        ) Hoạt động
+                                    else 
+                                        a(
+                                            href="javascript:;"
+                                            data-status= item.status
+                                            data-id=item.id
+                                            button-change-status
+                                            class="btn btn-danger"
+                                        ) Dừng hoạt động
+                                td
+                                    a(
+                                        href=`${prefixAdmin}/products/detail/${item.id}`
+                                        class = "btn btn-secondary btn-sm"
+                                    ) Chi tiết
+                                    a(
+                                        href=`${prefixAdmin}/products/edit/${item.id}`
+                                        class = "btn btn-warning btn-sm"
+                                    ) Sửa
+                                    button(
+                                        class= "btn btn-dark btn-sm ml-1"
+                                        data-id = item.id 
+                                        button-delete
+                                    ) Xoá
+        
