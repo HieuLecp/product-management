@@ -12,9 +12,10 @@ const createTree = require("../../helpers/createTree");
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
-    // console.log(req.query.status); 
+    // console.log(req.query.status);
 
     const filterStatus = filterStatusHelper(req.query);
+    // console.log(filterStatus);
 
     let find = {
         deleted: false
@@ -23,6 +24,7 @@ module.exports.index = async (req, res) => {
     if(req.query.status){
         find.status = req.query.status;
     }
+    console.log(find);
 
     const objectSearch = searchHepler(req.query);
     // console.log(objectSearch);
@@ -54,6 +56,7 @@ module.exports.index = async (req, res) => {
         sort.position = "desc";
     }
     // end sort
+    // console.log(sort);
 
     const products= await Product.find(find)
     .sort(sort)   // desc: giảm dần, asc: tăng dần
@@ -188,14 +191,14 @@ module.exports.bin = async (req, res) => {
         countProducts
     )
 
-    const binProducts= await Product.find(find)
+    const records= await Product.find(find)
     .sort({position: "desc"})   // desc: giảm dần, asc: tăng dần
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip);
 
     res.render("admin/pages/products/bin", {
         pageTitle : "Sản phẩm đã xoá",
-        binProducts: binProducts,
+        records: records,
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
         pagination: objectPagination

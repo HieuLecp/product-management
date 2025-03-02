@@ -1,8 +1,6 @@
 extends ../../layouts/default
 include ../../mixins/filterStatus
-include ../../mixins/search
 include ../../mixins/alert
-include ../../mixins/pagination
 include ../../mixins/formChangeMultiBin
 
 block main 
@@ -16,11 +14,9 @@ block main
             .rol
                 .col-6 
                     +filterStatus(filterStatus)
-                .col-6 
-                    +search(keyword)
 
     .card.mb-3 
-        .card-header Sản phẩm đã xoá
+        .card-header Danh mục sản phẩm đã xoá
             .card-body
                 //- .row 
                 //-     .col-8 
@@ -33,10 +29,10 @@ block main
                             th STT 
                             th Hình ảnh
                             th Tiêu đề
-                            th Giá
                             th Vị trí
                             th Trạng thái
                             th Hành động
+                    
                     tbody
                         each item, index in records 
                             tr
@@ -48,7 +44,6 @@ block main
                                         height= "auto"
                                     )
                                 td #{item.title }
-                                td #{item.price}$
                                 td 
                                     input(
                                         type= "number"
@@ -63,20 +58,19 @@ block main
                                     else 
                                         span(class="btn btn-danger") Hoạt động
                                 td
-                                    if(role.permissions.includes("products_restore")) 
+                                    if(role.permissions.includes("products-category_restore")) 
                                         button(
                                             class = "btn btn-primary btn-sm"
                                             data-id = item.id 
                                             button-restore
                                         ) Khôi phục
-                                    if(role.permissions.includes("products-bin_delete"))
+                                    if(role.permissions.includes("products-category-bin_delete"))
                                         button(
                                             class= "btn btn-dark btn-sm ml-1"
                                             data-id = item.id 
-                                            button-delete-bin
+                                            button-delete
                                         ) Xoá
     
-    +pagination(pagination)
 
     form(
         action="" 

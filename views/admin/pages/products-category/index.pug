@@ -10,6 +10,17 @@ include ../../mixins/table-tree
 block main 
     if(role.permissions.includes("products-category_view"))
         h1 danh mục sản phẩm
+
+        .card.mb-3 
+            .card-header Bộ lọc và tìm kiếm
+            .card-body
+                .rol
+                    .col-6 
+                        +filterStatus(filterStatus) 
+                        a(
+                            href=`${prefixAdmin}/products-category/bin`
+                            class="btn btn-sm ml-1 btn-outline-success"
+                        ) Đã xoá                 
                         
         .card.mb-3 
             .card-header Danh mục sản phẩm
@@ -43,6 +54,13 @@ block main
                             +table-tree(records)
                             
 
+
+        form(
+            action="" 
+            method="POST"
+            id= "form-delete-item"
+            data-path= `${prefixAdmin}/products-category/delete`
+        )
 
         script(src="/admin/js/product.js")
 

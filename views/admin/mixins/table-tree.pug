@@ -62,7 +62,7 @@ mixin table-tree(items, level = 1)
                     button(
                         class= "btn btn-dark btn-sm ml-1"
                         data-id = item.id 
-                        button-delete-category
+                        button-delete
                     ) Xoá
         if item.children && item.children.length > 0
             +table-tree(item.children, level + 1)

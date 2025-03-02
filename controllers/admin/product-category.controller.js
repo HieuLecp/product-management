@@ -3,21 +3,29 @@ const ProductCategory= require("../../models/product-category.model");
 const systemConfig = require("../../config/system");
 
 const createTree = require("../../helpers/createTree");
+const filterStatusHelper = require("../../helpers/filterStatus");
 
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
-    // console.log(req.query.status); 
+    // console.log(req.query.status);
+
+    const filterStatus = filterStatusHelper(req.query);
 
     let find={
         deleted: false,
     };
+
+    if(req.query.status){
+        find.status = req.query.status;
+    }
 
     const records = await ProductCategory.find(find);
     const newRecords= createTree.tree(records);
 
     res.render("admin/pages/products-category/index", {
         pageTitle : "Danh mục sản phẩm",
-        records: newRecords
+        records: newRecords,
+        filterStatus: filterStatus,
     })
 };
 
@@ -98,3 +106,42 @@ module.exports.editItem = async (req, res) => {
 
     res.redirect("back");
 };
+
+// [DELETE] /admin/products-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+    // console.log(req);
+    const id = req.params.id;
+    // console.log(id);
+
+    await ProductCategory.updateOne({_id: id}, {
+        deleted: true,
+        deletedBy: {
+            account_id: res.locals.user.id,
+            deletedAt: new Date()
+        }
+    });
+    req.flash("success", "Xoá thành công sản phẩm!");
+
+    res.redirect("back");
+};
+
+// [GET] /admin/products-category/bin
+module.exports.bin = async (req, res) => {
+
+    const filterStatus = filterStatusHelper(req.query);
+
+    let find = {
+        deleted: true
+    }
+    if(req.query.status){
+        find.status = req.query.status;
+    }
+
+    const records= await ProductCategory.find(find);
+
+    res.render("admin/pages/products-category/bin", {
+        pageTitle : "Sản phẩm đã xoá",
+        records: records,
+        filterStatus: filterStatus,
+    })
+}

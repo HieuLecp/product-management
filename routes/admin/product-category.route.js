@@ -32,4 +32,12 @@ router.patch(
     controller.editItem
 );
 
+router.delete("/delete/:id", controller.deleteItem);
+
+router.get("/bin", controller.bin);
+
+// router.patch("/bin/restore/:id", controller.restoreItem);
+
+// router.patch("/bin/delete/:id", controller.deleteItemBin);
+
 module.exports = router; 
