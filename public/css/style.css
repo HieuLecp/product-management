@@ -1,5 +1,5 @@
 .header {
-    background-color: #333; /* Màu nền xanh đậm */
+    background-color: #f8f9fa; /* Màu nền xanh đậm */
     padding: 15px 0;  /* Khoảng cách trên/dưới */
     border-bottom: 3px solid #f39c12; /* Đường viền dưới màu cam */
 }
@@ -136,7 +136,7 @@
 .main h1 {
     font-size: 22px;
     font-weight: bold;
-    color: #333;
+    color: #f8f9fa;
     margin-bottom: 10px;
 }
 
@@ -206,3 +206,59 @@
 }
 /* end detail product */
 
+/* sub menu */
+.sub-menu {
+    position: relative;
+    z-index: 999;
+}
+
+.sub-menu ul {
+    position: absolute;
+    top: 100%; /* Hiển thị ngay bên dưới */
+    right: 0; /* Hiển thị submenu bên trái */
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
+    min-width: 160px;
+    display: none; /* Ẩn mặc định */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+/* Khi di chuột vào menu cha, submenu hiển thị */
+.sub-menu:hover > ul {
+    display: block;
+}
+
+/* Định dạng submenu cấp 2 (hiển thị bên trái) */
+.sub-menu ul ul {
+    position: absolute;
+    right: 100%;
+    top: 0%;
+    display: none;
+}
+
+/* Khi hover vào submenu cha, hiển thị submenu cấp 2 */
+.sub-menu ul li:hover > ul {
+    display: block;
+}
+
+/* Thiết kế các mục menu */
+.sub-menu ul li {
+    position: relative;
+    padding: 10px 15px;
+    white-space: nowrap;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Màu chữ và hiệu ứng hover */
+.sub-menu ul li a {
+    text-decoration: none;
+    color: #007bff; /* Màu xanh đẹp */
+    font-weight: bold;
+}
+
+.sub-menu ul li:hover {
+    background-color: #e9ecef;
+}

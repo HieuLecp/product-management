@@ -1,3 +1,5 @@
+include ../mixins/sub-menu.pug
+
 header.header 
     .container 
         .row.align-items-center 
@@ -10,6 +12,9 @@ header.header
                 .inner-menu 
                     ul 
                         li 
-                            a(href="/" class="btn btn-success") Trang chủ
-                        li 
-                            a(href="/product" class="btn btn-success") Sản phẩm
+                            a(href="/" ) Trang chủ
+                        li(class="sub-menu")
+                            - const pathProduct = "/product";
+                            a(href=pathProduct ) Sản phẩm
+                                +sub-menu(layoutProductCategory, pathProduct)
+                        

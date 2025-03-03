@@ -1,4 +1,4 @@
-
+const ProductCategory= require("../../models/product-category.model");
 const Product = require('../../models/product.model');
 
 // [GET] /products
