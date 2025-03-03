@@ -26,7 +26,7 @@ block main
                     required
                 )
             div(class="form-group")
-                label(for="product_category_id") Danh mục cha
+                label(for="product_category_id") Danh mục
                 select(
                     name= "product_category_id"
                     id= "product_category_id"
@@ -35,6 +35,25 @@ block main
                     option(value="") Chọn danh mục cha
                     if(category)
                         +select-tree(category)
+            div(class="form-group form-check form-check-inline")
+                input(
+                    type="radio"
+                    class='form-check-input'
+                    id= "featured1"
+                    name="featured"
+                    value="1"
+                )
+                label(for="featured1" class="form-check-label") Nổi bật
+            div(class="form-group form-check form-check-inline")
+                input(
+                    type="radio"
+                    class='form-check-input'
+                    id= "featured0"
+                    name="featured"
+                    value="0"
+                    checked
+                )
+                label(for="featured0" class="form-check-label") Không
             div(class="form-group")
                 label(for="desc") Mô tả
                 textarea(
@@ -123,7 +142,7 @@ block main
                     name="status"
                     value= "Inactive"
                 )
-                label(for="statusInactive" class="form-check-label") Dừng hoạt động
+                label(for="statusInactive" class="form-check-label") Dừng hoạt động 
             div(class="form-group")
                 label(for="position") 
                 button(
