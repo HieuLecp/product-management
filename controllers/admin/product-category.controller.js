@@ -144,4 +144,40 @@ module.exports.bin = async (req, res) => {
         records: records,
         filterStatus: filterStatus,
     })
-}
+};
+
+// [PATCH] /admin/products-category/bin/restore/:id
+module.exports.restoreItem= async (req, res) => {
+    // console.log(req.params.id);
+
+    try{
+        await ProductCategory.updateOne(
+            {_id: req.params.id},
+            {deleted: false}
+        );
+    
+        req.flash("success", "Khôi phục danh mục thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("error", "Khôi phục danh mục thất bại!");
+        res.redirect("back");
+    }
+
+    
+};
+
+// [DELETE] /admin/products-category/bin/delete/:id
+module.exports.deleteItemBin= async (req, res) => {
+    console.log(req.params.id);
+
+    try{
+        await ProductCategory.deleteOne({_id: req.params.id});
+
+        req.flash("success", "Xoá hẳn danh mục thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("success", "Xoá hẳn danh mục thất bại!");
+        res.redirect("back");
+    }
+    
+};

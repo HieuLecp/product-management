@@ -27,27 +27,27 @@ if(buttonChangeStatus.length > 0){
 // end chang status
 
 // delete product
-const buttonDelete = document.querySelectorAll("[button-delete]");
-// console.log(buttonDelete);
-if(buttonDelete.length > 0){
-    const formDeleteItem = document.querySelector("#form-delete-item");
-    const path = formDeleteItem.getAttribute("data-path");
+// const buttonDelete = document.querySelectorAll("[button-delete]");
+// // console.log(buttonDelete);
+// if(buttonDelete.length > 0){
+//     const formDeleteItem = document.querySelector("#form-delete-item");
+//     const path = formDeleteItem.getAttribute("data-path");
 
-    buttonDelete.forEach(button => {
-        button.addEventListener("click", () => {
-            const isconfirm = confirm("Bạn có chắc chắn muốn xoá sản phẩm này?");
-            if(isconfirm){
-                const id = button.getAttribute("data-id");
+//     buttonDelete.forEach(button => {
+//         button.addEventListener("click", () => {
+//             const isconfirm = confirm("Bạn có chắc chắn muốn xoá sản phẩm này?");
+//             if(isconfirm){
+//                 const id = button.getAttribute("data-id");
 
-                const action = `${path}/${id}?_method=DELETE`;
-                formDeleteItem.action=action;
+//                 const action = `${path}/${id}?_method=DELETE`;
+//                 formDeleteItem.action=action;
 
-                console.log(action);
-                formDeleteItem.submit();
-            }
-        })
-    })
-}
+//                 console.log(action);
+//                 formDeleteItem.submit();
+//             }
+//         })
+//     })
+// }
 
 // end delete product
 

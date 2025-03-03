@@ -143,20 +143,23 @@ module.exports.changeMulti = async (req, res) => {
 
 // [DELETE] /admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
-    // console.log(req);
     const id = req.params.id;
-    // console.log(id);
 
-    await Product.updateOne({_id: id}, {
-        deleted: true,
-        deletedBy: {
-            account_id: res.locals.user.id,
-            deletedAt: new Date()
-        }
-    });
-    req.flash("success", "Xoá thành công sản phẩm!");
+    try{
+        await Product.updateOne({_id: id}, {
+            deleted: true,
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            }
+        });
+        req.flash("success", "Xoá sản phẩm thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("error", "Xoá sản phẩm thất bại!");
+        res.redirect("back");
+    }
 
-    res.redirect("back");
 };
 
 // [GET] /admin/products/bin

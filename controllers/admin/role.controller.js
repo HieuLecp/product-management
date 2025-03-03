@@ -114,3 +114,74 @@ module.exports.permissionsPatch = async (req, res) => {
     
 };
 
+// [DELETE] /admin/roles/delete/:id
+module.exports.deleteItem = async (req, res) => {
+    console.log(req.params.id);
+
+    try{
+        await Roles.updateOne({_id: req.params.id}, {
+            deleted: true,
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            }
+        });
+        req.flash("success", "Xoá sản phẩm thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("error", "Xoá sản phẩm thất bại!");
+        res.redirect("back");
+    }
+
+};
+
+// [GET] /admin/roles/bin
+module.exports.bin = async (req, res) => {
+
+    let find = {
+        deleted: true
+    }
+
+    const records= await Roles.find(find);
+
+    res.render("admin/pages/roles/bin", {
+        pageTitle : "Sản phẩm đã xoá",
+        records: records,
+    })
+};
+
+// [PATCH] /admin/roles/bin/restore/:id
+module.exports.restoreItem= async (req, res) => {
+    // console.log(req.params.id);
+
+    try{
+        await Roles.updateOne(
+            {_id: req.params.id},
+            {deleted: false}
+        );
+    
+        req.flash("success", "Khôi phục nhóm quyền thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("error", "Khôi phục nhóm quyền thất bại!");
+        res.redirect("back");
+    }
+
+    
+};
+
+// [DELETE] /admin/roles/bin/delete/:id
+module.exports.deleteItemBin= async (req, res) => {
+    // console.log(req.params.id);
+
+    try{
+        await Roles.deleteOne({_id: req.params.id});
+
+        req.flash("success", "Xoá hẳn nhóm quyền thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("success", "Xoá hẳn nhóm quyền thất bại!");
+        res.redirect("back");
+    }
+    
+}

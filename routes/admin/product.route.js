@@ -20,7 +20,7 @@ router.get("/bin", controller.bin);
 
 router.patch("/bin/restore/:id", controller.restoreItem);
 
-router.patch("/bin/delete/:id", controller.deleteItemBin);
+router.delete("/bin/delete/:id", controller.deleteItemBin);
 
 router.get("/create", controller.create);
 

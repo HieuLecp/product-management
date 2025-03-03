@@ -1,14 +1,18 @@
 extends ../../layouts/default
 
 block main
+
     if(role.permissions.includes("roles_view"))
         h1(class="mb-4")  Nhóm quyền
-
         .card.mb-3 
             .card-header Danh sách
             .card-body
                 .row
-                    .col-8 
+                    .col-8
+                        a(
+                            href=`${prefixAdmin}/roles/bin`
+                            class="btn btn-outline-success"
+                        ) Đã xoá
                     .col-4.text-right
                         if(role.permissions.includes("roles_create"))
                             a(
@@ -46,7 +50,14 @@ block main
                                             button(
                                                 class= "btn btn-dark btn-sm ml-1"
                                                 data-id = item.id 
-                                                button-delete-roles
+                                                button-delete
                                             ) Xoá
+                                            form(
+                                                action="" 
+                                                method="POST"
+                                                id= "form-delete-item"
+                                                data-path= `${prefixAdmin}/roles/delete`
+                                            )
                         else 
                             td(colspan="4" class="text-center") chưa có nhóm quyền nào được tạo
+    
