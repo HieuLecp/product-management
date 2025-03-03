@@ -1,6 +1,6 @@
 module.exports.createPost = (req, res, next) => {
-    if(!req.body.email){
-        req.flash("error", "Vui lòng nhập Email!");
+    if(!req.body.userName){
+        req.flash("error", "Vui lòng nhập tên đăng nhập!");
         res.redirect("back");
         return;
     }
@@ -9,6 +9,5 @@ module.exports.createPost = (req, res, next) => {
         res.redirect("back");
         return;
     }
-    
     next();
 }

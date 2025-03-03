@@ -46,6 +46,10 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/accounts/create
 module.exports.createAccount = async (req, res) => {
+    const userNameExitst= await Accounts.findOne({
+        userName: req.body.userName,
+        deleted: false
+    })
     const emailExitst= await Accounts.findOne({
         email: req.body.email,
         deleted: false
@@ -54,6 +58,10 @@ module.exports.createAccount = async (req, res) => {
         phone: req.body.phone,
         deleted: false
     })
+    if(userNameExitst){
+        req.flash("error", "Tên tài khoản này này đã tồn tại");
+        res.redirect("back");
+    }
     if(emailExitst){
         req.flash("error", "Email này đã tồn tại");
         res.redirect("back");
@@ -135,3 +143,83 @@ module.exports.editAccount = async (req, res) => {
     
     
 };
+
+// [DELETE] /admin/accounts/delete/:id
+module.exports.deleteItem = async (req, res) => {
+    console.log(req.params.id);
+    try{
+        await Accounts.updateOne({_id: req.params.id}, {
+            deleted: true,
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            }
+        });
+        req.flash("success", "Xoá sản phẩm thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("error", "Xoá sản phẩm thất bại!");
+        res.redirect("back");
+    }
+
+};
+
+// [GET] /admin/accounts/bin
+module.exports.bin = async (req, res) => {
+
+    let find = {
+        deleted: true
+    }
+
+    const records= await Accounts.find(find).select("-password -token");
+
+    for(const record of records){
+        const role_id= record.role_id;
+        const role= await Roles.findOne({
+            _id: role_id,
+            deleted: false
+        })
+        record.role= role;
+    }
+
+    res.render("admin/pages/accounts/bin", {
+        pageTitle : "Sản phẩm đã xoá",
+        records: records,
+    })
+};
+
+// [PATCH] /admin/accounts/bin/restore/:id
+module.exports.restoreItem= async (req, res) => {
+    // console.log(req.params.id);
+
+    try{
+        await Accounts.updateOne(
+            {_id: req.params.id},
+            {deleted: false}
+        );
+    
+        req.flash("success", "Khôi phục tài khoản thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("error", "Khôi phục tài khoản thất bại!");
+        res.redirect("back");
+    }
+
+    
+};
+
+// [DELETE] /admin/accounts/bin/delete/:id
+module.exports.deleteItemBin= async (req, res) => {
+    // console.log(req.params.id);
+
+    try{
+        await Accounts.deleteOne({_id: req.params.id});
+
+        req.flash("success", "Xoá hẳn tài khoản thành công!");
+        res.redirect("back");
+    }catch{
+        req.flash("error", "Xoá hẳn tài khoản thất bại!");
+        res.redirect("back");
+    }
+    
+}

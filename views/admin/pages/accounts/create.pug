@@ -14,6 +14,15 @@ block main
                 enctype="multipart/form-data"
             )
                 div(class="form-group")
+                    label(for="userName") Tên đăng nhập *
+                    input(
+                        type="text"
+                        class="form-control"
+                        id="userName"
+                        name="userName"
+                        required
+                    )
+                div(class="form-group")
                     label(for="fullName") Họ tên *
                     input(
                         type="text"

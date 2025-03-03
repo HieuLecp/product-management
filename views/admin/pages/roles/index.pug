@@ -52,12 +52,14 @@ block main
                                                 data-id = item.id 
                                                 button-delete
                                             ) Xoá
-                                            form(
-                                                action="" 
-                                                method="POST"
-                                                id= "form-delete-item"
-                                                data-path= `${prefixAdmin}/roles/delete`
-                                            )
+                                            
                         else 
                             td(colspan="4" class="text-center") chưa có nhóm quyền nào được tạo
     
+    if(role.permissions.includes("roles_delete"))
+        form(
+            action="" 
+            method="POST"
+            id= "form-delete-item"
+            data-path= `${prefixAdmin}/roles/delete`
+        )

@@ -4,6 +4,7 @@ const generate= require("../helpers/generate");
 
 const accountsSchema = new mongoose.Schema(
     {
+        userName: String,
         fullName : String,
         password: String,
         email: String,
@@ -19,7 +20,10 @@ const accountsSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        deletedAt: Date
+        deletedBy: {
+            account_id: String,
+            deletedAt: Date
+        }
     }, 
     {
         timestamps : true

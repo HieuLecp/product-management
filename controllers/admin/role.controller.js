@@ -180,7 +180,7 @@ module.exports.deleteItemBin= async (req, res) => {
         req.flash("success", "Xoá hẳn nhóm quyền thành công!");
         res.redirect("back");
     }catch{
-        req.flash("success", "Xoá hẳn nhóm quyền thất bại!");
+        req.flash("error", "Xoá hẳn nhóm quyền thất bại!");
         res.redirect("back");
     }
     

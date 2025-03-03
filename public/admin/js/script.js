@@ -1,4 +1,3 @@
-// console.log("Ok");
 // Button status
 const buttonStatus = document.querySelectorAll("[button-status]");
 if(buttonStatus.length > 0){
@@ -25,7 +24,6 @@ if(buttonStatus.length > 0){
 // Button status end
 
 // form search
-
 const formSearch = document.querySelector("#form-search");
 if(formSearch){
 
@@ -46,7 +44,6 @@ if(formSearch){
         window.location.href = url.href;
     });
 }
-
 // end form search
 
 // pagination
@@ -58,7 +55,7 @@ if(buttonPagination){
     buttonPagination.forEach(button => {
         button.addEventListener("click", () => {
             const page = button.getAttribute("button-pagination");
-            console.log(page);
+            // console.log(page);
 
             url.searchParams.set("page", page);
 
@@ -185,7 +182,7 @@ if(uploadImage){
     const closeImage = document.querySelector("[button-close-image]");
 
     uploadImageInput.addEventListener("change", (e) => {
-        console.log(e);
+        // console.log(e);
 
         const file = e.target.files[0];
         if(file){
@@ -249,7 +246,7 @@ if(sort){
     // console.log(sortValue);
     if(sortKey && sortValue){
         const stringSort = `${sortKey}-${sortValue}`;
-        console.log(stringSort);
+        // console.log(stringSort);
 
         const optionSelected = sortSelect.querySelector(`option[value='${stringSort}']`);
         optionSelected.selected = true;
@@ -263,6 +260,7 @@ const buttonDelete = document.querySelectorAll("[button-delete]");
 // console.log(buttonDelete);
 if(buttonDelete.length > 0){
     const formDeleteItem = document.querySelector("#form-delete-item");
+    console.log(formDeleteItem)
     const path = formDeleteItem.getAttribute("data-path");
 
     buttonDelete.forEach(button => {
@@ -274,7 +272,7 @@ if(buttonDelete.length > 0){
                 const action = `${path}/${id}?_method=DELETE`;
                 formDeleteItem.action=action;
 
-                console.log(action);
+                // console.log(action);
                 formDeleteItem.submit();
             }
         })
@@ -319,8 +317,8 @@ if(buttonRestore.length > 0){
 const buttonDeleteBin = document.querySelectorAll("[button-delete-bin]");
 // console.log(buttonDelete);
 if(buttonDeleteBin.length > 0){
-    const formDeleteItem = document.querySelector("#form-delete-item-bin");
-    const path = formDeleteItem.getAttribute("data-path");
+    const formDeleteItemBin = document.querySelector("#form-delete-item-bin");
+    const path = formDeleteItemBin.getAttribute("data-path");
 
     buttonDeleteBin.forEach(button => {
         // console.log(button);
@@ -331,12 +329,12 @@ if(buttonDeleteBin.length > 0){
                 if(isconfirm){
                     const id = button.getAttribute("data-id");
                     const action = `${path}/${id}?_method=DELETE`;
-                    formDeleteItem.action=action;
+                    formDeleteItemBin.action=action;
 
                     // console.log(id);
-                    console.log(action);
+                    // console.log(action);
 
-                    formDeleteItem.submit();
+                    formDeleteItemBin.submit();
                 }
             })
         }

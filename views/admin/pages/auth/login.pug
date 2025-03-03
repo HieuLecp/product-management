@@ -12,13 +12,22 @@ block main
                 action= `${prefixAdmin}/auth/login`
                 method="POST"
             )
+                //- div(class="form-group")
+                //-     label(for="email") Email 
+                //-     input(
+                //-         type= "email"
+                //-         class="form-control"
+                //-         id="email"
+                //-         name="email"
+                //-         required
+                //-     )
                 div(class="form-group")
-                    label(for="email") Email 
+                    label(for="userName") Tên đăng nhập
                     input(
-                        type= "email"
+                        type= "text"
                         class="form-control"
-                        id="email"
-                        name="email"
+                        id="userName"
+                        name="userName"
                         required
                     )
                 div(class="form-group")

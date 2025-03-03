@@ -25,6 +25,15 @@ router.patch('/edit/:id',
     upload.single('avatar'),
     uploadCloud.upload,
     validate.createPatch,
-    controller.editAccount);
+    controller.editAccount
+);
+
+router.delete("/delete/:id", controller.deleteItem);
+
+router.get("/bin", controller.bin);
+
+router.patch("/bin/restore/:id", controller.restoreItem);
+
+router.delete("/bin/delete/:id", controller.deleteItemBin);
 
 module.exports = router;
