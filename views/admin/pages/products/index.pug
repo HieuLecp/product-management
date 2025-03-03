@@ -64,7 +64,8 @@ block main
                                 th Giá
                                 th Vị trí
                                 th Trạng thái
-                                th Người tạo
+                                //- th Người tạo
+                                th Người cập nhập
                                 th Hành động
                         
                         tbody
@@ -116,10 +117,16 @@ block main
                                                 span(class="btn btn-success") Hoạt động
                                             else 
                                                 span(class="btn btn-danger") Dừng hoạt động
-                                    td 
-                                        p #{item.accountFullName}
-                                        p 
-                                            +formatDate(item.createdBy.createdAt)
+                                    //- td 
+                                    //-     p #{item.accountFullName}
+                                    //-     p 
+                                    //-         +formatDate(item.createdBy.createdAt)
+                                    td
+                                        - const updatedBy = item.updatedBy.slice(-1)[0];
+                                        if(updatedBy)
+                                            p #{updatedBy.accountFullName}
+                                            p 
+                                                +formatDate(updatedBy.updatedAt)
                                     td
                                         a(
                                             href=`${prefixAdmin}/products/detail/${item.id}`
