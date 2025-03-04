@@ -16,10 +16,20 @@ module.exports.index =  async (req, res) => {
 
     productHepler.priceNew(productFeatured);
     // end SP nổi bật
+
+    // SP mới nhất
+    const productNew= await Product.find({
+        deleted: false,
+        status: "active",
+    }).sort({position: "desc"}).limit(6);
+
+    productHepler.priceNew(productNew);
+    // end SP mới nhất
     // console.log(productFeatured);
 
     res.render("client/pages/home/index.pug", {
         pageTitle: "Trang chủ",
-        productFeatured: productFeatured
+        productFeatured: productFeatured,
+        productNew: productNew
     });
 };
