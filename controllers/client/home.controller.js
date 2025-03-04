@@ -14,16 +14,16 @@ module.exports.index =  async (req, res) => {
         status: "active"
     }).limit(6);
 
-    productHepler.priceNew(productFeatured);
+    productHepler.priceNewProducts(productFeatured);
     // end SP nổi bật
 
     // SP mới nhất
     const productNew= await Product.find({
         deleted: false,
         status: "active",
-    }).sort({position: "desc"}).limit(6);
+    }).sort({position: "desc"}).limit(5);
 
-    productHepler.priceNew(productNew);
+    productHepler.priceNewProducts(productNew);
     // end SP mới nhất
     // console.log(productFeatured);
 

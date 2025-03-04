@@ -1,32 +1,52 @@
 extends ../../layouts/default.pug
+include ../../mixins/box-head
 
 block main
-    .card.mb-3 
-        .card-header
-            if(products.title)
-                h1(class="mb-4 title-detail") <b>#{products.title}</b>
-            .card-body
-                .row
-                    .col-4
-                        if(products.thumbnail)
-                            div(class="mb-4 detail-image")
-                                img(
-                                    src= products.thumbnail 
-                                    style= "width: 100px"
-                                )
-                    .col-8 
-                        if(products.discountPercentage)
-                            h1(class="mb-4 discount-newPrice") 
-                                <b class="price-new-detail">#{priceNew}$</b> 
-                                <b class="detail-discount">-#{products.discountPercentage}%</b>
+    .product-detail
+        .container.my-5
+            .row 
+                .col-6 
+                    .inner-thumb 
+                        img(src= products.thumbnail alt= products.title)
+                .col-6
+                    h1(class="mb-4 title-detail") <b>#{products.title}</b>
 
-                        if(products.price)
-                            h1(class="mb-4 price-old-detail") <b>#{products.price}$</b>
+                    if(products.category)
+                        div(class="inner-category")
+                            span Danh mục: 
+                            a(href=`product/${products.category.slug}`) #{products.category.title} 
+                    if(products.priceNew)
+                        div(class="inner-price-new") #{products.priceNew}$
+                    if(products.price)
+                        div(class="inner-price-old") #{products.price}$
+                    if(products.discountPercentage)
+                        div(class="inner-percent") Giảm tới <span>#{products.discountPercentage}%</span>
+                    if(products.stock)
+                        div(class="inner-stock") Còn lại: <span>#{products.stock}</span> sản phẩm
+                    
+                    form(
+                        action= `/cart/add/${products.id}`
+                        method="POST"
+                    )
+                        input(
+                            class="form-control mb-2"
+                            type= "number"
+                            name= "quantity"
+                            value= "1"
+                            min= "1"
+                            max= products.stock
+                        )
+                        button(
+                            type= "submit"
+                            class= "btn btn-success btn-block"
+                        ) Thêm vào giỏ hàng
 
-                        if(products.stock)
-                            h1(class="mb-4 detail-stock") Còn lại: <b>#{products.stock}</b>
+        hr 
 
-                        if(products.description)
-                            h1(class="mb-4 detail-description") Mô tả:  !{products.description} 
+        .container.my-5 
+            .row 
+                .col-12 
+                    +box-head("Mô tả sản phẩm")
+                    .inner-desc !{products.description}
 
     script(src="/admin/js/product.js")

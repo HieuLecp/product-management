@@ -13,7 +13,7 @@ module.exports.index = async (req, res) => {
     })
     .sort({position: "desc"});
 
-    const newproducts= productHepler.priceNew(products);
+    const newproducts= productHepler.priceNewProducts(products);
 
     // console.log(newproducts);
 
@@ -23,29 +23,38 @@ module.exports.index = async (req, res) => {
     });
 }
 
-// [GET] /products/:slug
+// [GET] /products/detail/:slugProduct
 module.exports.detail = async (req, res) => {
-    // console.log(req.params);
+    // console.log(req.params.slug);
 
     try{
         const find= {
             deleted: false,
-            slug: req.params.slug
+            slug: req.params.slugProduct
         };
 
         const products= await Product.findOne(find);
 
-        const priceNew= (products.price * (100-products.discountPercentage)/100).toFixed(0);
+        // console.log(products);
+        if(products.product_category_id){
+            const category= await ProductCategory.findOne({
+                _id: products.product_category_id,
+                status: "active",
+                deleted: false  
+            });
 
-        console.log(products);
+            products.category= category;
+
+            productHepler.priceNewProduct(products);
+        }
+        // console.log(products.category.slug);
     
         res.render("client/pages/products/detail", {
             pageTitle : products.title,
             products: products,
-            priceNew: priceNew
         });
     } catch(error) {
-        res.redirect(`/products}`);
+        res.redirect(`/product}`);
     }
 };
 
@@ -67,10 +76,10 @@ module.exports.category = async (req, res) => {
         deleted: false
     }).sort({position: "desc"})
 
-    const newproducts= productHepler.priceNew(products);
+    const newproducts= productHepler.priceNewProducts(products);
 
     res.render('client/pages/products/index',  {
         pageTitle: category.title,
-        products: newproducts
+        products: newproducts,
     });
 }
