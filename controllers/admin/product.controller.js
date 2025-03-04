@@ -24,7 +24,7 @@ module.exports.index = async (req, res) => {
     if(req.query.status){
         find.status = req.query.status;
     }
-    console.log(find);
+    // console.log(find);
 
     const objectSearch = searchHepler(req.query);
     // console.log(objectSearch);
@@ -80,7 +80,7 @@ module.exports.index = async (req, res) => {
             updatedBy.accountFullName = userUpdated.fullName;
         }
         
-        console.log(item);
+        // console.log(item);
         
     }
 

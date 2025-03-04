@@ -83,12 +83,25 @@
     width: 100%;
     aspect-ratio: 4/3;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
 
 .product-item .inner-image img{
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.product-item .inner-featured{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #27ae60;
+    color: #f8f9fa;
+    padding: 3px 6px;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px;
 }
 
 .product-item .inner-content .inner-title{
@@ -262,3 +275,6 @@
 .sub-menu ul li:hover {
     background-color: #e9ecef;
 }
+
+/* end sub menu */
+
