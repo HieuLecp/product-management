@@ -13,10 +13,7 @@ const blogSchema= new mongoose.Schema(
         },
         description: String,
         content: String,
-        thumbnail : String,
-        status : String,
         featured: String,
-        position : Number,
         slug : {
             type: String,
             slug: "title",

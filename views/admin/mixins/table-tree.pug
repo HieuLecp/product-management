@@ -66,3 +66,35 @@ mixin table-tree(items, level = 1)
                     ) Xoá
         if item.children && item.children.length > 0
             +table-tree(item.children, level + 1)
+
+
+mixin table-tree-blogs(items, level = 1)
+    each item, index in items
+        - const prefix = Array(level + 1).join("-- ")
+        tr
+            td 
+                input(
+                    type="checkbox"
+                    name="id"
+                    value=item.id  
+                )
+            td #{item.index}
+            td #{prefix} #{item.title }
+            td
+                a(
+                    href=`${prefixAdmin}/products-category/detail/${item.id}`
+                    class = "btn btn-secondary btn-sm"
+                ) Chi tiết
+                if(role.permissions.includes("products-category_edit"))
+                    a(
+                        href=`${prefixAdmin}/products-category/edit/${item.id}`
+                        class = "btn btn-warning btn-sm"
+                    ) Sửa
+                if(role.permissions.includes("products-category_delete"))
+                    button(
+                        class= "btn btn-dark btn-sm ml-1"
+                        data-id = item.id 
+                        button-delete
+                    ) Xoá
+        if item.children && item.children.length > 0
+            +table-tree-blogs(item.children, level + 1)
