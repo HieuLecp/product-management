@@ -29,6 +29,13 @@
     text-decoration: none;
 }
 
+.inner-logo a:hover {
+    background-color: #f39c12; /* Màu nền cam khi hover */
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+
 /* Định dạng responsive */
 @media (max-width: 768px) {
     .row.align-items-center {
@@ -38,6 +45,9 @@
 
     .inner-menu ul {
         justify-content: center;
+        display: flex;
+        padding: 0;
+        margin: 0;
     }
 
     .inner-menu li {
@@ -51,6 +61,11 @@
 }
 
 .header .inner-menu ul li a{
+    text-decoration: none;
+    /* display: inline-block; */
+}
+
+.header .inner-logo a{
     text-decoration: none;
 }
 
