@@ -9,9 +9,15 @@ const roleRouter = require("./role.route");
 const accountRouter = require("./account.route");
 const authRouter = require("./auth.route");
 const myAccount = require("./my-account.route");
+const blogCategoryRouter= require("./blog-category.route");
 
 module.exports = (app) => {
     const PATH_ADMIN = systemConfig.prefixAdmin;
+
+    // app.use(PATH_ADMIN + '/', 
+    //     authMiddleware.requireAuth,
+    //     dashboardRouter
+    // );
 
     app.use(PATH_ADMIN + '/dashboard', 
         authMiddleware.requireAuth,
@@ -26,6 +32,11 @@ module.exports = (app) => {
     app.use(PATH_ADMIN + '/products-category', 
         authMiddleware.requireAuth, 
         productCategoryRouter
+    );
+
+    app.use(PATH_ADMIN + '/blogs-category', 
+        authMiddleware.requireAuth, 
+        blogCategoryRouter
     );
 
     app.use(PATH_ADMIN + '/roles', 

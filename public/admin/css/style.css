@@ -157,44 +157,73 @@
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* detail product */
-.container-detail{
-    display: flex;
-    gap: 20px;
-    max-width: 1000px;
-    margin: auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.title-detail{
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-.detail-price, 
-.detail-discount, 
-.detail-stock, 
-.detail-position, 
-.detail-description {
-    font-size: 18px;
-    margin-bottom: 8px;
-}
-.detail-image {
-    width: 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* product detail */
+.product-detail .inner-thumb img{
+    width: 100%;
+    height: auto;
 }
 
-.detail-image img {
-    width: 100%;
-    max-width: 250px;
+.product-detail .inner-info div {
+    margin-bottom: 12px; /* Tăng khoảng cách giữa các dòng */
+    line-height: 1.6; /* Làm cho văn bản thoáng hơn */
+}
+
+.product-detail .inner-title {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.product-detail .inner-category {
+    margin-bottom: 10px;
+}
+
+.product-detail .inner-category-title {
+    margin-bottom: 10px;
+    color: #3aa1d4c4;
+}
+
+.product-detail .inner-price-old {
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: 20px;
+    /* text-decoration: line-through; */
+    margin-bottom: 10px;
+}
+
+.product-detail .inner-percent span{
+    color: #fff;
+    background: #e74c3c;
+    font-weight: 600;
+    display: inline-block;
+    padding: 3px 6px;
     border-radius: 8px;
 }
-.detail-status {
-    margin-top: 10px;
-    font-size: 18px;
+
+.product-detail .inner-stock{
+    margin-bottom: 10px;
 }
-/* end detail product */
+
+.product-detail .inner-stock span{
+    color: #fff;
+    background: #287311;
+    font-weight: 600;
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 8px;
+}
+
+.product-detail .inner-createdBy, .inner-updatedBy, .inner-stock, .inner-percent, .inner-price-old, .inner-category {
+    font-size: 1.1rem;  /* Tăng kích thước chữ */
+    font-weight: bold;  /* In đậm chữ */
+    padding: 10px;  /* Thêm khoảng cách để dễ nhìn hơn */
+    border-left: 4px solid #007bff;  /* Thêm đường viền trái màu xanh dương */
+    background: #f8f9fa;  /* Màu nền nhẹ nhàng */
+    margin-bottom: 10px;  /* Tạo khoảng cách giữa các phần */
+    border-radius: 5px;  /* Bo góc nhẹ */
+}
+
+.product-detail.inner-updatedBy {
+    border-left-color: #28a745;  /* Màu viền xanh lá để phân biệt */
+}
+
+/* end product detail */

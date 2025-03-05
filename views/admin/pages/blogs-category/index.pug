@@ -1,0 +1,64 @@
+extends ../../layouts/default
+include ../../mixins/filterStatus
+include ../../mixins/search
+include ../../mixins/pagination
+include ../../mixins/formChangeMulti
+include ../../mixins/alert
+include ../../mixins/sort
+include ../../mixins/table-tree
+
+block main 
+    if(role.permissions.includes("blogs-category_view"))
+        h1 danh mục bài viết
+
+        .card.mb-3 
+            .card-header Bộ lọc và tìm kiếm
+            .card-body
+                .rol
+                    .col-6 
+                        //- +filterStatus(filterStatus) 
+                        a(
+                            href=`${prefixAdmin}/blogs-category/bin`
+                            class="btn btn-sm ml-1 btn-outline-success"
+                        ) Đã xoá                 
+                        
+        .card.mb-3 
+            .card-header Danh mục bài viết
+                .card-body
+                    .row
+                        if(role.permissions.includes("products-category_create"))
+                            .col-4 
+                                a(
+                                    href=`${prefixAdmin}/blogs-category/create`
+                                    class="btn btn-outline-success"
+                                ) Thêm mới
+                    table(
+                        class= "table table-hover table-sm"
+                        checkbox-multi
+                    )
+                        thead 
+                            tr 
+                                th 
+                                    input(
+                                        type="checkbox"
+                                        name="checkall"
+                                        ) 
+                                th STT 
+                                th Hình ảnh
+                                th Tiêu đề
+                                th Vị trí
+                                th Trạng thái
+                                th Hành động
+                        tbody
+                            +table-tree(records)
+                        
+
+                            
+        form(
+            action="" 
+            method="POST"
+            id= "form-delete-item"
+            data-path= `${prefixAdmin}/products-category/delete`
+        )
+
+

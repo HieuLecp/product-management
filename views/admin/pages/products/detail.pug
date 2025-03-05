@@ -1,49 +1,49 @@
 extends ../../layouts/default
+include ../../mixins/moment
 
 block main
-    .card.mb-3 
-        .card-header
-            if(product.title)
-                h1(class="mb-4 title-detail") <b>#{product.title}</b>
-            .card-body
-                .row
-                    .col-4
-                        if(product.thumbnail)
-                            div(class="mb-4 detail-image")
-                                img(
-                                    src= product.thumbnail 
-                                    style= "width: 100px"
-                                )
-                    .col-8 
-                        
+    .product-detail
+        .container.my-5
+            .row 
+                .col-6 
+                    .inner-thumb 
+                        img(src= product.thumbnail alt= product.title)
+                .col-6
+                    div(class="inner-info")
+                        h1(class="mb-4 title-detail") <b>#{product.title}</b>
 
+                        if(product.category)
+                            div(class="inner-category")
+                                span Danh mục: 
+                                span(class="inner-category-title") #{product.category.title} 
                         if(product.price)
-                            h1(class="mb-4 detail-price") <b>#{product.price}$</b>
-                        
+                            div(class="inner-price-old") #{product.price}$
                         if(product.discountPercentage)
-                            h1(class="mb-4 detail-discount" ) Giảm giá: <b>#{product.discountPercentage}%</b>
-
+                            div(class="inner-percent") Giảm giá: <span>#{product.discountPercentage}%</span>
                         if(product.stock)
-                            h1(class="mb-4 detail-stock") Còn lại: <b>#{product.stock}</b>
-                        
-                        if(product.status)
-                            div(class="mb-4 detail-status")
-                                span Trạng thái: 
-                                if (product.status === "active")
-                                    span(class="btn btn-success") Hoạt động
-                                else 
-                                    span(class="btn btn-danger") Dừng hoạt động
-                        
-                        if(product.position)
-                            h1(class="mb-4 detail-position") Vị trí: <b>#{product.position}</b>
+                            div(class="inner-stock") 
+                                p Còn lại: <span>#{product.stock}</span> sản phẩm
 
-                        if(product.description)
-                            h1(class="mb-4 detail-description") Mô tả:  !{product.description} 
-
+                        div(class="inner-createdBy") Người tạo:  #{product.accountFullName} - 
+                            +formatDateTime(product.createdBy.createdAt)
+                        div(class="inner-updatedBy") Cập nhập gần nhất:
+                            - const updatedBy = product.updatedBy.slice(-1)[0];
+                            if(updatedBy)
+                                p #{updatedBy.accountFullName} - 
+                                    +formatDateTime(updatedBy.updatedAt)
                         a(
                             href=`${prefixAdmin}/products/edit/${product.id}`
                             class = "btn btn-warning"
                         ) Chỉnh sửa
+
+        hr 
+
+        .container.my-5 
+            .row 
+                .col-12 
+                    h2(class="inner-title") Mô tả sản phẩm
+                    .inner-desc !{product.description}
+
                     
                         
 

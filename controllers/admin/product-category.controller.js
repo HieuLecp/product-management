@@ -66,7 +66,7 @@ module.exports.createCategory = async (req, res) => {
     
         res.redirect(`${systemConfig.prefixAdmin}/products-category`);
     }else{
-
+        
     }
 
 };
@@ -102,33 +102,43 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] /admin/products-category/edit/:id
 module.exports.editItem = async (req, res) => {
-    const id = req.params.id;
-    req.body.position = parseInt(req.body.position);
 
+    const permissions= res.locals.role.permissions;
 
+    if(permissions.includes("products-category_edit")){
+        const id = req.params.id;
+        req.body.position = parseInt(req.body.position);
 
-    await ProductCategory.updateOne({_id: id}, req.body);
+        await ProductCategory.updateOne({_id: id}, req.body);
 
-
-    res.redirect("back");
+        res.redirect("back");
+    }else{
+        
+    }
+    
 };
 
 // [DELETE] /admin/products-category/delete/:id
 module.exports.deleteItem = async (req, res) => {
-    // console.log(req);
-    const id = req.params.id;
-    // console.log(id);
+    const permissions= res.locals.role.permissions;
 
-    await ProductCategory.updateOne({_id: id}, {
-        deleted: true,
-        deletedBy: {
-            account_id: res.locals.user.id,
-            deletedAt: new Date()
-        }
-    });
-    req.flash("success", "Xoá thành công sản phẩm!");
+    if(permissions.includes("products-category_delete")){
+        const id = req.params.id;
 
-    res.redirect("back");
+        await ProductCategory.updateOne({_id: id}, {
+            deleted: true,
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            }
+        });
+        req.flash("success", "Xoá thành công sản phẩm!");
+
+        res.redirect("back");
+    }else{
+        
+    }
+    
 };
 
 // [GET] /admin/products-category/bin
@@ -156,34 +166,44 @@ module.exports.bin = async (req, res) => {
 module.exports.restoreItem= async (req, res) => {
     // console.log(req.params.id);
 
-    try{
-        await ProductCategory.updateOne(
-            {_id: req.params.id},
-            {deleted: false}
-        );
-    
-        req.flash("success", "Khôi phục danh mục thành công!");
-        res.redirect("back");
-    }catch{
-        req.flash("error", "Khôi phục danh mục thất bại!");
-        res.redirect("back");
-    }
+    const permissions= res.locals.role.permissions;
 
-    
+    if(permissions.includes("products-category_restore")){
+        try{
+            await ProductCategory.updateOne(
+                {_id: req.params.id},
+                {deleted: false}
+            );
+        
+            req.flash("success", "Khôi phục danh mục thành công!");
+            res.redirect("back");
+        }catch{
+            req.flash("error", "Khôi phục danh mục thất bại!");
+            res.redirect("back");
+        }
+    }else{
+        
+    }
+        
 };
 
 // [DELETE] /admin/products-category/bin/delete/:id
 module.exports.deleteItemBin= async (req, res) => {
-    console.log(req.params.id);
+    // console.log(req.params.id);
+    const permissions= res.locals.role.permissions;
 
-    try{
-        await ProductCategory.deleteOne({_id: req.params.id});
-
-        req.flash("success", "Xoá hẳn danh mục thành công!");
-        res.redirect("back");
-    }catch{
-        req.flash("success", "Xoá hẳn danh mục thất bại!");
-        res.redirect("back");
-    }
+    if(permissions.includes("products-category-bin_delete")){
+        try{
+            await ProductCategory.deleteOne({_id: req.params.id});
     
+            req.flash("success", "Xoá hẳn danh mục thành công!");
+            res.redirect("back");
+        }catch{
+            req.flash("success", "Xoá hẳn danh mục thất bại!");
+            res.redirect("back");
+        }
+    }else{
+        
+    }
+
 };
