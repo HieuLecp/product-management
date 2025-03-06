@@ -1,9 +1,13 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head
 include ../../mixins/product-layout
+include ../../mixins/alert
 
 
 block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
     .section-products-featured.my5
         .container
             .row 
