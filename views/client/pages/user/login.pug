@@ -11,7 +11,7 @@ block main
             .col-8 
                 h1(class="text-center") Đăng ký tài khoản
                 form(
-                    action= "/user/register"
+                    action= "/user/login"
                     method="POST"
                 )
                     div(class="form-group")
@@ -21,15 +21,6 @@ block main
                             class="form-control"
                             id="userName"
                             name="userName"
-                            required
-                        )
-                    div(class="form-group")
-                        label(for="email") Email *
-                        input(
-                            type= "email"
-                            class="form-control"
-                            id="email"
-                            name="email"
                             required
                         )
                     div(class="form-group")
@@ -45,5 +36,5 @@ block main
                     button(
                         type= "submit"
                         class="btn btn-primary btn-block"
-                    ) Đăng ký
+                    ) Đăng nhập
         

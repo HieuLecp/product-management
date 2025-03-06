@@ -36,6 +36,22 @@
     text-decoration: none;
 }
 
+/* .header.inner-menu ul {
+    list-style: none; 
+    padding: 0;
+    margin: 0;
+    display: flex; 
+    justify-content: center; 
+    gap: 25px; 
+}
+
+.header .inner-menu ul li {
+    display: inline-block; 
+    align-items: center; 
+    flex-wrap: wrap;
+    
+} */
+
 /* Định dạng responsive */
 @media (max-width: 768px) {
     .row.align-items-center {
@@ -50,8 +66,9 @@
         margin: 0;
     }
 
-    .inner-menu li {
+    .inner-menu ul li {
         margin-left: 10px;
+        display: inline-block;
     }
 }
 
