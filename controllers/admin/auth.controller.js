@@ -86,7 +86,7 @@ module.exports.loginPost = async (req, res) => {
         res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
         
     }else{
-        req.flash("error", "Vui lòng xác minh mã captcha!");
+        req.flash("error", "Vui lòng xác minh captcha!");
         res.redirect("back");
     }
 };
