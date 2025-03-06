@@ -7,13 +7,14 @@ const systemConfig = require("../../config/system");
 
 // [GET] /admin/auth/login
 module.exports.login = async (req, res) => {
-    // console.log(req.cookies.token);
+    // console.log(res.recaptcha);
 
     if(req.cookies.token){
         res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
     }else{
         res.render("admin/pages/auth/login", {
             pageTitle: "Đăng nhập tài khoản",
+            captcha: res.recaptcha
         });
     }
 };
@@ -53,34 +54,41 @@ module.exports.login = async (req, res) => {
 
 // [POST] /admin/auth/login
 module.exports.loginPost = async (req, res) => {
-    console.log(req.body);
-    const userName= req.body.userName;
-    const password= req.body.password;
+    // console.log(req.recaptcha);
 
-    const user= await Accounts.findOne({
-        userName: userName,
-        deleted: false
-    });
+    if(req.recaptcha && req.recaptcha.error === null){
+        const userName= req.body.userName;
+        const password= req.body.password;
 
-    if(!user){
-        req.flash("error", "Tên đăng nhập không tồn tại!");
+        const user= await Accounts.findOne({
+            userName: userName,
+            deleted: false
+        });
+
+        if(!user){
+            req.flash("error", "Tên đăng nhập không tồn tại!");
+            res.redirect("back");
+            return;
+        }
+
+        if(md5(password) != user.password){
+            req.flash("error", "Mật khẩu không chính xác!");
+            res.redirect("back");
+            return;
+        }
+
+        if(user.status == "Inactive"){
+            req.flash("error", "Tài khoản đã bị khoá!");
+            res.redirect("back");
+            return;
+        }
+        res.cookie("token", user.token);
+        res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+        
+    }else{
+        req.flash("error", "Vui lòng xác minh mã captcha!");
         res.redirect("back");
-        return;
     }
-
-    if(md5(password) != user.password){
-        req.flash("error", "Mật khẩu không chính xác!");
-        res.redirect("back");
-        return;
-    }
-
-    if(user.status == "Inactive"){
-        req.flash("error", "Tài khoản đã bị khoá!");
-        res.redirect("back");
-        return;
-    }
-    res.cookie("token", user.token);
-    res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
 };
 
 

@@ -2,7 +2,7 @@ extends ../../layouts/auth
 include ../../mixins/alert
 
 block main 
-    +alert-error(5000)
+    +alert-error(3000)
 
     .container.my-5 
         .row.justify-contend-center 
@@ -39,9 +39,12 @@ block main
                         name="password"
                         required
                     )
+                != captcha
                 div(class="form-group")
                 label(for="position") 
                 button(
                     type= "submit"
                     class="btn btn-primary"
                 ) Đăng nhập
+
+    script(src="https://www.google.com/recaptcha/api.js" async defer)
