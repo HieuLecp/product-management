@@ -65,21 +65,42 @@ module.exports.category = async (req, res) => {
         slug: req.params.slugCategory,
         status: "active",
         deleted: false
-    })
+    });
+    // console.log(category);
+    // if(category){
+    //     const listSubCategory= await productCategoryHepler.getSubCategory(category.id);
+    
+    //     const listSubCategoryId= listSubCategory.map(item => item.id);
 
+    //     const products= await Product.find({
+    //         product_category_id: {$in: [category.id, ...listSubCategoryId]},
+    //         deleted: false
+    //     }).sort({position: "desc"})
+
+    //     const newproducts= productHepler.priceNewProducts(products);
+
+    //     res.render('client/pages/products/index',  {
+    //         pageTitle: category.title,
+    //         products: newproducts,
+    //     });
+    // }
+    // else{
+    //     // res.redirect("back");
+    // }
     const listSubCategory= await productCategoryHepler.getSubCategory(category.id);
     
-    const listSubCategoryId= listSubCategory.map(item => item.id);
+        const listSubCategoryId= listSubCategory.map(item => item.id);
 
-    const products= await Product.find({
-        product_category_id: {$in: [category.id, ...listSubCategoryId]},
-        deleted: false
-    }).sort({position: "desc"})
+        const products= await Product.find({
+            product_category_id: {$in: [category.id, ...listSubCategoryId]},
+            deleted: false
+        }).sort({position: "desc"})
 
-    const newproducts= productHepler.priceNewProducts(products);
+        const newproducts= productHepler.priceNewProducts(products);
 
-    res.render('client/pages/products/index',  {
-        pageTitle: category.title,
-        products: newproducts,
-    });
+        res.render('client/pages/products/index',  {
+            pageTitle: category.title,
+            products: newproducts,
+        });
+    
 }

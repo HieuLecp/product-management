@@ -33,8 +33,8 @@ header.header
                         //-     a(href="/" ) Trang chủ
                         li(class="sub-menu")
                             - const pathProduct = "/product";
-                            a(href=pathProduct ) Sản phẩm
+                            a(href=pathProduct ) Danh mục
                                 +sub-menu(layoutProductCategory, pathProduct)
                         li(class="sub-menu")
-                            a(href="cart" ) Giỏ hàng (#{miniCart ? miniCart.totalQuantity : "0"})
+                            a(href="/cart" ) Giỏ hàng (#{miniCart ? miniCart.totalQuantity : "0"})
                         
