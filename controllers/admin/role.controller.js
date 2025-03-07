@@ -54,7 +54,7 @@ module.exports.edit = async (req, res) => {
         }
 
         const data = await Roles.findOne(find);
-        console.log(data);
+        // console.log(data);
 
         res.render("admin/pages/roles/edit", {
             pageTitle: "Sửa nhóm quyền",

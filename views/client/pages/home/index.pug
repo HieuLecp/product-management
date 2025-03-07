@@ -12,7 +12,8 @@ block main
         .container
             .row 
                 .col-12 
-                    +box-head("Sản phẩm nổi bật")
+                    if(productFeatured.length > 0)
+                        +box-head("Sản phẩm nổi bật")
                     
             +product-grid(productFeatured)
 
@@ -20,6 +21,7 @@ block main
         .container
             .row 
                 .col-12 
-                    +box-head("Sản phẩm mới")
+                    if(productNew.length > 0)
+                        +box-head("Sản phẩm mới")
                     
             +product-grid(productNew)

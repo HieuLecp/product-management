@@ -1,5 +1,28 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1; /* Đẩy footer xuống */
+}
+
+.footer {
+    background-color: #f8f9fa; /* Màu nền footer */
+    padding: 20px;
+    text-align: center;
+}
+
+
+
 .header {
-    background-color: #f8f9fa; /* Màu nền xanh đậm */
+    background: #E0E0E0 !important;
     padding: 15px 0;  /* Khoảng cách trên/dưới */
     border-bottom: 3px solid #f39c12; /* Đường viền dưới màu cam */
 }
@@ -88,11 +111,35 @@
 
 /* footer */
 .footer{
-    background: #333;
-    color: #fff;
+    background: #E0E0E0 !important;
+    color: #c12323;
     text-align: center;
     padding: 10px;
+    border-top: 3px solid #f39c12;
 }
+
+.footer .row {
+    display: flex;
+    align-items: center; /* Giúp các cột căn giữa nhau */
+}
+
+.footer h6 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.footer ul.list-unstyled {
+    padding: 0;
+}
+
+.footer ul.list-unstyled li a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #333;
+}
+
 /* end footer */
 
 
@@ -501,3 +548,35 @@ label {
 }
 
 /* end Immage preview */
+
+/* icon */
+.icon-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Đảm bảo icon nằm giữa chiều cao của <li> */
+}
+
+/* end icon */
+
+/* cart icon */
+.cart-container {
+    position: relative;
+    display: inline-block;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px; /* Điều chỉnh vị trí lên trên */
+    right: -10px; /* Điều chỉnh vị trí sang phải */
+    color: #333; /* Màu chữ */
+    font-size: 16px; /* Kích thước số nhỏ */
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    line-height: 18px;
+    border-radius: 50%;
+}
+/* end cart icon */
+

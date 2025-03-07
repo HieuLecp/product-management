@@ -62,7 +62,7 @@ module.exports.order= async (req, res) => {
         });
 
         const newStock= productInfo.stock - objectProduct.quantity;
-        console.log(newStock);
+        // console.log(newStock);
         await Product.updateOne({
             _id: item.product_id
         },{
@@ -113,14 +113,14 @@ module.exports.success= async (req, res) => {
             product.productInfo= productInfo;
     
             productHepler.priceNewProduct(product);
-            console.log(product.priceNew);
+            // console.log(product.priceNew);
     
             product.totalPrice= product.priceNew * product.quantity;
         }
     
         order.totalPrice= order.products.reduce((sum, item) => sum + item.totalPrice, 0);
     
-        console.log(order);
+        // console.log(order);
     
         res.render("client/pages/checkout/success", {
             pageTitle: "Đặt hàng",

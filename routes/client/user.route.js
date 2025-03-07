@@ -60,4 +60,15 @@ router.post('/info/edit',
     controller.editPost
 );
 
+router.get('/info/editPassword',
+    authMiddleware.requireAuth,
+    controller.editPassword
+);
+
+router.post('/info/editPassword',
+    authMiddleware.requireAuth,
+    validate.editPasswordPost,
+    controller.editPasswordPost
+);
+
 module.exports = router;

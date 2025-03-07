@@ -30,7 +30,7 @@ module.exports.create= async (req, res) => {
 
     const records= await BlogCategory.find(find);
     const newRecords= createTree.tree(records);
-    console.log(newRecords);
+    // console.log(newRecords);
 
     res.render("admin/pages/blogs/create", {
         pageTitle : "Tạo danh mục sản phẩm",

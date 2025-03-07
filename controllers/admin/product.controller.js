@@ -116,7 +116,7 @@ module.exports.changeStatus = async (req, res) => {
 
 // [PATCH] /admin/products/change-multi
 module.exports.changeMulti = async (req, res) => {
-    console.log(req.body.type);
+    // console.log(req.body.type);
     const type = req.body.type;
     const ids = req.body.ids.split(",");
 
@@ -141,7 +141,7 @@ module.exports.changeMulti = async (req, res) => {
             req.flash("success", `Cập nhập trạng thái ${ids.length} sản phầm thành công!`);
             break;
         case "delete-all":
-            console.log(ids.length);
+            // console.log(ids.length);
             await Product.updateMany(
                 {_id: { $in: ids} }, 
                 {  deleted: true,
@@ -159,7 +159,7 @@ module.exports.changeMulti = async (req, res) => {
                 position = parseInt(position);
 
                 // console.log(ids.length);
-                console.log(position);
+                // console.log(position);
 
                 await Product.updateOne({_id: id}, { 
                     position: position,
@@ -303,7 +303,7 @@ module.exports.detail = async (req, res) => {
         };
     
         const product = await Product.findOne(find);
-        console.log(product.product_category_id);
+        // console.log(product.product_category_id);
 
         if(product.product_category_id){
             const category= await ProductCategory.findOne({
@@ -311,7 +311,7 @@ module.exports.detail = async (req, res) => {
                 status: "active",
                 deleted: false  
             });
-            console.log(category);
+            // console.log(category);
             product.category= category;
         }
 

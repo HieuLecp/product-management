@@ -44,7 +44,7 @@ module.exports.registerPost =  async (req, res) => {
     req.body.password= md5(req.body.password);
     const user = new User(req.body);
     await user.save();
-    console.log(user);
+    // console.log(user);
 
     res.cookie("tokenUser", user.tokenUser);
     res.redirect("/");
@@ -61,7 +61,7 @@ module.exports.login =  async (req, res) => {
 
 // [POST] /user/login
 module.exports.loginPost =  async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
     const user= await User.findOne({
         userName: req.body.userName
@@ -173,7 +173,7 @@ module.exports.otpPasswordPost =  async (req, res) => {
         otp: otp
     });
 
-    console.log(result);
+    // console.log(result);
     if(!result){
         req.flash("error", "Mã otp không hợp lệ!");
         res.redirect("back");
@@ -261,7 +261,7 @@ module.exports.editPost =  async (req, res) => {
         phone: req.body.phone,
         deleted: false
     });
-    console.log(phoneExitst);
+    // console.log(phoneExitst);
 
     if(emailExitst){
         req.flash("error", `Email ${req.body.email} đã tồn tại`);
@@ -280,3 +280,43 @@ module.exports.editPost =  async (req, res) => {
         res.redirect("back");
     }
 };
+
+// [GET] /user/info/editPassword
+module.exports.editPassword =  async (req, res) => {
+
+    const user= await User.findOne({
+        _id: res.locals.user.id
+    });
+
+    // console.log(res.locals.user.id);
+
+    res.render("client/pages/user/editPassword", {
+        pageTitle: "Đổi mật khẩu",
+        user: user
+    });
+};
+
+// [POST] /user/password/reset
+module.exports.editPasswordPost =  async (req, res) => {
+
+    const user= await User.findOne({
+        _id: res.locals.user.id
+    })
+    // console.log(res.locals.user.id);
+
+    if(md5(req.body.password) != user.password){
+        req.flash("error", "Mật khẩu cũ không chính xác!");
+        res.redirect("back");
+    }else{
+        const password= req.body.newPassword;
+
+        await User.updateOne({
+            _id: res.locals.user.id
+        }, {
+            password: md5(password)
+        })
+        req.flash("success", "Đặt lại mật khẩu thành công");
+        res.redirect("back");
+    }
+};
+// 1234567

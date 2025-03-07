@@ -19,7 +19,7 @@ module.exports.sendMail= (email, subject, html) => {
 
     transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-    console.log(error);
+        console.log(error);
     } else {
         console.log('Email sent: ' + info.response);
         // do something useful

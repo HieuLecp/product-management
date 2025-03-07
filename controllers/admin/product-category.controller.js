@@ -39,7 +39,7 @@ module.exports.create = async (req, res) => {
 
     const newRecords= createTree.tree(records);
 
-    console.log(newRecords);
+    // console.log(newRecords);
 
     res.render("admin/pages/products-category/create", {
         pageTitle : "Tạo danh mục sản phẩm",
@@ -86,7 +86,7 @@ module.exports.edit = async (req, res) => {
     const newRecords= createTree.tree(records);
 
 
-    console.log(newRecords);
+    // console.log(newRecords);
     
     res.render("admin/pages/products-category/edit", {
         pageTitle: "Chỉnh sửa danh mục sản phẩm",

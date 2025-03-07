@@ -26,7 +26,7 @@ module.exports.cartId= async (req, res, next) => {
                 res.locals.miniCart= cart.totalQuantity;
             }
         }
-        res.locals.user= user;
+        // res.locals.user= user;
     }
     
     // if(!req.cookies.cartId){
