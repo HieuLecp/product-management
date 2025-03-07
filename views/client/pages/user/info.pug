@@ -3,6 +3,7 @@ include ../../mixins/alert
 include ../../mixins/box-head
 
 block main 
+
     +alert-success(3000)
     +alert-error(3000)
 
@@ -10,3 +11,34 @@ block main
         .row 
             .col-12 
                 +box-head("Thông tin cá nhân")
+
+    .container.mt-5
+      .card.shadow-lg(style="max-width: 800px; margin: auto;")
+        .card-body.text-center
+            if(user.avatar)
+                img.avatar.rounded-circle.mb-3(src=user.avatar alt="Avatar" width="100")
+            if(user.fullName)    
+                h4.card-title <b>#{user.fullName}</b>
+            if(user.email)
+                p.card-text Email: <b>#{user.email}</b>
+            if(user.phone)
+                p.card-text Số điện thoại: <b>#{user.phone}</b>
+            if(user.address)
+                p.card-text Địa chỉ: <b>#{user.address}</b>
+            p.card-text
+                span Trạng thái: 
+                if(user.status === "active")
+                    span.text-success 🟢 Đang hoạt động
+                else
+                    span.text-danger 🔴 Dừng hoạt động
+            a(
+                href= "/user/info/edit"
+                class="btn btn-outline-primary d-block w-100 mb-2"
+            ) <b>Chỉnh sửa thông tin</b>
+            a(
+                href= "/user/info/editPassword"
+                class="btn btn-outline-primary d-block w-100"
+            ) <b>Đổi mật khẩu</b>
+
+    
+

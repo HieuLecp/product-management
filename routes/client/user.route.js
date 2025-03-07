@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const multer  = require('multer');
+
+const upload = multer();
 
 const controller = require("../../controllers/client/user.controller");
 const validate= require("../../validates/client/user.validate");
 const authMiddleware= require("../../middlewares/client/auth.middleware");
+const uploadCloud = require("../../middlewares/client/uploadCloud.middlewares");
 
 router.get('/register', controller.register);
 
@@ -42,6 +46,18 @@ router.post('/password/reset',
 router.get('/info',
     authMiddleware.requireAuth,
     controller.infoUser
+);
+
+router.get('/info/edit',
+    // authMiddleware.requireAuth,
+    controller.edit
+);
+
+router.post('/info/edit',
+    authMiddleware.requireAuth,
+    upload.single('avatar'),
+    uploadCloud.upload,
+    controller.editPost
 );
 
 module.exports = router;

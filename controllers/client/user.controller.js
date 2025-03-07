@@ -200,7 +200,7 @@ module.exports.resetPassword =  async (req, res) => {
     });
 };
 
-// [POST] /user/password/otp
+// [POST] /user/password/reset
 module.exports.resetPasswordPost =  async (req, res) => {
 
     const password= req.body.password;
@@ -218,10 +218,65 @@ module.exports.resetPasswordPost =  async (req, res) => {
 // [GET] /user/info
 module.exports.infoUser =  async (req, res) => {
 
-    const email= req.query.email;
+    const user= await User.findOne({
+        _id: res.locals.user.id
+    });
+
+    // console.log(user);
 
     res.render("client/pages/user/info", {
-        pageTitle: "Đặt lại mật khẩu",
-        email: email
+        pageTitle: "Thông tin cá nhân",
+        user: user
     });
+};
+
+// [GET] /user/info/edit
+module.exports.edit =  async (req, res) => {
+
+    const user= await User.findOne({
+        // _id: res.locals.user.id
+        tokenUser: req.cookies.tokenUser
+    });
+
+    // console.log(res.locals.user.id);
+
+    res.render("client/pages/user/edit", {
+        pageTitle: "Chỉnh sửa thông tin",
+        user: user
+    });
+};
+
+// [PATCH] /user/info/edit
+module.exports.editPost =  async (req, res) => {
+
+    const id= res.locals.user.id;
+ 
+    const emailExitst= await User.findOne({
+        _id: {$ne: id},
+        email: req.body.email,
+        deleted: false
+    });
+    const phoneExitst= await User.findOne({
+        _id: {$ne: id},
+        phone: req.body.phone,
+        deleted: false
+    });
+    console.log(phoneExitst);
+
+    if(emailExitst){
+        req.flash("error", `Email ${req.body.email} đã tồn tại`);
+        res.redirect("back");
+    }
+    else if(phoneExitst){
+        req.flash("error", "Số điện thoại này đã tồn tại");
+        res.redirect("back");
+    }
+    else{
+        await User.updateOne({
+            _id: res.locals.user.id
+        }, req.body);
+
+        req.flash("success", "Thay đổi thông tin thành công");
+        res.redirect("back");
+    }
 };

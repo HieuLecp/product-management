@@ -1,0 +1,88 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert
+include ../../mixins/box-head
+
+block main 
+
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .container.my-5 
+        .row.justify-content-center 
+            .col-8 
+                h1(class="mb-4") Thay đổi thông tin cá nhân
+                form(
+                        action="/user/info/edit"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    )
+                        div(
+                            class="form-group form-image"
+                            upload-image 
+                        )
+                            label(for="avatar" class="d-block") Avatar
+                            input(
+                                type= "file"
+                                class="form-control-file"
+                                id="avatar"
+                                name="avatar"
+                                accept="image/*"
+                                upload-image-input
+                            )
+                            if(user.avatar)
+                                img(
+                                src=user.avatar
+                                upload-image-preview
+                                class="image-preview"
+                                )
+                        div(class="form-group")
+                            label(for="fullName") Họ tên
+                            input(
+                                type="text"
+                                class="form-control"
+                                id="fullName"
+                                name="fullName"
+                                value= (user.fullName ? user.fullName : "")
+                            )
+                        div(class="form-group")
+                            label(for="email") Email
+                            input(
+                                type= "email"
+                                class="form-control"
+                                id="email"
+                                name="email"
+                                value= user.email 
+                            )
+                        div(class="form-group")
+                            label(for="phone") Số điện thoại 
+                            input(
+                                type= "text"
+                                class="form-control"
+                                id="phone"
+                                name="phone"
+                                value= (user.phone ? user.phone : "")
+                            )
+                        div(class="form-group")
+                            label(for="address") Địa chỉ
+                            input(
+                                type= "text"
+                                class="form-control"
+                                id="address"
+                                name="address"
+                                value= (user.address ? user.address : "")
+                            )
+                        
+                        div(class="form-group")
+                            label(for="position") 
+                            button(
+                                type= "submit"
+                                class="btn btn-outline-primary form-control"
+                            ) <b>Cập nhập</b>
+                        
+
+
+
+    
+
+    
+

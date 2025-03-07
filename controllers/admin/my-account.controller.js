@@ -30,12 +30,12 @@ module.exports.editPatch = async (req, res) => {
         _id: {$ne: id},
         email: req.body.email,
         deleted: false
-    })
+    });
     const phoneExitst= await Accounts.findOne({
         _id: {$ne: id},
         phone: req.body.phone,
         deleted: false
-    })
+    });
     if(emailExitst){
         req.flash("error", `Email ${req.body.email} đã tồn tại`);
         res.redirect("back");
