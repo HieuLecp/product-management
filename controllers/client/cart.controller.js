@@ -1,13 +1,16 @@
 const Product= require("../../models/product.model");
 const Cart= require("../../models/carts.model");
+const User= require("../../models/users.model");
 
 const productHepler  = require("../../helpers/product");
 
 // [GET]/cart
 module.exports.index =  async (req, res) => {
-    const cartId= req.cookies.cartId;
+    const user= await User.findOne({
+        tokenUser: req.cookies.tokenUser
+    });
     
-    const cart= await Cart.findOne({_id: cartId});
+    const cart= await Cart.findOne({userId: user.id});
     // console.log(cart);
 
     if(cart.products.length > 0){
@@ -34,14 +37,22 @@ module.exports.index =  async (req, res) => {
 
 // [POST]/cart/add/:productId
 module.exports.addCart =  async (req, res) => {
-    const cartId= req.cookies.cartId;
+    const user= await User.findOne({
+        tokenUser: req.cookies.tokenUser
+    });
+    // const cartId= req.cookies.cartId;
     const productId= req.params.productId;
     const quantity= parseInt(req.body.quantity);
 
     const cart= await Cart.findOne(
-        {_id: cartId}
+        {
+            userId: user.id
+        }
     );
-    console.log(cart.products);
+    
+    // console.log(cart);
+    // console.log(productId);
+    // console.log(quantity);
 
     const exitsProductCart= cart.products.find(item => item.product_id == productId);
     
@@ -51,7 +62,7 @@ module.exports.addCart =  async (req, res) => {
 
         await Cart.updateOne(
             {
-                _id: cartId,
+                userId: user.id,
                 'products.product_id': productId
             },
             {
@@ -66,7 +77,7 @@ module.exports.addCart =  async (req, res) => {
     
         await Cart.updateOne(
             {
-                _id: cartId
+                userId: user.id,
             },
             {
                 $push: {products: objectCart}
@@ -76,16 +87,21 @@ module.exports.addCart =  async (req, res) => {
 
     req.flash("success", "Đã thêm sản phẩm vào giỏ hàng");
     res.redirect("back")
+    // res.send("ok");
 };
 
 // [GET]/cart/delete/:id
 module.exports.delete =  async (req, res) => {
+    const user= await User.findOne({
+        tokenUser: req.cookies.tokenUser
+    });
+
     const productId= req.params.productId;
-    const cartId= req.cookies.cartId;
+    // const cartId= req.cookies.cartId;
 
     await Cart.updateOne(
         {
-            _id: cartId
+            userId: user.id,
         },
         {
             "$pull": {products : { "product_id": productId}}
@@ -98,13 +114,17 @@ module.exports.delete =  async (req, res) => {
 
 // [GET]/cart/update/:id/:quantity
 module.exports.update =  async (req, res) => {
-    const cartId= req.cookies.cartId;
+    const user= await User.findOne({
+        tokenUser: req.cookies.tokenUser
+    });
+
+    // const cartId= req.cookies.cartId;
     const productId= req.params.productId;
     const quantity= req.params.quantity;
 
     await Cart.updateOne(
         {
-            _id: cartId,
+            userId: user.id,
             'products.product_id': productId
         },
         {

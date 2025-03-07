@@ -7,6 +7,7 @@ mongoose.plugin(slug);
 const orderSchema = new mongoose.Schema(
     {
         cart_id: String,
+        user_id: String,
         userInfo: {
             fullName: String,
             phone: String,

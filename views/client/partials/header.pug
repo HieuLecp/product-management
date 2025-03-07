@@ -33,9 +33,15 @@ header.header
                             - const pathProduct = "/product";
                             a(href=pathProduct ) Danh mục
                                 +sub-menu(layoutProductCategory, pathProduct)
-                        li(class="sub-menu")
-                            a(href="/cart" ) Giỏ hàng (#{miniCart ? miniCart.totalQuantity : "0"})
                         if(user)
+                            li(class="sub-menu")
+                                a(href="/cart" ) Giỏ hàng (#{miniCart ? miniCart : "0"})
+                        if !user
+                            li(class="sub-menu")
+                                a(href="/user/login" ) Giỏ hàng #{"(0)"}
+                        if(user)
+                            li 
+                                a(href="/user/info" ) #{user.userName}
                             li 
                                 a(href="/user/logout" ) Đăng xuất
                         else 

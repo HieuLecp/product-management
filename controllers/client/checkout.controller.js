@@ -1,15 +1,17 @@
 const Product= require("../../models/product.model");
 const Cart= require("../../models/carts.model");
 const Order= require("../../models/orders.model");
+const User= require("../../models/users.model");
 
 const productHepler  = require("../../helpers/product");
 
 // [GET] /checkout
 module.exports.index= async (req, res) => {
-
-    const cartId= req.cookies.cartId;
+    const user= await User.findOne({
+        tokenUser: req.cookies.tokenUser
+    });
     
-    const cart= await Cart.findOne({_id: cartId});
+    const cart= await Cart.findOne({userId: user.id});
     // console.log(cart);
 
     if(cart.products.length > 0){
@@ -36,11 +38,13 @@ module.exports.index= async (req, res) => {
 
 // [POST] /checkout/order
 module.exports.order= async (req, res) => {
-    const cartId= req.cookies.cartId;
+    const user= await User.findOne({
+        tokenUser: req.cookies.tokenUser
+    });
     const userInfo= req.body;
 
     const cart= await Cart.findOne({
-        _id: cartId    
+        userId: user.id   
     });
 
     let products= [];
@@ -74,7 +78,8 @@ module.exports.order= async (req, res) => {
     // console.log(products);
 
     const objectOrder= {
-        cart_id: cartId,
+        cart_id: cart.id,
+        user_id: user.id,
         userInfo: userInfo,
         products: products
     };
@@ -83,7 +88,7 @@ module.exports.order= async (req, res) => {
     await order.save();
 
     await Cart.updateOne({
-        _id: cartId
+        userId: user.id  
     }, {
         products: []
     });

@@ -63,26 +63,27 @@ module.exports.createAccount = async (req, res) => {
             deleted: false
         })
         if(userNameExitst){
-            req.flash("error", "Tên tài khoản này này đã tồn tại");
+            req.flash("error", "Tên đăng nhập này này đã tồn tại");
             res.redirect("back");
+            return;
         }
         if(emailExitst){
             req.flash("error", "Email này đã tồn tại");
             res.redirect("back");
+            return;
         }
-        else if(phoneExitst){
+        if(phoneExitst){
             req.flash("error", "Số điện thoại này đã tồn tại");
             res.redirect("back");
+            return;
         }
-        else{
-            req.body.password= md5(req.body.password);
-            // console.log(req.body);
-    
-            const record= new Accounts(req.body);
-            await record.save();
-            
-            res.redirect(`${systemConfig.prefixAdmin}/accounts`);
-        }
+        req.body.password= md5(req.body.password);
+        // console.log(req.body);
+
+        const record= new Accounts(req.body);
+        await record.save();
+        
+        res.redirect(`${systemConfig.prefixAdmin}/accounts`);
     }else{
         
     }
