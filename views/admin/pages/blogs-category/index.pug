@@ -26,7 +26,7 @@ block main
             .card-header Danh mục bài viết
                 .card-body
                     .row
-                        if(role.permissions.includes("products-category_create"))
+                        if(role.permissions.includes("blogs-category_create"))
                             .col-4 
                                 a(
                                     href=`${prefixAdmin}/blogs-category/create`

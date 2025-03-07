@@ -1,13 +1,14 @@
 include ../mixins/sub-menu.pug
 
 header.header 
+
     .container 
         .row.align-items-center 
             .col-3 
                 .inner-logo
                     a(href="/")
-                        //- img(src="/images/avt.jpeg", alt="Avt", width="100px", height= "auto")
-                    a(href="/" ) Trang chủ
+                        img(src=settingGeneral.logo, alt="Avt", width=max-width, height= "auto")
+                    //- a(href="/" ) Trang chủ
             .col-5 
                 form(
                     action="/search"

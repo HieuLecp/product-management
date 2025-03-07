@@ -5,7 +5,7 @@ const systemConfig = require("../../config/system");
 const createTree = require("../../helpers/createTree");
 const filterStatusHelper = require("../../helpers/filterStatus");
 
-// [GET] admin/blogs
+// [GET] admin/blogs-category
 module.exports.index= async (req, res) => {
 
     let find={
@@ -61,4 +61,51 @@ module.exports.createCategory = async (req, res) => {
     }else{
         
     }
+};
+
+// [GET] /admin/blogs-category/edit/:id
+module.exports.edit = async (req, res) => {
+    try{
+        const id = req.params.id;
+
+    const data= await BlogCategory.findOne(
+        {_id: id},
+        {deleted: false}
+    );
+    const records = await BlogCategory.find(
+        {deleted: false}
+    );
+    const newRecords= createTree.tree(records);
+
+
+    console.log(newRecords);
+    
+    res.render("admin/pages/blogs-category/edit", {
+        pageTitle: "Chỉnh sửa danh mục bài viết",
+        data: data,
+        records: newRecords
+    });
+    } catch{
+        res.redirect(`${systemConfig.prefixAdmin}/blogs-category`);
+    }
+
+    
+};
+
+// [PATCH] /admin/blogs-category/edit/:id
+module.exports.editItem = async (req, res) => {
+
+    const permissions= res.locals.role.permissions;
+
+    if(permissions.includes("blogs-category_edit")){
+        const id = req.params.id;
+        req.body.position = parseInt(req.body.position);
+
+        await BlogCategory.updateOne({_id: id}, req.body);
+
+        res.redirect("back");
+    }else{
+        
+    }
+    
 };

@@ -9,9 +9,9 @@
             if(role.permissions.includes("products_view"))
                 li 
                     a(href=`${prefixAdmin}/products`) Danh sách sản phẩm
-            if(role.permissions.includes("blogs-category_view"))
-                li 
-                    a(href=`${prefixAdmin}/blogs-category`) Danh mục bài viết
+            //- if(role.permissions.includes("blogs-category_view"))
+            //-     li 
+            //-         a(href=`${prefixAdmin}/blogs-category`) Danh mục bài viết
             if(role.permissions.includes("blogs_view"))
                 li 
                     a(href=`${prefixAdmin}/blogs`) Danh sách bài viết
@@ -24,4 +24,7 @@
             if(role.permissions.includes("accounts_view"))
                 li 
                     a(href=`${prefixAdmin}/accounts`) Tài khoản
+            if(role.permissions.includes("setting-general_view"))
+                li 
+                    a(href=`${prefixAdmin}/setting/general`) Cài đặt chung
             

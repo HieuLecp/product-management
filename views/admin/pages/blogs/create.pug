@@ -3,13 +3,13 @@ include ../../mixins/alert
 include ../../mixins/select-tree
 
 block main
-    if(role.permissions.includes("blogs-category_create"))
-        h1(class="mb-4") Thêm mới danh mục bài viết
+    if(role.permissions.includes("blogs_create"))
+        h1(class="mb-4") Thêm mới bài viết
 
         +alert-error(5000)
 
         form(
-            action=`${prefixAdmin}/blogs-category/create` 
+            action=`${prefixAdmin}/blogs/create` 
             method="POST"
             enctype="multipart/form-data"
             upload-form
@@ -24,10 +24,10 @@ block main
                     required
                 )
             div(class="form-group")
-                label(for="parent_id") Danh mục
+                label(for="blog_category_id") Danh mục
                 select(
-                    name= "parent_id"
-                    id= "parent_id"
+                    name= "blog_category_id"
+                    id= "blog_category_id"
                     class= "form-control"
                 )
                     option(value="") Chọn danh mục 
@@ -39,6 +39,14 @@ block main
                     class="form-control tinymce"
                     id="desc"
                     name="description"
+                    rows="5"
+                )
+            div(class="form-group")
+                label(for="content") Nội dung chi tiết
+                textarea(
+                    class="form-control tinymce"
+                    id="content"
+                    name="content"
                     rows="5"
                 )
             div(class="form-group")

@@ -3,13 +3,13 @@ include ../../mixins/alert
 include ../../mixins/select-tree
 
 block main
-    if(role.permissions.includes("blogs-category_create"))
-        h1(class="mb-4") Thêm mới danh mục bài viết
+    if(role.permissions.includes("blogs_create"))
+        h1(class="mb-4") Chỉnh sửa bài viết
 
         +alert-error(5000)
 
         form(
-            action=`${prefixAdmin}/blogs-category/create` 
+            action=`${prefixAdmin}/blogs/edit/${data.id}?_method=PATCH` 
             method="POST"
             enctype="multipart/form-data"
             upload-form
@@ -21,18 +21,19 @@ block main
                     class="form-control"
                     id="title"
                     name="title"
+                    value= data.title
                     required
                 )
             div(class="form-group")
-                label(for="parent_id") Danh mục
+                label(for="blog_category_id") Danh mục
                 select(
-                    name= "parent_id"
-                    id= "parent_id"
+                    name= "blog_category_id"
+                    id= "blog_category_id"
                     class= "form-control"
                 )
                     option(value="") Chọn danh mục 
                     if(records)
-                        +select-tree(records)
+                        +select-tree(records, 0, data.blog_category_id)
             div(class="form-group")
                 label(for="desc") Mô tả
                 textarea(
@@ -40,12 +41,20 @@ block main
                     id="desc"
                     name="description"
                     rows="5"
-                )
+                ) #{data.description}
+            div(class="form-group")
+                label(for="content") Nội dung chi tiết
+                textarea(
+                    class="form-control tinymce"
+                    id="content"
+                    name="content"
+                    rows="5"
+                ) #{data.content}
             div(class="form-group")
                 label(for="position") 
                 button(
                     type= "submit"
                     class="btn btn-primary"
-                ) Tạo mới
+                ) Cập nhập
 
         script(src="/admin/js/product.js")

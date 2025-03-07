@@ -2,12 +2,12 @@ mixin table-tree(items, level = 1)
     each item, index in items
         - const prefix = Array(level + 1).join("-- ")
         tr
-            td 
-                input(
-                    type="checkbox"
-                    name="id"
-                    value=item.id  
-                )
+            //- td 
+            //-     input(
+            //-         type="checkbox"
+            //-         name="id"
+            //-         value=item.id  
+            //-     )
             td #{item.index}
             td 
                 img(src=item.thumbnail, 
@@ -82,15 +82,15 @@ mixin table-tree-blogs(items, level = 1)
             td #{prefix} #{item.title }
             td
                 a(
-                    href=`${prefixAdmin}/products-category/detail/${item.id}`
+                    href=`${prefixAdmin}/blogs-category/detail/${item.id}`
                     class = "btn btn-secondary btn-sm"
                 ) Chi tiết
-                if(role.permissions.includes("products-category_edit"))
+                if(role.permissions.includes("blogs-category_edit"))
                     a(
-                        href=`${prefixAdmin}/products-category/edit/${item.id}`
+                        href=`${prefixAdmin}/blogs-category/edit/${item.id}`
                         class = "btn btn-warning btn-sm"
                     ) Sửa
-                if(role.permissions.includes("products-category_delete"))
+                if(role.permissions.includes("blogs-category_delete"))
                     button(
                         class= "btn btn-dark btn-sm ml-1"
                         data-id = item.id 
