@@ -7,49 +7,54 @@ block main
 
     .product-detail
         .container.my-5
-
             button(
                 class="btn btn-secondary"
                 button-go-back
             ) Quay lại
-
-
             .row 
                 .col-6 
                     .inner-thumb 
                         img(src= products.thumbnail alt= products.title)
                 .col-6
-                    h1(class="mb-4 title-detail") <b>#{products.title}</b>
+                    div(class="inner-info")
+                        h1(class="mb-4 title-detail") <b>#{products.title}</b>
 
-                    if(products.category)
-                        div(class="inner-category")
-                            span Danh mục: 
-                            a(href=`product/${products.category.slug}`) #{products.category.title} 
-                    if(products.priceNew)
-                        div(class="inner-price-new") #{products.priceNew}$
-                    if(products.price)
-                        div(class="inner-price-old") #{products.price}$
-                    if(products.discountPercentage)
-                        div(class="inner-percent") Giảm tới <span>#{products.discountPercentage}%</span>
-                    if(products.stock)
-                        div(class="inner-stock") Còn lại: <span>#{products.stock}</span> sản phẩm
+                        if(products.category)
+                            div(class="inner-category")
+                                span Danh mục: 
+                                a(href=`product/${products.category.slug}`) #{products.category.title} 
+                        if(products.priceNew)
+                            div(class="inner-price-new") Giá mới: <span>#{products.priceNew}$</span>
+                        if(products.price)
+                            div(class="inner-price-old") Giá cũ: <span>#{products.price}$</span>
+                        if(products.discountPercentage)
+                            div(class="inner-percent") Giảm tới <span>#{products.discountPercentage}%</span>
+                        if(products.stock)
+                            div(class="inner-stock") Còn lại: <span>#{products.stock}</span> sản phẩm
+                        
+                        if(user)
+                            form(
+                                action= `/cart/add/${products.id}`
+                                method="POST"
+                            )
+                                input(
+                                    class="form-control mb-2"
+                                    type= "number"
+                                    name= "quantity"
+                                    value= "1"
+                                    min= "1"
+                                    max= products.stock
+                                )
+                                button(
+                                    type= "submit"
+                                    class= "btn btn-success btn-block"
+                                ) Thêm vào giỏ hàng
+                        else
+                            a(
+                                href="/user/login"
+                                class= "btn btn-success btn-block"
+                            ) Thêm vào giỏ hàng
                     
-                    form(
-                        action= `/cart/add/${products.id}`
-                        method="POST"
-                    )
-                        input(
-                            class="form-control mb-2"
-                            type= "number"
-                            name= "quantity"
-                            value= "1"
-                            min= "1"
-                            max= products.stock
-                        )
-                        button(
-                            type= "submit"
-                            class= "btn btn-success btn-block"
-                        ) Thêm vào giỏ hàng
 
         hr 
 

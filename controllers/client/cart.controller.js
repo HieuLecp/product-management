@@ -10,29 +10,31 @@ module.exports.index =  async (req, res) => {
         tokenUser: req.cookies.tokenUser
     });
     
-    const cart= await Cart.findOne({userId: user.id});
-    // console.log(cart);
+    if(user){
+        const cart= await Cart.findOne({userId: user.id});
+        // console.log(cart);
 
-    if(cart.products.length > 0){
-        for(const item of cart.products){
-            const productId= item.product_id;
-            const productInfo= await Product.findOne({_id: productId});
+        if(cart.products.length > 0){
+            for(const item of cart.products){
+                const productId= item.product_id;
+                const productInfo= await Product.findOne({_id: productId});
 
-            productHepler.priceNewProduct(productInfo);
+                productHepler.priceNewProduct(productInfo);
 
-            item.productInfo= productInfo;
+                item.productInfo= productInfo;
 
-            item.totalPrice= item.quantity * productInfo.priceNew;
-            
+                item.totalPrice= item.quantity * productInfo.priceNew;
+                
+            }
         }
+
+        cart.totalPrice= cart.products.reduce((sum, item) => sum + item.totalPrice , 0);
+
+        res.render("client/pages/cart/index", {
+            pageTitle : "Giỏ hàng",
+            cartDetail: cart
+        });
     }
-
-    cart.totalPrice= cart.products.reduce((sum, item) => sum + item.totalPrice , 0);
-
-    res.render("client/pages/cart/index", {
-        pageTitle : "Giỏ hàng",
-        cartDetail: cart
-    });
 };
 
 // [POST]/cart/add/:productId

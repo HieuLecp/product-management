@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
@@ -6,6 +7,8 @@ const flash = require('express-flash');
 const cookieParser = require('cookie-parser')
 const session = require("express-session");
 const moment= require("moment");
+const http= require("http");
+const { Server } = require("socket.io")
 
 
 require('dotenv').config();
@@ -25,8 +28,19 @@ const port = process.env.PORT;
 
 app.use(methodOverride('_method'));
 
+app.use(cors());
+
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
+
+app.set('views', `${__dirname}/views`);
+app.set('view engine', 'pug');
+
+const server= http.createServer(app);
+const io= new Server(server);
+global._io = io;
+
 
 //flash 
 app.use(cookieParser('HieuLe'));
@@ -37,9 +51,6 @@ app.use(flash());
 // tinymce
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 // end tinymce
-
-app.set('views', `${__dirname}/views`);
-app.set('view engine', 'pug');
 
 // app local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
@@ -59,9 +70,8 @@ app.get("*", (req, res) => {
 })
 
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
 
 // app.listen(3000)
-// B19

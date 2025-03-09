@@ -14,6 +14,11 @@ module.exports.registerPost= (req, res, next) => {
         res.redirect("back");
         return;
     }
+    if(!req.body.fullName){
+        req.flash("error", "Vui lòng nhập Họ tên!");
+        res.redirect("back");
+        return;
+    }
     
     next();
 }

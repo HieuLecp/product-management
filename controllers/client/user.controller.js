@@ -101,7 +101,7 @@ module.exports.logout =  async (req, res) => {
 
     res.clearCookie("tokenUser");
 
-    res.redirect("/user/login");
+    res.redirect("/");
 };
 
 // [GET] /user/password/forgot
@@ -319,4 +319,3 @@ module.exports.editPasswordPost =  async (req, res) => {
         res.redirect("back");
     }
 };
-// 1234567

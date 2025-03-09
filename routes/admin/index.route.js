@@ -1,6 +1,9 @@
 const systemConfig = require("../../config/system");
+const Recaptcha = require('express-recaptcha').RecaptchaV2
 
 const authMiddleware= require("../../middlewares/admin/auth.middleware");
+
+const Authcontroller = require("../../controllers/admin/auth.controller")
 
 const dashboardRouter = require("./dashboard.route");
 const productRouter = require("./product.route");
@@ -13,14 +16,18 @@ const blogCategoryRouter= require("./blog-category.route");
 const blogRouter= require("./blog.route");
 const settingRouter = require("./setting.route");
 
+const site_key = process.env.SITE_KEY;
+const secret_key = process.env.SECRET_KEY;
+
+const recaptcha = new Recaptcha(site_key, secret_key, { callback: 'cb' });
+
 
 module.exports = (app) => {
     const PATH_ADMIN = systemConfig.prefixAdmin;
 
-    // app.use(PATH_ADMIN + '/', 
-    //     authMiddleware.requireAuth,
-    //     dashboardRouter
-    // );
+    app.get(PATH_ADMIN + '/',
+        recaptcha.middleware.render, 
+        Authcontroller.login);
 
     app.use(PATH_ADMIN + '/dashboard', 
         authMiddleware.requireAuth,
