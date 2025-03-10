@@ -529,10 +529,10 @@ label {
 
 /* chat */
 
-.chat {
+/* .chat {
     width: 90vw;
     max-width: 1200px;
-    height: 50vh; /* Không cố định chiều cao */
+    height: 50vh; 
     max-height: 700px;
     background: white;
     border-radius: 10px;
@@ -540,8 +540,8 @@ label {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    margin: auto; /* Căn giữa mà không tạo khoảng trống thừa */
-    overflow: hidden; /* Ngăn nội dung bên trong bị tràn */
+    margin: auto; 
+    overflow: hidden; 
 }
 
 .chat .inner-body {
@@ -586,10 +586,10 @@ label {
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 600px; /* Giới hạn kích thước */
+    max-width: 600px; 
     padding: 5px;
     background: white;
-    border-radius: 30px; /* Làm bo tròn */
+    border-radius: 30px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -613,6 +613,145 @@ label {
     border-radius: 15px;
     padding: 0 10px;
     cursor: pointer;
-}
+} */
  
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: 50vh; /* Giới hạn chiều cao */
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.inner-body {
+    flex-grow: 1; /* Giúp body mở rộng đầy đủ */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    max-height: 450px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+/* .inner-outgoing, .inner-incoming {
+    max-width: 60%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    font-size: 14px;
+} */
+
+.inner-outgoing {
+    align-self: flex-end;
+    background-color: #FE5DA3;
+    color: white;
+    /* padding: 2px 4px; */
+    border-radius: 15px;
+    word-wrap: break-word;
+    font-size: 18px;
+}
+
+.inner-outgoing .inner-content {
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+.inner-incoming {
+    align-self: flex-start;
+    /* background-color: #fff; */
+    color: black;
+    /* padding: 2px 4px; */
+    border-radius: 15px;
+    word-wrap: break-word;
+    font-size: 18px;
+    flex-direction: column; /* Sắp xếp nội dung theo chiều dọc */
+}
+
+.inner-incoming .inner-content {
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: #333;
+    background-color: #e3dede;
+    font-size: 14px;
+    word-wrap: break-word;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inner-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 2px; /* Đẩy tên lên trên */
+    display: block;
+}
+
+/* .inner-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 3px;
+} */
+
+.inner-foot {
+    display: flex;
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #ddd;
+}
+
+.inner-form {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: center; /* Canh giữa nội dung */
+}
+
+.inner-form input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+}
+
+.inner-form button {
+    background: #FE5DA3;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.inner-form button:hover {
+    background: #bf3239;
+}
+
+.inner-form button i {
+    font-size: 16px;
+}
+
+/* emoji */
+.tooltip{
+    visibility: hidden;
+}
+
+.tooltip.shown{
+    visibility: visible;
+    opacity: 1;
+}
+/* end emoji */
+
 /* end chat */
