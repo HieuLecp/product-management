@@ -613,13 +613,33 @@ label {
     border-radius: 15px;
     padding: 0 10px;
     cursor: pointer;
-} */
+}
+    
+.chat .inner-body .inner-images img{
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: #efefef;
+    padding: 10px;
+    margin: 0 5px 5px 0;
+    border-radius: 5px;
+}
+
+.chat .inner-body .inner-outgoing .inner-images {
+    margin-left: auto;
+    text-align: center;
+}
+
+.chat .inner-body .inner-outgoing .inner-images img{
+    margin: 0 0 5px 5px;
+}
+*/
  
 
 .chat {
     display: flex;
     flex-direction: column;
-    height: 50vh; /* Giới hạn chiều cao */
+    height: 50vh; 
     max-width: 500px;
     margin: auto;
     background: white;
@@ -629,7 +649,7 @@ label {
 }
 
 .inner-body {
-    flex-grow: 1; /* Giúp body mở rộng đầy đủ */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -640,21 +660,12 @@ label {
     border-bottom: 1px solid #ddd;
 }
 
-/* .inner-outgoing, .inner-incoming {
-    max-width: 60%;
-    padding: 10px 15px;
-    border-radius: 15px;
-    word-wrap: break-word;
-    font-size: 14px;
-} */
 
 .inner-outgoing {
     align-self: flex-end;
-    background-color: #FE5DA3;
+    /* background-color: #FE5DA3; */
     color: white;
-    /* padding: 2px 4px; */
     border-radius: 15px;
-    word-wrap: break-word;
     font-size: 18px;
 }
 
@@ -664,17 +675,15 @@ label {
     color: #fff;
     font-size: 14px;
     word-wrap: break-word;
+    background: #FE5DA3;
 }
 
 .inner-incoming {
     align-self: flex-start;
-    /* background-color: #fff; */
     color: black;
-    /* padding: 2px 4px; */
     border-radius: 15px;
-    word-wrap: break-word;
     font-size: 18px;
-    flex-direction: column; /* Sắp xếp nội dung theo chiều dọc */
+    flex-direction: column; 
 }
 
 .inner-incoming .inner-content {
@@ -684,23 +693,16 @@ label {
     background-color: #e3dede;
     font-size: 14px;
     word-wrap: break-word;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .inner-name {
     font-size: 12px;
     font-weight: bold;
     color: #555;
-    margin-bottom: 2px; /* Đẩy tên lên trên */
+    margin-bottom: 2px; 
     display: block;
 }
 
-/* .inner-name {
-    font-size: 12px;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 3px;
-} */
 
 .inner-foot {
     display: flex;
@@ -713,7 +715,7 @@ label {
     display: flex;
     width: 100%;
     gap: 10px;
-    align-items: center; /* Canh giữa nội dung */
+    align-items: center; 
 }
 
 .inner-form input {
@@ -723,13 +725,19 @@ label {
     border-radius: 20px;
     font-size: 14px;
     outline: none;
+    overflow-y: hidden; 
+    height: 36px; 
+    min-height: 36px; 
+    max-height: 120px; 
+    line-height: 1.5; 
+    box-sizing: border-box;
 }
 
 .inner-form button {
     background: #FE5DA3;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 8px;
     border-radius: 50%;
     cursor: pointer;
     transition: background 0.3s ease;
@@ -741,6 +749,48 @@ label {
 
 .inner-form button i {
     font-size: 16px;
+}
+
+.chat .inner-body .inner-images img{
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    /* background: #efefef; */
+    padding: 10px;
+    margin: 0 5px 5px 0;
+    border-radius: 5px;
+}
+
+.chat .inner-body .inner-outgoing .inner-images {
+    margin-left: auto;
+    text-align: center;
+}
+
+.chat .inner-body .inner-outgoing .inner-images img{
+    margin: 0 0 5px 5px;
+}
+
+.chat .inner-preview-images{
+    position: relative;
+}
+
+.chat .inner-preview-images .label-container{
+    display: none;
+}
+
+.chat .inner-preview-images .input-container{
+    display: none;
+}
+
+.chat .inner-preview-images .image-preview{
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+}
+
+.chat .inner-preview-images .image-preview-item{
+    width: 90px;
+    background-size: contain;
 }
 
 /* emoji */
@@ -755,3 +805,53 @@ label {
 /* end emoji */
 
 /* end chat */
+
+
+/* box typing */
+.box-typing{
+    position: relative;
+}
+
+.box-typing .inner-dots{
+    position: relative;
+    height: 20px;
+    width: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #efefef;
+    border-radius: 45px;
+    margin-top: 2px;
+}
+
+.box-typing .inner-dots span{
+    animation: blink 1.5s infinite;
+    height: 5px;
+    width: 5px;
+    background: #252525;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 3px;
+}
+
+.box-typing .inner-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.box-typing .inner-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink{
+    0%{
+        opacity: 0.1;
+    }
+    20%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0.1;
+    }
+}
+
+/* end box typing */

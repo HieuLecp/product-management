@@ -14,3 +14,4 @@ if(inputQuantity.length > 0){
 }
 
 // end Cập nhập số lượng sp trong giỏ
+

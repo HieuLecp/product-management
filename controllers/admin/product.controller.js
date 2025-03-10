@@ -268,7 +268,8 @@ module.exports.editItem = async (req, res) => {
         req.body.position = parseInt(req.body.position);    
         
         if(req.file){
-            req.body.thumbnail = `/uploads/${req.file.filename}`;
+            req.body.thumbnail = `${req.body.thumbnail}`;
+            // console.log(req.body.thumbnail);
         }
         try{
             const updatedBy= {

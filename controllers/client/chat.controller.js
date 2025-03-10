@@ -1,34 +1,15 @@
 const Chat= require("../../models/chat.model");
 const User= require("../../models/users.model");
 
-const productHepler  = require("../../helpers/product");
+const chatSocket  = require("../../socket/client/chat.socket");
+
+
 
 // [GET] /chat
 module.exports.index= async (req, res) => {
-    const userId= res.locals.user.id;
-    const fullName= res.locals.user.fullName;
 
     // socketIo
-    _io.once('connection', (socket) => {
-        // console.log(`Total connections: ${_io.engine.clientsCount}`);
-        socket.on("client_send_message", async (content) => {
-            // console.log(content);
-            const chat= new Chat({
-                user_id: userId,
-                content: content
-            });
-            await chat.save();
-
-            // Trả về client
-            _io.emit("server_return_message", {
-                userId: userId,
-                fullName: fullName,
-                content
-            });
-
-        });
-        
-      });
+        chatSocket(res);
     // end socketIo
 
     const chats= await Chat.find({
