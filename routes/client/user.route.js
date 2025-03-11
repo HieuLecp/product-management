@@ -4,22 +4,37 @@ const multer  = require('multer');
 
 const upload = multer();
 
+const Recaptcha = require('express-recaptcha').RecaptchaV2
+
 const controller = require("../../controllers/client/user.controller");
 const validate= require("../../validates/client/user.validate");
 const authMiddleware= require("../../middlewares/client/auth.middleware");
 const uploadCloud = require("../../middlewares/client/uploadCloud.middlewares");
 
-router.get('/register', controller.register);
+const site_key = process.env.SITE_KEY;
+const secret_key = process.env.SECRET_KEY;
+
+const recaptcha = new Recaptcha(site_key, secret_key, { callback: 'cb' });
+
+router.get('/register',
+    authMiddleware.checkUser,
+    controller.register
+);
 
 router.post('/register', 
     validate.registerPost,
     controller.registerPost
 );
 
-router.get('/login', controller.login);
+router.get('/login', 
+    authMiddleware.checkUser,
+    recaptcha.middleware.render,
+    controller.login
+);
 
 router.post('/login', 
     validate.loginPost,
+    recaptcha.middleware.verify,
     controller.loginPost
 );
 

@@ -4,9 +4,14 @@ include ../../mixins/product-layout
 include ../../mixins/alert
 
 
+
 block main 
     +alert-success(3000)
     +alert-error(3000)
+
+    .container.my-3 
+
+        include ../../partials/list-btn-user
 
     .container.my-3 
         .row 
@@ -53,6 +58,6 @@ block main
 
     div(class="tooltip" role="tooltip")
         emoji-picker
-
-
     
+    block script 
+        script(type="module" src="/js/chat.js")

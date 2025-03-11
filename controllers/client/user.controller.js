@@ -46,6 +46,7 @@ module.exports.registerPost =  async (req, res) => {
     await user.save();
     // console.log(user);
 
+    req.flash("success", "Bạn đã đăng ký tài khoản thành công!");
     res.cookie("tokenUser", user.tokenUser);
     res.redirect("/");
 };
@@ -55,7 +56,7 @@ module.exports.login =  async (req, res) => {
 
     res.render("client/pages/user/login.pug", {
         pageTitle: "Đăng nhập",
-
+        captcha: res.recaptcha
     });
 };
 
@@ -63,37 +64,44 @@ module.exports.login =  async (req, res) => {
 module.exports.loginPost =  async (req, res) => {
     // console.log(req.body);
 
-    const user= await User.findOne({
-        userName: req.body.userName
-    });
-
-    if(!user){
-        req.flash("error", "Tài khoản không tồn tại!");
-        res.redirect("back");
-        return;
+    if(req.recaptcha && req.recaptcha.error === null){
+        const user= await User.findOne({
+            userName: req.body.userName
+        });
+    
+        if(!user){
+            req.flash("error", "Tài khoản không tồn tại!");
+            res.redirect("back");
+            return;
+        }
+    
+        if(md5(req.body.password) != user.password){
+            req.flash("error", "Mật khẩu không chính xác!");
+            res.redirect("back");
+            return;
+        }
+    
+        if(user.status == "inactive"){
+            req.flash("error", "Tài khoản đang bị khoá!");
+            res.redirect("back");
+            return;
+        }
+    
+        res.cookie("tokenUser", user.tokenUser);
+    
+        await Carts.updateOne({
+            _id: req.cookies.cartId
+        }, {
+            userId: user.id
+        })
+    
+        res.redirect("/");
     }
-
-    if(md5(req.body.password) != user.password){
-        req.flash("error", "Mật khẩu không chính xác!");
+    else{
+        req.flash("error", "Vui lòng xác minh captcha!");
         res.redirect("back");
-        return;
     }
-
-    if(user.status == "inactive"){
-        req.flash("error", "Tài khoản đang bị khoá!");
-        res.redirect("back");
-        return;
-    }
-
-    res.cookie("tokenUser", user.tokenUser);
-
-    await Carts.updateOne({
-        _id: req.cookies.cartId
-    }, {
-        userId: user.id
-    })
-
-    res.redirect("/");
+    
 };
 
 // [GET] /user/logout

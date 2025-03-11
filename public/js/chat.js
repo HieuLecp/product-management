@@ -72,7 +72,7 @@ socket.on("server_return_message", (data) => {
             `
         }
 
-        htmlImages += `</div>`
+        htmlImages += `</div>` ;
     }
 
     div.innerHTML= `
@@ -84,6 +84,13 @@ socket.on("server_return_message", (data) => {
     body.insertBefore(div, boxTyping);
 
     body.scrollTop = body.scrollHeight;
+
+    // preview image
+    const boxImage= div.querySelector(".inner-images");
+    if(boxImage){
+        const gallery= new Viewer(boxImage);
+    }
+    // end preview image
 })
 // end server_return_message
 
@@ -185,3 +192,9 @@ if(elementListTyping){
 // end server_return_typing
 
 
+// preview image
+const chatBody= document.querySelector(".chat .inner-body");
+    if(chatBody){
+        const gallery= new Viewer(chatBody);
+    }
+// end preview image 

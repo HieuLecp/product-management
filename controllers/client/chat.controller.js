@@ -3,8 +3,6 @@ const User= require("../../models/users.model");
 
 const chatSocket  = require("../../socket/client/chat.socket");
 
-
-
 // [GET] /chat
 module.exports.index= async (req, res) => {
 
@@ -28,4 +26,4 @@ module.exports.index= async (req, res) => {
         pageTitle: "Chat",
         chats: chats
     })
-};
+}

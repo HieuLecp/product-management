@@ -9,7 +9,7 @@ module.exports= async (res) => {
     _io.once('connection', (socket) => {
         // console.log(`Total connections: ${_io.engine.clientsCount}`);
         socket.on("client_send_message", async (data) => {
-            console.log(data);
+            // console.log(data);
 
             let imageList= []
 
@@ -17,7 +17,7 @@ module.exports= async (res) => {
                 const link= await uploadToCloudinary(imageBuffer);
                 imageList.push(link);
             }
-            console.log(imageList);
+            // console.log(imageList);
             
             // lưu vào db
             const chat= new Chat({

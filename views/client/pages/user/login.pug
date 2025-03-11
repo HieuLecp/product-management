@@ -32,6 +32,8 @@ block main
                             name="password"
                             required
                         )
+
+                    != captcha
                     div(class="form-group")
                         button(
                             type= "submit"
@@ -39,3 +41,5 @@ block main
                         ) Đăng nhập
 
                 a(href="/user/password/forgot" ) Quên mật khẩu?
+
+    script(src="https://www.google.com/recaptcha/api.js" async defer)
