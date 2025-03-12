@@ -17,7 +17,7 @@ const secret_key = process.env.SECRET_KEY;
 const recaptcha = new Recaptcha(site_key, secret_key, { callback: 'cb' });
 
 router.get('/register',
-    // authMiddleware.checkUser,
+    authMiddleware.checkUser,
     controller.register
 );
 
