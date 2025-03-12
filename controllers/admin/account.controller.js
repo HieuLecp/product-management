@@ -4,7 +4,6 @@ const Roles= require("../../models/roles.model");
 
 const systemConfig = require("../../config/system");
 
-
 // [GET] /admin/accounts
 module.exports.index = async (req, res) => {
 

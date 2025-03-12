@@ -38,3 +38,21 @@ module.exports.checkUser= async (req, res, next) => {
     }
     next();
 }
+
+// module.exports.genTokenUser= async (req, res, next) => {
+
+//     // console.log(req.cookies.token);
+
+//     if(req.cookies.tokenUser){
+//         const user= await User.findOne({
+//             tokenUser: req.cookies.tokenUser
+//         }).select("-password");
+
+//         if(user){
+//             res.redirect(`/`);
+//             return;
+//         }
+//     }
+//     next();
+// }
+

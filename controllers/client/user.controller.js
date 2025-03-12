@@ -42,13 +42,15 @@ module.exports.registerPost =  async (req, res) => {
     }
 
     req.body.password= md5(req.body.password);
-    const user = new User(req.body);
-    await user.save();
-    // console.log(user);
+    req.body.tokenUser = generateHelper.generateRandomString(20); 
+    const record = new User(req.body);
+    await record.save();
+    // console.log(record);
 
     req.flash("success", "Bạn đã đăng ký tài khoản thành công!");
-    res.cookie("tokenUser", user.tokenUser);
+    res.cookie("tokenUser", record.tokenUser);
     res.redirect("/");
+    // res.redirect("back");
 };
 
 // [GET] /user/login
@@ -227,7 +229,7 @@ module.exports.resetPasswordPost =  async (req, res) => {
 module.exports.infoUser =  async (req, res) => {
 
     const user= await User.findOne({
-        _id: res.locals.user.id
+        tokenUser: req.cookies.tokenUser
     });
 
     // console.log(user);
