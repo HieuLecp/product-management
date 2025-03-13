@@ -28,11 +28,18 @@ header.header
                         ) Tìm
 
             .col-4
+
                 .inner-menu 
                     ul 
                         //- li(class="d-flex align-items-center")
                         //-         a(href="/leon" ) Leon
-                                    
+
+                .inner-menu.flex-wrap
+                    ul
+                        if(user)
+                            li(class="d-flex align-items-center")
+                                    a(href="/leon" ) Leo
+          
                         li(class="sub-menu d-flex align-items-center")
                             - const pathProduct = "/product";
                             a(href=pathProduct ) 
@@ -40,7 +47,8 @@ header.header
                                 +sub-menu(layoutProductCategory, pathProduct)
                         if(user)
                             li 
-                                a(href="/chat" ) Chat
+                                a(href="/chat" )
+                                    <i class="bi bi-chat-dots-fill fs-3 icon-centered"></i>
                             li(class="d-flex align-items-center")
                                 a(href="/user/info" ) 
                                     i(class="bi bi-person fs-3 icon-centered")    

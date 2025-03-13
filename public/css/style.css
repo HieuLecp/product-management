@@ -615,4 +615,385 @@ label {
     cursor: pointer;
 }
  
+
 /* end chat */
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: 50vh; 
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.inner-body {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    max-height: 450px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.inner-outgoing {
+    align-self: flex-end;
+    /* background-color: #FE5DA3; */
+    color: white;
+    border-radius: 15px;
+    font-size: 18px;
+}
+
+.inner-outgoing .inner-content {
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    word-wrap: break-word;
+    background: #FE5DA3;
+}
+
+.inner-incoming {
+    align-self: flex-start;
+    color: black;
+    border-radius: 15px;
+    font-size: 18px;
+    flex-direction: column; 
+}
+
+.inner-incoming .inner-content {
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: #333;
+    background-color: #e3dede;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+.inner-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 2px; 
+    display: block;
+}
+
+
+.inner-foot {
+    display: flex;
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #ddd;
+}
+
+.inner-form {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: center; 
+}
+
+.inner-form input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+    overflow-y: hidden; 
+    height: 36px; 
+    min-height: 36px; 
+    max-height: 120px; 
+    line-height: 1.5; 
+    box-sizing: border-box;
+}
+
+.inner-form button {
+    background: #FE5DA3;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.inner-form button:hover {
+    background: #bf3239;
+}
+
+.inner-form button i {
+    font-size: 16px;
+}
+
+.chat .inner-body .inner-images img{
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    /* background: #efefef; */
+    padding: 10px;
+    margin: 0 5px 5px 0;
+    border-radius: 5px;
+}
+
+.chat .inner-body .inner-outgoing .inner-images {
+    margin-left: auto;
+    text-align: center;
+}
+
+.chat .inner-body .inner-outgoing .inner-images img{
+    margin: 0 0 5px 5px;
+}
+
+.chat .inner-preview-images{
+    position: relative;
+}
+
+.chat .inner-preview-images .label-container{
+    display: none;
+}
+
+.chat .inner-preview-images .input-container{
+    display: none;
+}
+
+.chat .inner-preview-images .image-preview{
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+}
+
+.chat .inner-preview-images .image-preview-item{
+    width: 90px;
+    background-size: contain;
+}
+
+/* emoji */
+.tooltip{
+    visibility: hidden;
+}
+
+.tooltip.shown{
+    visibility: visible;
+    opacity: 1;
+}
+/* end emoji */
+
+/* end chat */
+
+
+/* box typing */
+.box-typing{
+    position: relative;
+}
+
+.box-typing .inner-dots{
+    position: relative;
+    height: 20px;
+    width: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #efefef;
+    border-radius: 45px;
+    margin-top: 2px;
+}
+
+.box-typing .inner-dots span{
+    animation: blink 1.5s infinite;
+    height: 5px;
+    width: 5px;
+    background: #252525;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 3px;
+}
+
+.box-typing .inner-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.box-typing .inner-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink{
+    0%{
+        opacity: 0.1;
+    }
+    20%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0.1;
+    }
+}
+
+/* end box typing */
+
+/* box-users */
+
+.box-users {
+    display: flex;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.box-users .inner-avatar{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f2f2f2;
+    margin-right: 10px;
+}
+
+.box-users .inner-avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nox-users .inner-info{
+    flex: 1;
+}
+
+.box-users .inner-info .inner-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.box-users [btn-cancel-friend] {
+    display: none ;
+}
+
+.box-users.add [btn-add-friend] {
+    display: none ;
+}
+
+.box-users.add [btn-cancel-friend] {
+    display: inline-block;
+}
+
+.box-users [btn-delete-friend] {
+    display: none;
+}
+
+.box-users.refuse [btn-accept-friend]{
+    display: none;
+}
+
+.box-users.refuse [btn-refuse-friend]{
+    display: none;
+}
+
+.box-users.refuse [btn-delete-friend]{
+    display: inline-block;
+}
+
+.box-users [btn-accepted-friend] {
+    display: none;
+}
+
+.box-users.accepted [btn-accept-friend]{
+    display: none;
+}
+
+.box-users.accepted [btn-refuse-friend]{
+    display: none;
+}
+
+.box-users.accepted [btn-accepted-friend]{
+    display: inline-block;
+}
+
+/* end box-users */
+
+/* chatbot */
+#chatbox {
+    width: 100%;
+    height: 500px; /* Điều chỉnh chiều cao */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f8f8f8;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+/* Tin nhắn của người dùng */
+.user-message {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+    color: #000;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+    max-width: 70%;
+}
+
+/* Tin nhắn của chatbot */
+.bot-message {
+    display: flex;
+    flex-direction: column; /* Xếp avatar trên nội dung tin nhắn */
+    align-items: flex-start; /* Căn lề trái */
+    max-width: 60%;
+    margin: 10px 0;
+}
+
+/* Input và button */
+form#chatForm {
+    display: flex;
+    margin-top: 10px;
+    width: 100%;
+}
+
+form#chatForm #userInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+}
+
+form#chatForm button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+ button:hover {
+    background-color: #0056b3;
+}
+
+form#chatForm .message {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.message .avatar {
+    width: 60px;
+    height: 40px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+
+/* end chatbot */
+

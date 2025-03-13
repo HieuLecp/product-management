@@ -12,6 +12,8 @@ const checkoutRouter = require("./checkout.route");
 const userRouter = require("./user.route");
 const leonRouter = require("./leon.route");
 const chatRouter = require("./chat.route");
+const paymentRouter = require("./payment.route");
+const leonRouter = require("./leon.route");
 
 module.exports = (app) => {
 
@@ -40,6 +42,17 @@ module.exports = (app) => {
         chatRouter
     );
 
+    app.use('/users',
+        authMiddleware.requireAuth,
+        usersRouter
+    );
     
+    app.use('/payment',
+        authMiddleware.requireAuth,
+        paymentRouter
+    );
 
+    app.use('/leon',
+        leonRouter
+    );
 }

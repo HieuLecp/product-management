@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const controller = require("../../controllers/client/leon.controller")
 
-// router.get('/', controller.index);
+router.get('/', controller.index);
 
 // router.post("/chatbot", controller.leon);
 
