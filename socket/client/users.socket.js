@@ -39,6 +39,18 @@ module.exports= async (res) => {
                     $push: {requestFriend: userId}
                 })
             }
+
+            // Lấy độ dài acceptFriend của ng nhận và trả về cho ng nhận
+            const infoUserAccept= await User.findOne({
+                _id: userId
+            });
+
+            const lengthAcceptFriend= infoUserAccept.acceptFriend.length;
+
+            socket.broadcast.emit("sever_return_lengthAcceptFriend", {
+                userId,
+                lengthAcceptFriend: lengthAcceptFriend
+            });
         });
         // end request addFriend
 

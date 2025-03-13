@@ -71,3 +71,18 @@ if(listBtnAcceptFriend.length > 0){
 }
 
 // end accepted addFriend
+
+// sever_return_lengthAcceptFriend
+
+socket.on("sever_return_lengthAcceptFriend", (data) => {
+    const badgeUsersAccept= document.querySelector("[badge-users-accpet]");
+    const userId= badgeUsersAccept.getAttribute("badge-users-accpet");
+
+    console.log(data);
+    if(userId == data.userId){
+        badgeUsersAccept.innerHTML= data.lengthAcceptFriend;
+    }
+    
+})
+
+// end sever_return_lengthAcceptFriend
