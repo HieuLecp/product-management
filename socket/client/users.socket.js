@@ -1,4 +1,4 @@
-const Chat= require("../../models/chat.model");
+const RoomChat= require("../../models/room-chat.model");
 const User= require("../../models/users.model");
 
 // const uploadToCloudinary= require("../../helpers/uploadToCloudinary");
@@ -155,12 +155,36 @@ module.exports= async (res) => {
             // console.log(userId); //Id của người add
             // console.log(myUserId);
 
-
-
             const exitsUserRequest= await User.findOne({ //Xem người add có id của ng chấp nhận chưa
                 _id: userId,
                 requestFriend: myUserId
             })
+
+            const exitsUserAccept= await User.findOne({ //Xem người chấp nhận có id của ng add chưa
+                _id: myUserId,
+                acceptFriend: userId
+            })
+
+            // tạo phòng chat
+            let roomChat;
+            if(exitsUserRequest && exitsUserAccept){
+                roomChat= new RoomChat({
+                    typeRoom: "friend",
+                    users: [
+                        {
+                            user_id: myUserId,
+                            role: "superAdmin"
+                        },
+                        {
+                            user_id: userId,
+                            role: "superAdmin"
+                        }
+                    ]
+                });
+                await roomChat.save();
+            }
+
+            // end tạo phòng chat
 
             if(exitsUserRequest){
                 await User.updateOne({
@@ -169,17 +193,12 @@ module.exports= async (res) => {
                     $push: {
                         friendList: {
                             user_id: myUserId,
-                            room_chat_id: ""
+                            room_chat_id: roomChat.id
                         }
                     },
                     $pull: {requestFriend: myUserId}
                 })
             }
-
-            const exitsUserAccept= await User.findOne({ //Xem người chấp nhận có id của ng add chưa
-                _id: myUserId,
-                acceptFriend: userId
-            })
 
             if(exitsUserAccept){
                 await User.updateOne({
@@ -188,7 +207,7 @@ module.exports= async (res) => {
                     $push: {
                         friendList: {
                             user_id: userId,
-                            room_chat_id: ""
+                            room_chat_id: roomChat.id
                         }
                     },
                     $pull: {acceptFriend: userId}

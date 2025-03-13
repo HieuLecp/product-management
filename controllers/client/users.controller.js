@@ -16,6 +16,9 @@ module.exports.notFriend =  async (req, res) => {
 
     const requestFriend = myUser.requestFriend;
     const acceptFriend = myUser.acceptFriend;
+    const friendList= myUser.friendList;
+
+    const friendListId= friendList.map(item => item.user_id);
     // console.log(requestFriend);
 
     const users= await User.find({
@@ -23,6 +26,7 @@ module.exports.notFriend =  async (req, res) => {
             { _id: {$ne: myUserId}  },
             {  _id: { $nin: requestFriend} },
             {  _id: { $nin: acceptFriend} },
+            {  _id: { $nin: friendListId} },
         ],
         status: "active",
         deleted: false
@@ -91,7 +95,7 @@ module.exports.userAccept =  async (req, res) => {
     });
 };
 
-// [GET] /users/not-friend
+// [GET] /users/friends
 module.exports.friends =  async (req, res) => {
     // socket
     usersSocket(res);
@@ -110,7 +114,11 @@ module.exports.friends =  async (req, res) => {
         status: "active",
         deleted: false
     }).select("id avatar fullName statusOnline");
-    // console.log(users);
+    
+    users.forEach(user => {
+        const infoUser= friendList.find(item => item.user_id == user.id);
+        user.roomChatId= infoUser.room_chat_id
+    })
 
     res.render("client/pages/users/friends.pug", {
         pageTitle: "Danh sách người dùng", 

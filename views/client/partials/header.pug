@@ -4,12 +4,12 @@ header.header
 
     .container 
         .row.align-items-center 
-            .col-3 
+            .col-2 
                 .inner-logo
                     a(href="/")
                         img(src=settingGeneral.logo, alt="Avt", width=max-width, height= "auto")
                     //- a(href="/" ) Trang chủ
-            .col-5 
+            .col-4 
                 form(
                     action="/search"
                     method="GET"
@@ -27,7 +27,7 @@ header.header
                             class="btn btn-primary"
                         ) Tìm
 
-            .col-4
+            .col-6
                 .inner-menu.flex-wrap
                     ul 
                         //- li(class="d-flex align-items-center")
@@ -39,8 +39,11 @@ header.header
                                 i(class="bi bi-list fs-3 icon-centered")
                                 +sub-menu(layoutProductCategory, pathProduct)
                         if(user)
+                            //- li 
+                            //-     a(href="/chat" )
+                            //-         <i class="bi bi-chat-dots-fill fs-3 icon-centered"></i>
                             li 
-                                a(href="/chat" ) Chat
+                                a(href="/users/friends" ) Bạn bè
                             li(class="d-flex align-items-center")
                                 a(href="/user/info" ) 
                                     i(class="bi bi-person fs-3 icon-centered")    
