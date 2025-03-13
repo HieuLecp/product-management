@@ -51,6 +51,16 @@ module.exports= async (res) => {
                 userId,
                 lengthAcceptFriend: lengthAcceptFriend
             });
+
+            // Lấy thông tin của ng gửi và trả về cho ng nhận
+            const infoUserRequest= await User.findOne({
+                _id: myUserId
+            }).select("id avatar fullName");
+
+            socket.broadcast.emit("sever_return_inforAcceptFriend", {
+                userId: userId,
+                infoUserRequest: infoUserRequest
+            })
         });
         // end request addFriend
 
@@ -85,6 +95,18 @@ module.exports= async (res) => {
                     $pull: {requestFriend: userId}
                 })
             }
+
+            // Lấy độ dài acceptFriend của ng nhận và trả về cho ng nhận
+            const infoUserAccept= await User.findOne({
+                _id: userId
+            });
+
+            const lengthAcceptFriend= infoUserAccept.acceptFriend.length;
+
+            socket.broadcast.emit("sever_return_lengthAcceptFriend", {
+                userId,
+                lengthAcceptFriend: lengthAcceptFriend
+            });
         });
         // end cancel addFriend
 

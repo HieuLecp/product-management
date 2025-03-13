@@ -1,3 +1,5 @@
-const socket= io();
+const socket= io({
+    reconnection: false
+});
 
 

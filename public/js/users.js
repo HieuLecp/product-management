@@ -86,3 +86,74 @@ socket.on("sever_return_lengthAcceptFriend", (data) => {
 })
 
 // end sever_return_lengthAcceptFriend
+
+// sever_return_inforAcceptFriend
+
+socket.on("sever_return_inforAcceptFriend", (data) => {
+    const dataUserAccept= document.querySelector("[data-user-accept]");
+    const userId= dataUserAccept.getAttribute("data-user-accept");
+
+    if(userId == data.userId){
+        const newBoxUser= document.createElement("div");
+        newBoxUser.classList.add("col-6");
+
+        newBoxUser.innerHTML= `
+            <div class="box-users ">
+                <div class="inner-avatar">
+                    <img
+                        src= "${data.infoUserRequest.avatar ? data.infoUserRequest.avatar : '/images/avt.png'}"
+                        alt= ${data.infoUserRequest.fullName}
+                    >
+                    </div>
+                <div class="inner-info">
+                    <div class="inner-name">
+                        ${data.infoUserRequest.fullName}
+                    </div>
+                    <div class="inner-buttons">
+                        <button 
+                        class="btn btn-sm btn-primary mr-1" 
+                        btn-accept-friend=${data.infoUserRequest._id}
+                        >
+                            Chấp nhận
+                        </button>
+                        <button 
+                        class="btn btn-sm btn-secondary mr-1" 
+                        btn-refuse-friend=${data.infoUserRequest._id}
+                        >
+                            Từ chối
+                        </button>
+                        <button 
+                        class="btn btn-sm btn-secondary mr-1" 
+                        btn-delete-friend= ""
+                        disabled="disabled"
+                        >
+                            Đã từ chối
+                        </button>
+                        <button 
+                        class="btn btn-sm btn-secondary mr-1" 
+                        btn-accepted-friend="" 
+                        disabled="disabled"
+                        >
+                            Đã chấp nhận
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `
+        dataUserAccept.appendChild(newBoxUser);
+
+        const btnRefuseFriend= newBoxUser.querySelector("[btn-refuse-friend]");
+        btnRefuseFriend.addEventListener("click", () => {
+            btnRefuseFriend.closest(".box-users").classList.add("refuse");
+            
+            const userId= btnRefuseFriend.getAttribute("btn-refuse-friend");
+            // console.log(userId);
+
+            socket.emit("client_refuse_friend", userId);
+        })
+
+    }
+    
+})
+
+// end sever_return_inforAcceptFriend
