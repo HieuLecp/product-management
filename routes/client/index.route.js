@@ -12,6 +12,7 @@ const checkoutRouter = require("./checkout.route");
 const userRouter = require("./user.route");
 const usersRouter = require("./users.route");
 const chatRouter = require("./chat.route");
+const roomChatRouter = require("./roomChat.route");
 
 module.exports = (app) => {
 
@@ -43,6 +44,11 @@ module.exports = (app) => {
     app.use('/users',
         authMiddleware.requireAuth,
         usersRouter
+    );
+
+    app.use('/rooms-chat',
+        authMiddleware.requireAuth,
+        roomChatRouter
     );
 
 }
