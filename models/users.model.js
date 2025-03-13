@@ -23,6 +23,7 @@ const usersSchema = new mongoose.Schema(
         ],
         acceptFriend: Array, //danh sách người mình dc add
         requestFriend: Array, //danh sách người mình add
+        statusOnline: String,
         status: {
             type: String,
             default: "active"

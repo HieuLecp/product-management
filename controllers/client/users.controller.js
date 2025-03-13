@@ -90,3 +90,30 @@ module.exports.userAccept =  async (req, res) => {
         users: users
     });
 };
+
+// [GET] /users/not-friend
+module.exports.friends =  async (req, res) => {
+    // socket
+    usersSocket(res);
+    // end socket
+
+    const myUserId= res.locals.user.id;
+
+    const myUser= await User.findOne({_id: myUserId});
+
+    const friendList= myUser.friendList;
+
+    const friendListId= friendList.map(item => item.user_id);
+
+    const users= await User.find({
+        _id: {$in: friendListId},
+        status: "active",
+        deleted: false
+    }).select("id avatar fullName statusOnline");
+    // console.log(users);
+
+    res.render("client/pages/users/friends.pug", {
+        pageTitle: "Danh sách người dùng", 
+        users: users
+    });
+};

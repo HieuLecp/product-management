@@ -19,30 +19,26 @@ block main
 
     
         .row 
-            //- each user in users 
-            //-     .col-6
-            //-         div(class="box-users ")
-            //-             div(class="inner-avatar")
-            //-                 img(
-            //-                     src= (user.avatar ? user.avatar : "/images/avt.png")
-            //-                     alt= user.fullname
-            //-                 )
-            //-             div(class="inner-info")
-            //-                 div(class="inner-name") #{user.fullName}
-            //-                 div(class="inner-buttons")
-            //-                     button(
-            //-                         class="btn btn-sm btn-primary mr-1"
-            //-                         btn-accept-friend = user.id
-            //-                     ) Chấp nhận
-            //-                     button(
-            //-                         class="btn btn-sm btn-secondary mr-1"
-            //-                         btn-refuse-friend = user.id
-            //-                     ) Từ chối
-            //-                     button(
-            //-                         class="btn btn-sm btn-secondary mr-1"
-            //-                         btn-delete-friend = user.id
-            //-                         disabled
-            //-                     ) Đã từ chối
+            each user in users 
+                .col-6
+                    div(class="box-users ")
+                        div(class="inner-avatar")
+                            img(
+                                src= (user.avatar ? user.avatar : "/images/avt.png")
+                                alt= user.fullname
+                            )
+                        div(class="inner-info")
+                            div(class="inner-name") #{user.fullName}
+                            div(class="inner-buttons")
+                                a(
+                                    href="#"
+                                    class="btn btn-sm btn-primary mr-1"
+                                ) Nhắn tin
+                        div(
+                            class="inner-statusOnline"
+                            status-online= user.statusOnline
+                        ) <i class="fa-solid fa-circle"></i>
+                                
 
 
     block script 
