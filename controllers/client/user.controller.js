@@ -90,6 +90,15 @@ module.exports.loginPost =  async (req, res) => {
         }
     
         res.cookie("tokenUser", user.tokenUser);
+        await User.updateOne({
+            _id: user.id
+        }, {
+            statusOnline: "online"
+        })
+
+        _io.once("connection", (socket) => [
+            socket.broadcast.emit("server_return_user_online", user.id)
+        ])
     
         await Carts.updateOne({
             _id: req.cookies.cartId
@@ -97,11 +106,6 @@ module.exports.loginPost =  async (req, res) => {
             userId: user.id
         })
     
-        await User.updateOne({
-            _id: user.id
-        }, {
-            statusOnline: "online"
-        })
         res.redirect("/");
     }
     else{
@@ -119,6 +123,10 @@ module.exports.logout =  async (req, res) => {
     }, {
         statusOnline: "offline"
     })
+
+    _io.once("connection", (socket) => [
+        socket.broadcast.emit("server_return_user_offline", res.locals.user.id)
+    ])
 
     res.clearCookie("tokenUser");
 

@@ -204,3 +204,28 @@ socket.on("sever_return_cancelAddFriend", (data) => {
 })
 
 // end sever_return_cancelAddFriend
+
+
+// server_return_user_online
+socket.on("server_return_user_online", (userId) => {
+    const dataUserFriend= document.querySelector("[data-users-friend]");
+    if(dataUserFriend){
+        const boxUser= dataUserFriend.querySelector(`[user-id = "${userId}"]`);
+        if(boxUser){
+            boxUser.querySelector("[status-online]").setAttribute("status-online", "online");
+        }
+    }
+})
+//  end server_return_user_offline
+
+// server_return_user_online
+socket.on("server_return_user_offline", (userId) => {
+    const dataUserFriend= document.querySelector("[data-users-friend]");
+    if(dataUserFriend){
+        const boxUser= dataUserFriend.querySelector(`[user-id = "${userId}"]`);
+        if(boxUser){
+            boxUser.querySelector("[status-online]").setAttribute("status-online", "offline");
+        }
+    }
+})
+//  end server_return_user_offline
