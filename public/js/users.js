@@ -78,7 +78,7 @@ socket.on("sever_return_lengthAcceptFriend", (data) => {
     const badgeUsersAccept= document.querySelector("[badge-users-accpet]");
     const userId= badgeUsersAccept.getAttribute("badge-users-accpet");
 
-    console.log(data);
+    // console.log(data);
     if(userId == data.userId){
         badgeUsersAccept.innerHTML= data.lengthAcceptFriend;
     }
@@ -96,6 +96,7 @@ socket.on("sever_return_inforAcceptFriend", (data) => {
     if(userId == data.userId){
         const newBoxUser= document.createElement("div");
         newBoxUser.classList.add("col-6");
+        newBoxUser.setAttribute("user-id", data.infoUserRequest._id);
 
         newBoxUser.innerHTML= `
             <div class="box-users ">
@@ -142,6 +143,7 @@ socket.on("sever_return_inforAcceptFriend", (data) => {
         `
         dataUserAccept.appendChild(newBoxUser);
 
+        // refuse addFriend
         const btnRefuseFriend= newBoxUser.querySelector("[btn-refuse-friend]");
         btnRefuseFriend.addEventListener("click", () => {
             btnRefuseFriend.closest(".box-users").classList.add("refuse");
@@ -152,8 +154,35 @@ socket.on("sever_return_inforAcceptFriend", (data) => {
             socket.emit("client_refuse_friend", userId);
         })
 
+        // accept addFriend
+        const btnAcceptFriend= newBoxUser.querySelector("[btn-accept-friend]");
+        btnAcceptFriend.addEventListener("click", () => {
+            btnAcceptFriend.closest(".box-users").classList.add("accepted");
+            
+            const userId= btnAcceptFriend.getAttribute("btn-accept-friend");
+            // console.log(userId);
+
+            socket.emit("client_accept_friend", userId);
+        })
     }
     
 })
 
 // end sever_return_inforAcceptFriend
+
+// sever_return_cancelAddFriend
+
+socket.on("sever_return_cancelAddFriend", (data) => {
+    const dataUserAccept= document.querySelector("[data-user-accept]");
+    const userId= dataUserAccept.getAttribute("data-user-accept");
+
+    if(userId == data.userId){
+        // Xoá requestUser khỏi ds của AcceptUser
+        const boxUserRemove= dataUserAccept.querySelector(`[user-id= "${data.requestUserId}"]`);
+        if(boxUserRemove){
+            dataUserAccept.removeChild(boxUserRemove);
+        }
+    }
+})
+
+// end sever_return_cancelAddFriend

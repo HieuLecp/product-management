@@ -104,8 +104,13 @@ module.exports= async (res) => {
             const lengthAcceptFriend= infoUserAccept.acceptFriend.length;
 
             socket.broadcast.emit("sever_return_lengthAcceptFriend", {
-                userId,
+                userId: userId,
                 lengthAcceptFriend: lengthAcceptFriend
+            });
+
+            socket.broadcast.emit("sever_return_cancelAddFriend", {
+                userId: userId,
+                requestUserId: myUserId
             });
         });
         // end cancel addFriend
