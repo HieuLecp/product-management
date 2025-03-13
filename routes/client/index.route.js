@@ -10,7 +10,7 @@ const searchRouter = require("./search.route");
 const cartRouter = require("./cart.route");
 const checkoutRouter = require("./checkout.route");
 const userRouter = require("./user.route");
-const leonRouter = require("./leon.route");
+// const usersRouter = require("./users.route");
 const chatRouter = require("./chat.route");
 const paymentRouter = require("./payment.route");
 const leonRouter = require("./leon.route");
@@ -42,10 +42,10 @@ module.exports = (app) => {
         chatRouter
     );
 
-    app.use('/users',
-        authMiddleware.requireAuth,
-        usersRouter
-    );
+    // app.use('/users',
+    //     authMiddleware.requireAuth,
+    //     usersRouter
+    // );
     
     app.use('/payment',
         authMiddleware.requireAuth,
