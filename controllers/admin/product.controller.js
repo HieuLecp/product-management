@@ -14,83 +14,89 @@ const createTree = require("../../helpers/createTree");
 module.exports.index = async (req, res) => {
     // console.log(req.query.status);
 
-    const filterStatus = filterStatusHelper(req.query);
-    // console.log(filterStatus);
+    try{
+        const filterStatus = filterStatusHelper(req.query);
+        // console.log(filterStatus);
 
-    let find = {
-        deleted: false
-    }
-
-    if(req.query.status){
-        find.status = req.query.status;
-    }
-    // console.log(find);
-
-    const objectSearch = searchHepler(req.query);
-    // console.log(objectSearch);
-
-    if(objectSearch.regex){
-        find.title = objectSearch.regex;
-    }
-
-    // pagination
-    const countProducts = await Product.countDocuments(find);
-
-    let objectPagination = paginationHelper(
-        {
-            currentPage: 1,
-            limitItems : 4
-        },
-        req.query,
-        countProducts
-    )
-    // end pagination
-
-    // sort 
-    let sort = {};
-
-    if(req.query.sortKey && req.query.sortValue){
-        sort[req.query.sortKey] = req.query.sortValue;
-    }   
-    else{
-        sort.position = "desc";
-    }
-    // end sort
-    // console.log(sort);
-
-    const products= await Product.find(find)
-    .sort(sort)   // desc: giảm dần, asc: tăng dần
-    .limit(objectPagination.limitItems)
-    .skip(objectPagination.skip);
-    // console.log(products);
-
-    for(const item of products){
-        // TT người tạo
-        const user= await Accounts.findOne({_id: item.createdBy.account_id});
-        if(user){
-            item.accountFullName= user.fullName;
+        let find = {
+            deleted: false
         }
 
-        // TT người chỉnh sửa gần nhất
-        // console.log(item.updatedBy.slice(-1)[0]);
-        const updatedBy = item.updatedBy.slice(-1)[0]
-        if(updatedBy){
-            const userUpdated= await Accounts.findOne({_id: updatedBy.account_id});
-
-            updatedBy.accountFullName = userUpdated.fullName;
+        if(req.query.status){
+            find.status = req.query.status;
         }
-        
-        // console.log(item);
-        
-    }
+        // console.log(find);
 
-    res.render("admin/pages/products/index", {
-        pageTitle : "Danh sách sản phẩm",
-        products: products,
-        filterStatus: filterStatus,
-        keyword: objectSearch.keyword,
-        pagination: objectPagination
-    })
+        // search
+        const objectSearch = searchHepler(req.query);
+        // console.log(objectSearch);
+
+        if(objectSearch.regex){
+            find.title = objectSearch.regex;
+        }
+        // end search 
+
+        // pagination
+        const countProducts = await Product.countDocuments(find);
+
+        let objectPagination = paginationHelper(
+            {
+                currentPage: 1,
+                limitItems : 4
+            },
+            req.query,
+            countProducts
+        )
+        // end pagination
+
+        // sort 
+        let sort = {};
+
+        if(req.query.sortKey && req.query.sortValue){
+            sort[req.query.sortKey] = req.query.sortValue;
+        }   
+        else{
+            sort.position = "desc";
+        }
+        // end sort
+        // console.log(sort);
+
+        const products= await Product.find(find)
+        .sort(sort)   // desc: giảm dần, asc: tăng dần
+        .limit(objectPagination.limitItems)
+        .skip(objectPagination.skip);
+        // console.log(products);
+
+        for(const item of products){
+            // TT người tạo
+            const user= await Accounts.findOne({_id: item.createdBy.account_id});
+            if(user){
+                item.accountFullName= user.fullName;
+            }
+
+            // TT người chỉnh sửa gần nhất
+            // console.log(item.updatedBy.slice(-1)[0]);
+            const updatedBy = item.updatedBy.slice(-1)[0]
+            if(updatedBy){
+                const userUpdated= await Accounts.findOne({_id: updatedBy.account_id});
+
+                updatedBy.accountFullName = userUpdated.fullName;
+            }
+            
+            // console.log(item);
+            
+        }
+
+        res.render("admin/pages/products/index", {
+            pageTitle : "Danh sách sản phẩm",
+            products: products,
+            filterStatus: filterStatus,
+            keyword: objectSearch.keyword,
+            pagination: objectPagination
+        })
+    } catch (error){
+
+    }
 };
 
 // [PATCH] /admin/products/change-status/:status/:id
