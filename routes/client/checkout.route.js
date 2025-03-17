@@ -7,6 +7,10 @@ router.get('/', controller.index);
 
 router.post('/order', controller.order);
 
+router.get('/payment/:id', controller.payment);
+
+router.post('/payment/:id', controller.paymentPost);
+
 router.get('/success/:id', controller.success);
 
 module.exports = router;

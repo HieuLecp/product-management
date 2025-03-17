@@ -460,6 +460,7 @@ label {
 
 .btn-success {
     background-color: #28a745;
+    width: 400px !important;
     color: white;
     padding: 12px;
     font-size: 18px;

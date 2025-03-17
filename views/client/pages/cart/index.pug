@@ -11,7 +11,7 @@ block main
     .container.mb-3
         .row 
             .col-12 
-                +box-head("Sản phẩm nổi bật")
+                +box-head("Đặt hàng")
                     
         .row   
             .col-12 
@@ -21,9 +21,9 @@ block main
                             th STT 
                             th Ảnh
                             th Tên
-                            th Giá
+                            th Giá #{"(vnd)"}
                             th Số lượng
-                            th Tổng tiền
+                            th Tổng tiền #{"(vnd)"}
                             th Hành động
                     tbody
                         if(cartDetail.products.length > 0)
@@ -34,7 +34,7 @@ block main
                                         img(src=item.productInfo.thumbnail, alt="sp1" width="80px")
                                     td 
                                         a(href=`product/detail/${item.productInfo.slug}`)  #{item.productInfo.title}
-                                    td #{item.productInfo.priceNew}$
+                                    td #{item.productInfo.priceNew}
                                     td 
                                         input(
                                             type="number"
@@ -52,9 +52,9 @@ block main
                                         ) Xoá
                         else 
                             p Không có sản phẩm nào trong giỏ hàng!
-                h3(cflass="text-right") Tổng đơn hàng: #{cartDetail.totalPrice}$
+                h3(cflass="text-right") Tổng đơn hàng: #{cartDetail.totalPrice}  #{"(vnd)"}
 
                 div(class="text-right mt-3")
-                    a(href="/checkout" class="btn btn-success") Thanh Toán
+                    a(href="/checkout" class="btn btn-success") Đặt hàng
             
             script(src="/js/cart.js")

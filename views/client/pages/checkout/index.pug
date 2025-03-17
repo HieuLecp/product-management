@@ -21,7 +21,7 @@ block main
                             th STT 
                             th Ảnh
                             th Tên
-                            th Giá
+                            th Giá #{"(vnd)"}
                             th Số lượng
                             th Tổng tiền
                     tbody
@@ -33,7 +33,7 @@ block main
                                         img(src=item.productInfo.thumbnail, alt="sp1" width="80px")
                                     td 
                                         span #{item.productInfo.title}
-                                    td #{item.productInfo.priceNew}$
+                                    td #{item.productInfo.priceNew}
                                     td #{item.quantity}
                                     td #{item.totalPrice}
 
@@ -44,7 +44,7 @@ block main
                                     class="text-center"
                                 ) Giỏ hàng trống.
                 if(cartDetail.products.length > 0)
-                    h3(class="text-right") Tổng đơn hàng: #{cartDetail.totalPrice}$
+                    h3(class="text-right") Tổng đơn hàng: #{cartDetail.totalPrice} #{"(vnd)"}
             
         if(cartDetail.products.length > 0)
             .row 
@@ -85,4 +85,4 @@ block main
                                 button(
                                     type="submit"
                                     class="btn btn-success btn-block"
-                                ) Đặt hàng
+                                ) Chọn phương thức thanh toán

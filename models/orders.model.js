@@ -20,7 +20,8 @@ const orderSchema = new mongoose.Schema(
                 discountPercentage: Number,
                 quantity: Number
             }
-        ]
+        ],
+        totalPrice: Number
     }, 
     {
         timestamps : true
