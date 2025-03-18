@@ -3,6 +3,8 @@ const md5= require("md5");
 const User= require("../../models/users.model");
 const ForgotPassword= require("../../models/forgot-password.model");
 const Carts= require("../../models/carts.model");
+const Order= require("../../models/orders.model");
+const Product= require("../../models/product.model");
 
 const generateHelper= require("../../helpers/generate");
 const sendMailHelper= require("../../helpers/sendMail");
@@ -42,6 +44,7 @@ module.exports.registerPost =  async (req, res) => {
     }
 
     req.body.password= md5(req.body.password);
+    req.body.tokenUser = generateHelper.generateRandomString(20); 
     const user = new User(req.body);
     await user.save();
     // console.log(user);
@@ -325,3 +328,37 @@ module.exports.editPasswordPost =  async (req, res) => {
         res.redirect("back");
     }
 };
+
+// [GET] /user/info/list-order
+module.exports.listOrder= async (req, res) => {
+    const user= await User.findOne({_id : res.locals.user.id});
+    
+    const orders= await Order.find({
+        user_id: user.id
+    });
+
+    const listOrder= []
+
+    for(const order of orders){
+        for (const item of order.products) {
+            const product = await Product.findOne({ _id: item.product_id });
+    
+            const object = {
+                thumbnail: product.thumbnail,
+                title: product.title,
+                price: item.price,
+                quantity: item.quantity,
+                totalPrice: order.totalPrice
+            };
+    
+            listOrder.push(object);
+        }
+    }
+    // console.log(listOrder);
+
+    // res.send("ok");
+    res.render("client/pages/user/list-order", {
+        pageTitle: "Lịch sử mua hàng",
+        records: listOrder
+    })
+}

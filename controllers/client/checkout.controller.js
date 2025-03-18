@@ -140,7 +140,7 @@ module.exports.payment= async (req, res) => {
     }
 };
 
-// [POST] /checkout/payment
+// [POST] /checkout/payment/:id
 module.exports.paymentPost= async (req, res) => {
     const order= await Order.findOne({
         _id: req.params.id
@@ -152,7 +152,7 @@ module.exports.paymentPost= async (req, res) => {
         var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
         var orderInfo = 'pay with MoMo';
         var partnerCode = 'MOMO';
-        var redirectUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
+        var redirectUrl = `http://localhost:3000/checkout/success/${order.id}`;
         var ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
         var requestType = "payWithMethod";
         var amount = order.totalPrice;
@@ -207,14 +207,14 @@ module.exports.paymentPost= async (req, res) => {
             },
             data: requestBody
         };
-
         let result;
 
         try{
             result= await axios(options);
 
             const payUrl = result.data.payUrl;
-            // console.log(payUrl)
+            console.log(payUrl)
+            // res.send("payment");
             res.redirect(payUrl);
         }catch{
             return res.status(500).json({
@@ -225,7 +225,7 @@ module.exports.paymentPost= async (req, res) => {
 
 }
 
-// [GET] /checkout/success
+// [GET] /checkout/success/:id
 module.exports.success= async (req, res) => {
     // console.log(req.params.id);
 

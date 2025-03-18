@@ -47,6 +47,7 @@ module.exports.detail = async (req, res) => {
 
             productHepler.priceNewProduct(products);
         }
+        // console.log(products.priceNew);
         // console.log(products.category.slug);
     
         res.render("client/pages/products/detail", {

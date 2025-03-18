@@ -79,4 +79,9 @@ router.post('/info/editPassword',
     controller.editPasswordPost
 );
 
+router.get('/info/list-order',
+    authMiddleware.requireAuth,
+    controller.listOrder
+);
+
 module.exports = router;

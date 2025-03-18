@@ -10,7 +10,7 @@ block main
     .container.my-3
         .row 
             .col-12 
-                +box-head("Thông tin cá nhân")
+                +box-head("Trang cá nhân")
 
     .container.mt-5
       .card.shadow-lg(style="max-width: 800px; margin: auto; padding-bottom: 20px;")
@@ -35,6 +35,10 @@ block main
                 href= "/user/info/edit"
                 class="btn btn-outline-primary d-block w-100 mb-2"
             ) <b>Chỉnh sửa thông tin</b>
+            a(
+                href= "/user/info/list-order"
+                class="btn btn-outline-primary d-block w-100 mb-2"
+            ) <b>Lịch sử mua hàng</b>
             a(
                 href= "/user/info/editPassword"
                 class="btn btn-outline-primary d-block w-100"
