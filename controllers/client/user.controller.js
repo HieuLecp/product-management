@@ -3,6 +3,8 @@ const md5= require("md5");
 const User= require("../../models/users.model");
 const ForgotPassword= require("../../models/forgot-password.model");
 const Carts= require("../../models/carts.model");
+const Order= require("../../models/orders.model");
+const Product= require("../../models/product.model");
 
 const generateHelper= require("../../helpers/generate");
 const sendMailHelper= require("../../helpers/sendMail");
@@ -46,6 +48,7 @@ module.exports.registerPost =  async (req, res) => {
     const record = new User(req.body);
     await record.save();
     // console.log(record);
+
 
     req.flash("success", "Bạn đã đăng ký tài khoản thành công!");
     res.cookie("tokenUser", record.tokenUser);
@@ -99,7 +102,6 @@ module.exports.loginPost =  async (req, res) => {
         _io.once("connection", (socket) => [
             socket.broadcast.emit("server_return_user_online", user.id)
         ])
-    
         await Carts.updateOne({
             _id: req.cookies.cartId
         }, {
@@ -111,8 +113,7 @@ module.exports.loginPost =  async (req, res) => {
     else{
         req.flash("error", "Vui lòng xác minh captcha!");
         res.redirect("back");
-    }
-    
+    }    
 };
 
 // [POST] /user/logout
@@ -348,3 +349,38 @@ module.exports.editPasswordPost =  async (req, res) => {
         res.redirect("back");
     }
 };
+
+// [GET] /user/info/list-order
+module.exports.listOrder= async (req, res) => {
+    const user= await User.findOne({_id : res.locals.user.id});
+    
+    const orders= await Order.find({
+        user_id: user.id
+    });
+
+    const listOrder= []
+
+    for(const order of orders){
+        for (const item of order.products) {
+            const product = await Product.findOne({ _id: item.product_id });
+    
+            const object = {
+                thumbnail: product.thumbnail,
+                title: product.title,
+                price: item.price,
+                quantity: item.quantity,
+                totalPrice: order.totalPrice,
+                status: order.status
+            };
+    
+            listOrder.push(object);
+        }
+    }
+    // console.log(listOrder);
+
+    // res.send("ok");
+    res.render("client/pages/user/list-order", {
+        pageTitle: "Lịch sử mua hàng",
+        records: listOrder
+    })
+}

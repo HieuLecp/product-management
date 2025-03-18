@@ -11,11 +11,11 @@ block main
     .container.mb-3
         .row 
             .col-12 
-                +box-head("Thanh toán thành công")
+                +box-head("Thanh toán thất bại")
 
         .row 
             div(class="alert alert-success")
-                | Chúc mừng bạn đã đặt hàng thành công! Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.
+                | Thanh toán thất bại! Bạn vui lòng thanh toán lại.
 
         if(order)
             .row 

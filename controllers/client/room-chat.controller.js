@@ -13,7 +13,7 @@ module.exports.index= async (req, res) => {
         typeRoom: "group",
         deleted: false,
     })
-    console.log(listRoomChat);
+    // console.log(listRoomChat);
 
     res.render("client/pages/rooms-chat/index", {
         pageTitle: "Chat",

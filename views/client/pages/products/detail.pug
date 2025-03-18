@@ -24,9 +24,9 @@ block main
                                 span Danh mục: 
                                 a(href=`product/${products.category.slug}`) #{products.category.title} 
                         if(products.priceNew)
-                            div(class="inner-price-new") Giá mới: <span>#{products.priceNew}$</span>
+                            div(class="inner-price-new") Giá mới: <span>#{products.priceNew} #{"(vnd)"}</span>
                         if(products.price)
-                            div(class="inner-price-old") Giá cũ: <span>#{products.price}$</span>
+                            div(class="inner-price-old") Giá cũ: <span>#{products.price} #{"(vnd)"}</span>
                         if(products.discountPercentage)
                             div(class="inner-percent") Giảm tới <span>#{products.discountPercentage}%</span>
                         if(products.stock)

@@ -11,11 +11,7 @@ block main
     .container.mb-3
         .row 
             .col-12 
-                +box-head("Thanh toán thành công")
-
-        .row 
-            div(class="alert alert-success")
-                | Chúc mừng bạn đã đặt hàng thành công! Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.
+                +box-head("Đơn hàng")
 
         if(order)
             .row 
@@ -56,6 +52,15 @@ block main
                                             img(src=item.productInfo.thumbnail, alt="sp1" width="80px")
                                         td 
                                             span #{item.productInfo.title}
-                                        td #{item.priceNew}
+                                        td #{item.priceNew} 
                                         td #{item.quantity}
-                                        td #{item.totalPrice}  
+                                        td #{item.totalPrice} 
+                    form(
+                        action= `/checkout/payment/${orderId}`
+                        method= "POST"
+                    )
+                        div(class=" form-group")
+                            button(
+                                type="submit"
+                                class="btn btn-success btn-block"
+                            ) Thanh toán qua momo

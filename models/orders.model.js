@@ -7,6 +7,7 @@ mongoose.plugin(slug);
 const orderSchema = new mongoose.Schema(
     {
         cart_id: String,
+        momoOrderId: String,
         user_id: String,
         userInfo: {
             fullName: String,
@@ -20,7 +21,9 @@ const orderSchema = new mongoose.Schema(
                 discountPercentage: Number,
                 quantity: Number
             }
-        ]
+        ],
+        totalPrice: Number,
+        status: String
     }, 
     {
         timestamps : true

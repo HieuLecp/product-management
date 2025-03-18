@@ -15,21 +15,16 @@ block main
     .container.my-5 
         .row.justify-content-center 
             .col-8 
-                h1(class="mb-4") Chat với Trợ lý ảo Leon
-                form(
-                        action="/leon/chatbot"
-                        method="POST"
-                    )
-                        input(
-                            type="text"
-                            class="form-control"
-                            id="message"
-                            name="message"
-                            placeholder="Nhập tin nhắn..."
-                        )
-                        div()
-                            label(for="position") 
-                            button(
-                                type= "submit"
-                                class="btn btn-outline-primary form-control"
-                            ) <b>Gửi</b>
+                h1  Trợ Lý Leo
+    
+                #chatbox
+                
+                form#chatForm
+                    input#userInput(type="text" placeholder="Nhập tin nhắn..." required)
+                    button(type="submit")
+                        i.fa-solid.fa-paper-plane
+
+     
+    block script 
+        script(type="module" src="/js/leon.js")
+        
