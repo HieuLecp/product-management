@@ -348,7 +348,8 @@ module.exports.listOrder= async (req, res) => {
                 title: product.title,
                 price: item.price,
                 quantity: item.quantity,
-                totalPrice: order.totalPrice
+                totalPrice: order.totalPrice,
+                status: order.status
             };
     
             listOrder.push(object);

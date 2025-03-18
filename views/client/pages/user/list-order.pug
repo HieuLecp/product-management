@@ -26,6 +26,7 @@ block main
                                 th Giá #{"(vnd)"}
                                 th Số lượng
                                 th Tổng tiền #{"(vnd)"}
+                                th Trạng thái
                         tbody
                             if(records.length > 0)
                                 each item, index in records
@@ -37,4 +38,11 @@ block main
                                             span #{item.title}
                                         td #{item.price}
                                         td #{item.quantity}
-                                        td #{item.totalPrice}  
+                                        td #{item.totalPrice} 
+                                        td 
+                                            if(item.status == 'pending')
+                                                span Chưa thanh toán
+                                            if(item.status == 'paid')
+                                                span Đã thanh toán
+                                            if(item.status == 'failed')
+                                                span Thanh toán thất bại

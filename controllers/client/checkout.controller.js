@@ -5,6 +5,8 @@ const User= require("../../models/users.model");
 
 const {default: axios} = require("axios");
 
+const crypto = require('crypto');
+
 const productHepler  = require("../../helpers/product");
 
 // [GET] /checkout
@@ -91,7 +93,8 @@ module.exports.order= async (req, res) => {
         user_id: user.id,
         userInfo: userInfo,
         products: products,
-        totalPrice: totalPrice
+        totalPrice: totalPrice,
+        status: "pending"
     };
 
     const order= new Order(objectOrder);
@@ -153,10 +156,10 @@ module.exports.paymentPost= async (req, res) => {
         var orderInfo = 'pay with MoMo';
         var partnerCode = 'MOMO';
         var redirectUrl = `http://localhost:3000/checkout/success/${order.id}`;
-        var ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
+        var ipnUrl = 'http://localhost:3000/checkout/payment/api/momo-ipn';
         var requestType = "payWithMethod";
         var amount = order.totalPrice;
-        var orderId = partnerCode + new Date().getTime();
+        var orderId = order.id ;
         var requestId = orderId;
         var extraData ='';
         var paymentCode = 'T8Qii53fAXyUftPV3m9ysyRhEanUs9KlOPfHgpMR0ON50U10Bh+vZdpJU7VY4z+Z2y77fJHkoDc69scwwzLuW5MzeUKTwPo3ZMaB29imm6YulqnWfTkgzqRaion+EuD7FN9wZ4aXE1+mRt0gHsU193y+yxtRgpmY7SDMU9hCKoQtYyHsfFR5FUAOAKMdw2fzQqpToei3rnaYvZuYaxolprm9+/+WIETnPUDlxCYOiw7vPeaaYQQH0BF0TxyU3zu36ODx980rJvPAgtJzH1gUrlxcSS1HQeQ9ZaVM1eOK/jl8KJm6ijOwErHGbgf/hVymUQG65rHU2MWz9U8QUjvDWA==';
@@ -168,15 +171,10 @@ module.exports.paymentPost= async (req, res) => {
         //accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType
         var rawSignature = "accessKey=" + accessKey + "&amount=" + amount + "&extraData=" + extraData + "&ipnUrl=" + ipnUrl + "&orderId=" + orderId + "&orderInfo=" + orderInfo + "&partnerCode=" + partnerCode + "&redirectUrl=" + redirectUrl + "&requestId=" + requestId + "&requestType=" + requestType;
         //puts raw signature
-        // console.log("--------------------RAW SIGNATURE----------------")
-        // console.log(rawSignature)
         //signature
-        const crypto = require('crypto');
         var signature = crypto.createHmac('sha256', secretKey)
             .update(rawSignature)
             .digest('hex');
-        // console.log("--------------------SIGNATURE----------------")
-        // console.log(signature)
 
         //json object send to MoMo endpoint
         const requestBody = JSON.stringify({
@@ -213,7 +211,7 @@ module.exports.paymentPost= async (req, res) => {
             result= await axios(options);
 
             const payUrl = result.data.payUrl;
-            console.log(payUrl)
+            // console.log(result.data)
             // res.send("payment");
             res.redirect(payUrl);
         }catch{
@@ -227,33 +225,79 @@ module.exports.paymentPost= async (req, res) => {
 
 // [GET] /checkout/success/:id
 module.exports.success= async (req, res) => {
-    // console.log(req.params.id);
+    var accessKey = 'F8BBA842ECF85';
+    var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+    var partnerCode = 'MOMO';
 
-    const order= await Order.findOne({
-        _id: req.params.id
-    })
-    if(order){
-        for(const product of order.products){
-            const productInfo= await Product.findOne({
-                _id: product.product_id
-            }).select("title thumbnail");
-    
-            product.productInfo= productInfo;
-    
-            productHepler.priceNewProduct(product);
-            // console.log(product.priceNew);
-    
-            product.totalPrice= product.priceNew * product.quantity;
+    const orderId= req.params.id;
+    const requestId = orderId;
+    const lang = "vi";
+
+    const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=${partnerCode}&requestId=${requestId}`;
+    const signature = crypto.createHmac("sha256", secretKey).update(rawSignature).digest("hex");
+
+    const requestBody = {
+        partnerCode,
+        requestId,
+        orderId,
+        lang,
+        signature,
+    };
+
+    try {
+        const response = await axios.post("https://test-payment.momo.vn/v2/gateway/api/query", requestBody, {
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const data= response.data;
+        // console.log(data)
+
+        if (data.resultCode === 0) {
+            await Order.updateOne({
+                _id: req.params.id
+            }, {
+                status: "paid"
+            });
+            
+            const order= await Order.findOne({
+                _id: req.params.id
+            })
+            if(order){
+                for(const product of order.products){
+                    const productInfo= await Product.findOne({
+                        _id: product.product_id
+                    }).select("title thumbnail");
+            
+                    product.productInfo= productInfo;
+            
+                    productHepler.priceNewProduct(product);
+                    // console.log(product.priceNew);
+            
+                    product.totalPrice= product.priceNew * product.quantity;
+                }
+            
+                order.totalPrice= order.products.reduce((sum, item) => sum + item.totalPrice, 0);
+            
+                // console.log(order);
+            
+                res.render("client/pages/checkout/success", {
+                    pageTitle: "Thanh toán thành công",
+                    order: order
+                })
+            }
+
+        } else {
+            await Order.updateOne({
+                _id: req.params.id
+            }, {
+                status: "failed"
+            });
+            
+            req.flash("error", "Thanh toán thất bại! Vui lòng thực hiện lại.");
+            res.redirect("/user/info/list-order")
         }
-    
-        order.totalPrice= order.products.reduce((sum, item) => sum + item.totalPrice, 0);
-    
-        // console.log(order);
-    
-        res.render("client/pages/checkout/success", {
-            pageTitle: "Đặt hàng",
-            order: order
-        })
+    } catch (error) {
+        console.error("Lỗi kiểm tra thanh toán:", error.response ? error.response.data : error.message);
+        return null;
     }
-
 };
