@@ -27,30 +27,66 @@ if(buttonGoback.length > 0){
 }
 // end button-go-back
 
-// document.getElementById("sendButton").addEventListener("click", async () => {
-//     const messageInput = document.getElementById("message");
-//     const chatbox = document.getElementById("chatbox");
+// pagination
+const buttonPagination = document.querySelectorAll("[button-pagination]");
+// console.log(buttonPagination);
+if(buttonPagination){
+    let url = new URL(window.location.href);
+    
+    buttonPagination.forEach(button => {
+        button.addEventListener("click", () => {
+            const page = button.getAttribute("button-pagination");
+            // console.log(page);
 
-//     const message = messageInput.value.trim();
-//     if (!message) return;
+            url.searchParams.set("page", page);
 
-//     // Hiển thị tin nhắn của người dùng
-//     chatbox.innerHTML += `<p><b>Bạn:</b> ${message}</p>`;
-//     messageInput.value = "";
+            window.location.href = url.href;
+        })
+    })
+}
+// end pagination
 
-//     try {
-//         const response = await fetch("/chatbot", { // Đổi "/chatbot" thành "/chat" nếu backend của bạn dùng đường dẫn đó
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({ message })
-//         });
 
-//         if (!response.ok) throw new Error(`Lỗi API: ${response.statusText}`);
+// sort
+const sort = document.querySelector("[sort]");
+// console.log(sort);
+if(sort){
+    let url = new URL(window.location.href);
 
-//         const data = await response.json();
-//         chatbox.innerHTML += `<p><b>Leon:</b> ${data.reply || "Không có phản hồi."}</p>`;
-//     } catch (error) {
-//         console.error("Lỗi kết nối với API:", error);
-//         chatbox.innerHTML += `<p><b>Leon:</b> Lỗi kết nối với server.</p>`;
-//     }
-// });
+    const sortSelect = sort.querySelector("[sort-select]");
+    const sortClear = sort.querySelector("[sort-clear]");
+
+    sortSelect.addEventListener("change", (e) => {
+        const value = e.target.value;
+        const [sortKey, sortValue] = value.split("-");
+
+        url.searchParams.set("sortKey", sortKey);
+        url.searchParams.set("sortValue", sortValue);
+
+        window.location.href = url.href;
+
+    });
+
+    // end sort
+    sortClear.addEventListener("click", () => {
+        url.searchParams.delete("sortKey");
+        url.searchParams.delete("sortValue");
+        window.location.href = url.href;
+    })
+
+    // selected cho option
+    const sortKey = url.searchParams.get("sortKey");
+    const sortValue = url.searchParams.get("sortValue");
+
+    // console.log(sortKey);
+    // console.log(sortValue);
+    if(sortKey && sortValue){
+        const stringSort = `${sortKey}-${sortValue}`;
+        // console.log(stringSort);
+
+        const optionSelected = sortSelect.querySelector(`option[value='${stringSort}']`);
+        optionSelected.selected = true;
+    }
+
+}
+// end sort

@@ -22,7 +22,7 @@ block main
                         if(products.category)
                             div(class="inner-category")
                                 span Danh mục: 
-                                a(href=`product/${products.category.slug}`) #{products.category.title} 
+                                a(href=`/product/${products.category.slug}`) #{products.category.title} 
                         if(products.priceNew)
                             div(class="inner-price-new") Giá mới: <span>#{products.priceNew} #{"(vnd)"}</span>
                         if(products.price)

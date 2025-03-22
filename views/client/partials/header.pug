@@ -35,14 +35,12 @@ header.header
 
                 .inner-menu.flex-wrap
                     ul
-                        if(user)
-                            li(class="d-flex align-items-center")
-                                    a(href="/leon" ) Leo
           
                         li(class="sub-menu d-flex align-items-center")
                             - const pathProduct = "/product";
                             a(href=pathProduct ) 
-                                i(class="bi bi-list fs-3 icon-centered")
+                                //- i(class="bi bi-list fs-3 icon-centered")
+                                span Danh mục
                                 +sub-menu(layoutProductCategory, pathProduct)
                         if(user)
                             //- li 

@@ -13,7 +13,6 @@ const userRouter = require("./user.route");
 const usersRouter = require("./users.route");
 const chatRouter = require("./chat.route");
 const roomChatRouter = require("./roomChat.route");
-const leonRouter = require("./leon.route");
 
 module.exports = (app) => {
 
@@ -52,7 +51,4 @@ module.exports = (app) => {
         roomChatRouter
     );
     
-    app.use('/leon',
-        leonRouter
-    );
 }

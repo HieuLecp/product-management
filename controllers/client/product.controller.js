@@ -4,23 +4,59 @@ const Product = require('../../models/product.model');
 const productHepler  = require("../../helpers/product");
 const productCategoryHepler  = require("../../helpers/product-category");
 
+const paginationHelper = require("../../helpers/pagination");
+
 
 // [GET] /products
 module.exports.index = async (req, res) => {
-    const products = await Product.find({
-        status: "active",
-        deleted : false
-    })
-    .sort({position: "desc"});
+    try{
 
-    const newproducts= productHepler.priceNewProducts(products);
+        let find = {
+            deleted: false,
+            status: "active"
+        }
 
-    // console.log(newproducts);
+        // pagination
+        const countProducts = await Product.countDocuments(find);
 
-    res.render('client/pages/products/index',  {
-        pageTitle: "Danh sách sản phẩm",
-        products: newproducts
-    });
+        let objectPagination = paginationHelper(
+            {
+                currentPage: 1,
+                limitItems : 8
+            },
+            req.query,
+            countProducts
+        )
+        // end pagination
+
+        // sort 
+        let sort = {};
+
+        if(req.query.sortKey && req.query.sortValue){
+            sort[req.query.sortKey] = req.query.sortValue;
+        }   
+        else{
+            sort.position = "desc";
+        }
+        // end sort
+
+        const products = await Product.find(find)
+        .sort(sort)
+        .limit(objectPagination.limitItems)
+        .skip(objectPagination.skip);;
+    
+        const newproducts= productHepler.priceNewProducts(products);
+    
+        // console.log(newproducts);
+    
+        res.render('client/pages/products/index',  {
+            pageTitle: "Danh sách sản phẩm",
+            products: newproducts,
+            pagination: objectPagination
+        });
+    }catch{
+
+    }
 }
 
 // [GET] /products/detail/:slugProduct

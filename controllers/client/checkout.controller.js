@@ -66,11 +66,17 @@ module.exports.order= async (req, res) => {
         });
 
         const newStock= productInfo.stock - objectProduct.quantity;
+        if(productInfo.sold){
+            const newSold= productInfo.sold + objectProduct.quantity;
+        } else{
+            newSold=1;
+        }
         // console.log(newStock);
         await Product.updateOne({
             _id: item.product_id
         },{
-            stock: newStock
+            stock: newStock,
+            sold: newSold
         });
 
         objectProduct.price= productInfo.price;
@@ -94,7 +100,8 @@ module.exports.order= async (req, res) => {
         userInfo: userInfo,
         products: products,
         totalPrice: totalPrice,
-        status: "pending"
+        status: "pending",
+        paymentType: "cash"
     };
 
     const order= new Order(objectOrder);
@@ -256,7 +263,8 @@ module.exports.success= async (req, res) => {
             await Order.updateOne({
                 _id: req.params.id
             }, {
-                status: "paid"
+                status: "paid",
+                paymentType: "banking"
             });
             
             const order= await Order.findOne({

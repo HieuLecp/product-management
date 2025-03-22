@@ -1,13 +1,29 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head
 include ../../mixins/product-layout
-    
-block main     
+include ../../mixins/pagination
+include ../../mixins/sort
 
-    .container.my-3
-        .row 
-            .col-12 
-                +box-head(pageTitle)
-        
-        +product-grid(products)
+//- block dashboard 
+//-     include ../dashboard/index.pug
+    
+block main
+
+    .card.mb-3 
+        .container.my-3
+            .row 
+                .col-4
+                    +box-head("Sắp xếp")
+                    +sort()
+
+    .card.mb-3 
+        .container.my-3
+            .row 
+                .col-12 
+                    +box-head(pageTitle)
+            
+            +product-grid(products)
+
+    
+    +pagination(pagination)
             

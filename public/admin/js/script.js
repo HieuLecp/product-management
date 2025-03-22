@@ -63,7 +63,7 @@ if(buttonPagination){
         })
     })
 }
-// end paginatio
+// end pagination
 // checkbox multi
 const checkboxMulti = document.querySelector("[checkbox-multi]");
     if(checkboxMulti){

@@ -1,56 +1,99 @@
 extends ../../layouts/default
 
 block main 
-    h1 Trang tổng quan
+    h1 Tổng quan
+
+    .dashboard
+        .row.mt-4 
+            .col-10 
+                .card.mb-4 
+                    .card-header Tổng quan
+                    .card-body.stats
+                        .stat-card.blue
+                            - var product = statistic.products[0]
+                            h3 Sản phẩm bán chạy nhất
+                            img(src=product.thumbnail, alt="", width="80", height="auto")
+                            h3 <b>#{product.title}</b>
+                            h3 Đã bán: <b>#{product.sold}</b>
+
+                        .stat-card.purple
+                            h3 Doanh thu 
+                            h3 Trong ngày: <b>#{statistic.totalRevenue.inDay} VND</b>
+                            h3 Trong tháng: <b>#{statistic.totalRevenue.inMonth} VND</b>
+
+                        .stat-card.red
+                            h3 Số lượng người dùng
+                            h3 Tất cả: <b>#{statistic.user.total}</b>
+                            h3 Đang truy cập: <b>#{statistic.user.statusOnline}</b>
+
+        .row.mt-4
+            .col-md-10
+                .card.mb-4 
+                    .card-header Đồ thị
+                    .card-body.chart-container
+                        h2 📊 Revenue Analytics
+                            canvas#revenueChart
+
+                    script.
+                        window.onload = function () {
+                            const revenueData = !{JSON.stringify(statistic.revenuePerDay || [])};
+
+                            if (revenueData.length === 0) {
+                                console.warn("Không có dữ liệu doanh thu để hiển thị biểu đồ.");
+                                return;
+                            }
+
+                            const labels = revenueData.map(item => item._id);
+                            const data = revenueData.map(item => item.totalRevenue);
+
+                            const ctx = document.getElementById('revenueChart').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Doanh thu theo ngày (VND)',
+                                        data: data,
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderWidth: 2
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        y: { beginAtZero: true }
+                                    }
+                                }
+                            });
+                        };
+
+        .row.mt-4            
+            .col-md-10
+                .card.mb-4 
+                    .card-header Top 5 sản phẩm bán chạy
+                    .card-body.recent-orders
+                        h2 🛒 Recent Orders
+                        table
+                            thead
+                                tr
+                                    th STT
+                                    th Ảnh
+                                    th Tiêu đề
+                                    th Giá
+                                    th Đã bán
+                            tbody
+                                if(statistic.products.length > 0)
+                                each item, index in statistic.products.slice(0, 5)
+                                    tr
+                                        td #{index + 1}
+                                        td 
+                                            img(src=item.thumbnail, alt=item.title, width="80", height="auto")
+                                        td #{item.title}
+                                        td #{item.price}
+                                        td #{item.sold}
 
 
-    .row.mt-4 
-        .col-12 
-            .card.mb-4 
-                .card-header Thông tin tài khoản
-                .card-body 
-                    if(user.avatar)
-                        img(
-                            src= user.avatar
-                            style= "height: 100px; margin-bottom: 15px"
-                        )
-                    if(user.fullName)
-                        p Họ tên: <b>#{user.fullName}</b>
-                    if(user.email)
-                        p Email: <b>#{user.email}</b>
-                    if(user.phone)
-                        p Số điện thoại: <b>#{user.phone}</b>
-                    if(role.title)
-                        p Phân quyền: <b>#{role.title}</b>
-                        
-        .col-6 
-            .card.mb-4 
-                .card-header Danh mục sản phẩm
-                .card-body 
-                    p Số lượng: <b>#{statistic.categoryProduct.total}</b>
-                    p Hoạt động: <b>#{statistic.categoryProduct.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.categoryProduct.inactive}</b>
-                    
-        .col-6 
-            .card.mb-4 
-                .card-header Sản phẩm
-                .card-body 
-                    p Số lượng: <b>#{statistic.product.total}</b>
-                    p Hoạt động: <b>#{statistic.product.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.product.inactive}</b>
+block script
+    script(src="https://cdn.jsdelivr.net/npm/chart.js")
 
-        .col-6 
-            .card.mb-4 
-                .card-header Tài khoản admin
-                .card-body 
-                    p Số lượng: <b>#{statistic.account.total}</b>
-                    p Hoạt động: <b>#{statistic.account.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.account.inactive}</b>
-
-        .col-6 
-            .card.mb-4 
-                .card-header Tài khoản client
-                .card-body 
-                    p Số lượng: <b>#{statistic.user.total}</b>
-                    p Hoạt động: <b>#{statistic.user.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.user.inactive}</b>
