@@ -11,12 +11,21 @@ const productHepler  = require("../../helpers/product");
 
 // [GET] /checkout
 module.exports.index= async (req, res) => {
+    const { productIds } = req.query;
+
+    const listProductIds = productIds.split(",");
+
     const user= await User.findOne({
         tokenUser: req.cookies.tokenUser
     });
     
     const cart= await Cart.findOne({userId: user.id});
-    // console.log(cart);
+    
+    cart.products = cart.products.filter(item => listProductIds.includes(item.id));
+
+    if (cart.products.length === 0) {
+        return res.redirect("/cart");
+    }
 
     if(cart.products.length > 0){
         for(const item of cart.products){
@@ -26,31 +35,39 @@ module.exports.index= async (req, res) => {
             productHepler.priceNewProduct(productInfo);
 
             item.productInfo= productInfo;
+            item.productInfo.priceNewFormat= Number(item.productInfo.priceNew).toLocaleString("vi-VN");
 
             item.totalPrice= item.quantity * productInfo.priceNew;
-            
+            item.totalPriceFormat= item.totalPrice.toLocaleString("vi-VN");
         }
     }
 
     cart.totalPrice= cart.products.reduce((sum, item) => sum + item.totalPrice , 0);
+    cart.totalPriceFormat= cart.totalPrice.toLocaleString("vi-VN");
 
     res.render("client/pages/checkout/index", {
         pageTitle: "Đặt hàng",
-        cartDetail: cart
+        cartDetail: cart,
+        listProductId: listProductIds
     })
+
+    // res.send("checkout");
 };
 
 // [POST] /checkout/order
 module.exports.order= async (req, res) => {
+    const { productIds, ...userInfo } = req.body;
+    const listProductIds = productIds.split(",");
+
     const user= await User.findOne({
         tokenUser: req.cookies.tokenUser
     });
-    const userInfo= req.body;
 
     const cart= await Cart.findOne({
         userId: user.id   
     });
 
+    cart.products = cart.products.filter(item => listProductIds.includes(item.id));
     let products= [];
 
     for(const item of cart.products){
@@ -64,10 +81,11 @@ module.exports.order= async (req, res) => {
         const productInfo= await Product.findOne({
             _id: item.product_id
         });
+        let newSold;
 
         const newStock= productInfo.stock - objectProduct.quantity;
         if(productInfo.sold){
-            const newSold= productInfo.sold + objectProduct.quantity;
+            newSold= productInfo.sold + objectProduct.quantity;
         } else{
             newSold=1;
         }
@@ -91,9 +109,6 @@ module.exports.order= async (req, res) => {
         totalPrice = totalPrice + (item.priceNew * item.quantity);
     }
 
-    // console.log(products);
-    // console.log(totalPrice);
-
     const objectOrder= {
         cart_id: cart.id,
         user_id: user.id,
@@ -107,14 +122,15 @@ module.exports.order= async (req, res) => {
     const order= new Order(objectOrder);
     await order.save();
 
-    await Cart.updateOne({
-        userId: user.id  
-    }, {
-        products: []
-    });
+    await Cart.updateOne(
+        { userId: user.id },
+        {
+            $pull: { products: { _id: { $in: listProductIds } } }
+        }
+    );
 
-    // res.send("ok");
     res.redirect(`/checkout/payment/${order.id}`);
+    // res.send("ok");
 };
 
 // [GET] /checkout/payment/:id
@@ -129,16 +145,19 @@ module.exports.payment= async (req, res) => {
             const productInfo= await Product.findOne({
                 _id: product.product_id
             }).select("title thumbnail");
+
+            productHepler.priceNewProduct(product);
     
             product.productInfo= productInfo;
-    
-            productHepler.priceNewProduct(product);
+            product.priceNewFormat= Number(product.priceNew).toLocaleString("vi-VN");
             // console.log(product.priceNew);
     
             product.totalPrice= product.priceNew * product.quantity;
+            product.totalPriceFormat= product.totalPrice.toLocaleString("vi-VN");
         }
     
         order.totalPrice= order.products.reduce((sum, item) => sum + item.totalPrice, 0);
+        order.totalPriceFormat= order.totalPrice.toLocaleString("vi-VN");
     
         // console.log(order);
     

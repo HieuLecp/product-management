@@ -15,7 +15,7 @@ block main
 
         .row   
             .col-12 
-                table(class="table table-bordered order")
+                table(class="table table-striped table-hover shadow-sm rounded-3 text-center align-middle")
                     thead 
                         tr 
                             th STT 
@@ -33,9 +33,9 @@ block main
                                         img(src=item.productInfo.thumbnail, alt="sp1" width="80px")
                                     td 
                                         span #{item.productInfo.title}
-                                    td #{item.productInfo.priceNew}
+                                    td #{item.productInfo.priceNewFormat}
                                     td #{item.quantity}
-                                    td #{item.totalPrice}
+                                    td #{item.totalPriceFormat}
 
                         else 
                             tr 
@@ -44,7 +44,7 @@ block main
                                     class="text-center"
                                 ) Giỏ hàng trống.
                 if(cartDetail.products.length > 0)
-                    h3(class="text-right") Tổng đơn hàng: #{cartDetail.totalPrice} #{"(vnd)"}
+                    h3(class="text-right") Tổng đơn hàng: #{cartDetail.totalPriceFormat} #{"(vnd)"}
             
         if(cartDetail.products.length > 0)
             .row 
@@ -54,6 +54,7 @@ block main
                             action= "/checkout/order"
                             method= "POST"
                         )
+                            input(type="hidden" name="productIds" value=listProductId.join(","))
                             div(class=" form-group")
                                 label(for="fullname") Họ tên
                                 input(
@@ -85,4 +86,4 @@ block main
                                 button(
                                     type="submit"
                                     class="btn btn-success btn-block"
-                                ) Chọn phương thức thanh toán
+                                ) Phương thức thanh toán

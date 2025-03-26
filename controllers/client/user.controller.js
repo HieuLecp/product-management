@@ -367,9 +367,9 @@ module.exports.listOrder= async (req, res) => {
             const object = {
                 thumbnail: product.thumbnail,
                 title: product.title,
-                price: item.price,
+                price: item.price.toLocaleString("vi-VN"),
                 quantity: item.quantity,
-                totalPrice: order.totalPrice,
+                totalPrice: order.totalPrice.toLocaleString("vi-VN"),
                 status: order.status
             };
     

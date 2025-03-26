@@ -27,6 +27,44 @@ if(buttonGoback.length > 0){
 }
 // end button-go-back
 
+// checkbox multi
+const checkboxMulti = document.querySelector("[checkbox-multi]");
+    if(checkboxMulti){
+        const inputCheckAll = checkboxMulti.querySelector("input[name=checkall]");
+        const inputsId = checkboxMulti.querySelectorAll("input[name=id]");
+
+        inputCheckAll.addEventListener("click", () => {
+            // console.log(inputCheckAll.checked);
+            if(inputCheckAll.checked){
+                inputsId.forEach(input => {
+                    input.checked = true;
+                });
+            }
+            else{
+                inputsId.forEach(input => {
+                    input.checked = false;
+                });
+            }
+        });
+
+        inputsId.forEach(input => {
+            input.addEventListener("click", () => {
+                const countChecked = checkboxMulti.querySelectorAll("input[name=id]:checked").length;
+                
+                // console.log(countChecked);
+                // console.log(inputsId.length);
+                if(countChecked == inputsId.length){
+                    inputCheckAll.checked = true;
+                }
+                else{
+                    inputCheckAll.checked = false;
+                }
+            });
+        });
+    }
+// end checkboxMulti
+
+
 // pagination
 const buttonPagination = document.querySelectorAll("[button-pagination]");
 // console.log(buttonPagination);
@@ -54,7 +92,7 @@ if(sort){
     let url = new URL(window.location.href);
 
     const sortSelect = sort.querySelector("[sort-select]");
-    const sortClear = sort.querySelector("[sort-clear]");
+    // const sortClear = sort.querySelector("[sort-clear]");
 
     sortSelect.addEventListener("change", (e) => {
         const value = e.target.value;
@@ -66,13 +104,6 @@ if(sort){
         window.location.href = url.href;
 
     });
-
-    // end sort
-    sortClear.addEventListener("click", () => {
-        url.searchParams.delete("sortKey");
-        url.searchParams.delete("sortValue");
-        window.location.href = url.href;
-    })
 
     // selected cho option
     const sortKey = url.searchParams.get("sortKey");
@@ -87,6 +118,13 @@ if(sort){
         const optionSelected = sortSelect.querySelector(`option[value='${stringSort}']`);
         optionSelected.selected = true;
     }
+
+    // end sort
+    // sortClear.addEventListener("click", () => {
+    //     url.searchParams.delete("sortKey");
+    //     url.searchParams.delete("sortValue");
+    //     window.location.href = url.href;
+    // })
 
 }
 // end sort
