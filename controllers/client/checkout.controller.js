@@ -6,6 +6,8 @@ const User= require("../../models/users.model");
 const {default: axios} = require("axios");
 
 const crypto = require('crypto');
+const CryptoJS = require('crypto-js'); // npm install crypto-js
+const moment = require('moment');
 
 const productHepler  = require("../../helpers/product");
 
@@ -56,8 +58,9 @@ module.exports.index= async (req, res) => {
 
 // [POST] /checkout/order
 module.exports.order= async (req, res) => {
-    const { productIds, ...userInfo } = req.body;
+    const { productIds,paymentType, ...userInfo } = req.body;
     const listProductIds = productIds.split(",");
+    console.log(paymentType);
 
     const user= await User.findOne({
         tokenUser: req.cookies.tokenUser
@@ -116,7 +119,7 @@ module.exports.order= async (req, res) => {
         products: products,
         totalPrice: totalPrice,
         status: "pending",
-        paymentType: "cash"
+        paymentType: paymentType
     };
 
     const order= new Order(objectOrder);
@@ -129,54 +132,7 @@ module.exports.order= async (req, res) => {
         }
     );
 
-    res.redirect(`/checkout/payment/${order.id}`);
-    // res.send("ok");
-};
-
-// [GET] /checkout/payment/:id
-module.exports.payment= async (req, res) => {
-    const orderId= req.params.id;
-
-    const order= await Order.findOne({
-        _id: req.params.id
-    })
-    if(order){
-        for(const product of order.products){
-            const productInfo= await Product.findOne({
-                _id: product.product_id
-            }).select("title thumbnail");
-
-            productHepler.priceNewProduct(product);
-    
-            product.productInfo= productInfo;
-            product.priceNewFormat= Number(product.priceNew).toLocaleString("vi-VN");
-            // console.log(product.priceNew);
-    
-            product.totalPrice= product.priceNew * product.quantity;
-            product.totalPriceFormat= product.totalPrice.toLocaleString("vi-VN");
-        }
-    
-        order.totalPrice= order.products.reduce((sum, item) => sum + item.totalPrice, 0);
-        order.totalPriceFormat= order.totalPrice.toLocaleString("vi-VN");
-    
-        // console.log(order);
-    
-        res.render("client/pages/checkout/payment", {
-            pageTitle: "Thanh toán",
-            order: order,
-            orderId: orderId
-        })
-    }
-};
-
-// [POST] /checkout/payment/:id
-module.exports.paymentPost= async (req, res) => {
-    const order= await Order.findOne({
-        _id: req.params.id
-    })
-    if(order){
-        //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
-        //parameters
+    if(paymentType === "momo"){
         var accessKey = 'F8BBA842ECF85';
         var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
         var orderInfo = 'pay with MoMo';
@@ -237,94 +193,145 @@ module.exports.paymentPost= async (req, res) => {
             result= await axios(options);
 
             const payUrl = result.data.payUrl;
-            // console.log(result.data)
+            console.log(payUrl)
             // res.send("payment");
-            res.redirect(payUrl);
+            return res.redirect(payUrl);
         }catch{
             return res.status(500).json({
                 statusCode: 500
             })
         }
     }
+    else if(paymentType === "zalopay"){
+        const config = {
+            app_id: "2553",
+            key1: "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL",
+            key2: "kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz",
+            endpoint: "https://sb-openapi.zalopay.vn/v2/create"
+        };
+        const embed_data = {
+            redirecturl : `http://localhost:3000/checkout/success/${order.id}`
+        };
 
-}
+        const items = [{}];
+        const transID = Math.floor(Math.random() * 1000000);
+        const orders = {
+            app_id: config.app_id,
+            app_trans_id: `${moment().format('YYMMDD')}_${transID}`, // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
+            app_user: "user123",
+            app_time: Date.now(), // miliseconds
+            item: JSON.stringify(items),
+            embed_data: JSON.stringify(embed_data),
+            amount: order.totalPrice,
+            description: `Laptop14`,
+            bank_code: "zalopayapp",
+        };
+
+        // appid|app_trans_id|appuser|amount|apptime|embeddata|item
+        const data = config.app_id + "|" + orders.app_trans_id + "|" + orders.app_user + "|" + orders.amount + "|" + orders.app_time + "|" + orders.embed_data + "|" + orders.item;
+        orders.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+
+        try {
+            const result= await axios.post(config.endpoint, null, { params: orders });
+            // console.log(result)
+
+            const payUrl = result.data.order_url;
+            return res.redirect(payUrl);
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+    else{
+        return res.redirect(`/checkout/success/${order.id}`);
+    }
+    // res.send("ok");
+};
+
+// // [GET] /checkout/success/:id
+// module.exports.success = async (req, res) => {
+//     const accessKey = 'F8BBA842ECF85';
+//     const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+//     const partnerCode = 'MOMO';
+
+//     const orderId = req.params.id;
+//     const requestId = orderId;
+//     const lang = 'vi';
+
+//     const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=${partnerCode}&requestId=${requestId}`;
+//     const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
+
+//     const requestBody = {
+//         partnerCode,
+//         requestId,
+//         orderId,
+//         lang,
+//         signature,
+//     };
+
+//     try {
+//         const response = await axios.post('https://test-payment.momo.vn/v2/gateway/api/query', requestBody, {
+//             headers: { 'Content-Type': 'application/json' },
+//         });
+
+//         const data = response.data;
+//         console.log(data);
+
+//         const order = await Order.findOne({ _id: req.params.id });
+//         if (!order) {
+//             return res.status(404).send('Không tìm thấy đơn hàng');
+//         }
+
+//         if (data.resultCode === 0) {
+//             await Order.updateOne({ _id: req.params.id }, { status: 'paid', paymentType: 'banking' });
+
+//             for (const product of order.products) {
+//                 const productInfo = await Product.findOne({ _id: product.product_id }).select('title thumbnail');
+//                 product.productInfo = productInfo;
+//                 productHepler.priceNewProduct(product);
+//                 product.totalPrice = product.priceNew * product.quantity;
+//             }
+
+//             order.totalPrice = order.products.reduce((sum, item) => sum + item.totalPrice, 0);
+
+//             return res.render('client/pages/checkout/success', {
+//                 pageTitle: 'Thanh toán thành công',
+//                 order: order,
+//             });
+//         } else {
+//             if (order.paymentType === 'momo') {
+//                 await Order.updateOne({ _id: req.params.id }, { status: 'failed' });
+//                 // req.flash("error", "Thanh toán thất bại! Vui lòng thực hiện lại."); // Bỏ nếu không dùng flash
+//                 return res.redirect('/user/info/list-order');
+//             } else {
+//                 for (const product of order.products) {
+//                     const productInfo = await Product.findOne({ _id: product.product_id }).select('title thumbnail');
+//                     product.productInfo = productInfo;
+//                     productHepler.priceNewProduct(product);
+//                     product.totalPrice = product.priceNew * product.quantity;
+//                 }
+
+//                 order.totalPrice = order.products.reduce((sum, item) => sum + item.totalPrice, 0);
+
+//                 return res.render('client/pages/checkout/success', {
+//                     pageTitle: 'Thanh toán thành công',
+//                     order: order,
+//                 });
+//             }
+//         }
+//     } catch (error) {
+//         console.error('Lỗi kiểm tra thanh toán:', error.response ? error.response.data : error.message);
+//         return res.status(500).send('Lỗi kiểm tra thanh toán');
+//     }
+// };
 
 // [GET] /checkout/success/:id
 module.exports.success= async (req, res) => {
-    var accessKey = 'F8BBA842ECF85';
-    var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
-    var partnerCode = 'MOMO';
+    const order= await Order.findOne({
+        _id: req.params.id
+    })
 
-    const orderId= req.params.id;
-    const requestId = orderId;
-    const lang = "vi";
-
-    const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=${partnerCode}&requestId=${requestId}`;
-    const signature = crypto.createHmac("sha256", secretKey).update(rawSignature).digest("hex");
-
-    const requestBody = {
-        partnerCode,
-        requestId,
-        orderId,
-        lang,
-        signature,
-    };
-
-    try {
-        const response = await axios.post("https://test-payment.momo.vn/v2/gateway/api/query", requestBody, {
-            headers: { "Content-Type": "application/json" },
-        });
-
-        const data= response.data;
-        // console.log(data)
-
-        if (data.resultCode === 0) {
-            await Order.updateOne({
-                _id: req.params.id
-            }, {
-                status: "paid",
-                paymentType: "banking"
-            });
-            
-            const order= await Order.findOne({
-                _id: req.params.id
-            })
-            if(order){
-                for(const product of order.products){
-                    const productInfo= await Product.findOne({
-                        _id: product.product_id
-                    }).select("title thumbnail");
-            
-                    product.productInfo= productInfo;
-            
-                    productHepler.priceNewProduct(product);
-                    // console.log(product.priceNew);
-            
-                    product.totalPrice= product.priceNew * product.quantity;
-                }
-            
-                order.totalPrice= order.products.reduce((sum, item) => sum + item.totalPrice, 0);
-            
-                // console.log(order);
-            
-                res.render("client/pages/checkout/success", {
-                    pageTitle: "Thanh toán thành công",
-                    order: order
-                })
-            }
-
-        } else {
-            await Order.updateOne({
-                _id: req.params.id
-            }, {
-                status: "failed"
-            });
-            
-            req.flash("error", "Thanh toán thất bại! Vui lòng thực hiện lại.");
-            res.redirect("/user/info/list-order")
-        }
-    } catch (error) {
-        console.error("Lỗi kiểm tra thanh toán:", error.response ? error.response.data : error.message);
-        return null;
-    }
+    return res.render('client/pages/checkout/success', {
+        pageTitle: 'Thanh toán thành công',
+        order: order,
+    });
 };

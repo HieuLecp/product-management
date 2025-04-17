@@ -9,6 +9,7 @@ const searchHepler = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
 const createTree = require("../../helpers/createTree");
 
+const productCategoryHepler  = require("../../helpers/product-category");
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
@@ -83,7 +84,8 @@ module.exports.index = async (req, res) => {
                 updatedBy.accountFullName = userUpdated.fullName;
             }
             
-            // console.log(item);
+            item.priceFormat= item.price.toLocaleString("vi-VN");
+            // console.log(item.priceFormat);
             
         }
 
@@ -322,19 +324,21 @@ module.exports.detail = async (req, res) => {
             product.category= category;
         }
 
-         // TT người tạo
-         const user= await Accounts.findOne({_id: product.createdBy.account_id});
-         if(user){
-             product.accountFullName= user.fullName;
-         }
-         // TT người chỉnh sửa gần nhất
-         // console.log(item.updatedBy.slice(-1)[0]);
-         const updatedBy = product.updatedBy.slice(-1)[0]
-         if(updatedBy){
-             const userUpdated= await Accounts.findOne({_id: updatedBy.account_id});
- 
-             updatedBy.accountFullName = userUpdated.fullName;
-         }
+        // TT người tạo
+        const user= await Accounts.findOne({_id: product.createdBy.account_id});
+        if(user){
+            product.accountFullName= user.fullName;
+        }
+        // TT người chỉnh sửa gần nhất
+        // console.log(item.updatedBy.slice(-1)[0]);
+        const updatedBy = product.updatedBy.slice(-1)[0]
+        if(updatedBy){
+            const userUpdated= await Accounts.findOne({_id: updatedBy.account_id});
+
+            updatedBy.accountFullName = userUpdated.fullName;
+        }
+
+        product.priceFormat= product.price.toLocaleString("vi-VN");
     
         res.render("admin/pages/products/detail", {
             pageTitle : product.title,

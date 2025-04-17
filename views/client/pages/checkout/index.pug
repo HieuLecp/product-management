@@ -49,14 +49,14 @@ block main
         if(cartDetail.products.length > 0)
             .row 
                 .col-12 
-                    .card.p-4.my-4 
+                    .order.p-4.my-4 
                         form(
                             action= "/checkout/order"
                             method= "POST"
                         )
                             input(type="hidden" name="productIds" value=listProductId.join(","))
-                            div(class=" form-group")
-                                label(for="fullname") Họ tên
+                            div(class="form-group")
+                                label(for="fullName") Họ tên
                                 input(
                                     type="text"
                                     class="form-control"
@@ -64,7 +64,8 @@ block main
                                     name="fullName"
                                     required
                                 )
-                            div(class=" form-group")
+                                span(id="fullNameError" class="error-message")
+                            div(class="form-group")
                                 label(for="phone") Số điện thoại
                                 input(
                                     type="text"
@@ -73,7 +74,8 @@ block main
                                     name="phone"
                                     required
                                 )
-                            div(class=" form-group")
+                                span(id="phoneError" class="error-message")
+                            div(class="form-group")
                                 label(for="address") Địa chỉ nhận hàng
                                 input(
                                     type="text"
@@ -82,8 +84,29 @@ block main
                                     name="address"
                                     required
                                 )
-                            div(class=" form-group")
-                                button(
-                                    type="submit"
-                                    class="btn btn-success btn-block"
-                                ) Phương thức thanh toán
+                            div(class="form-group")
+                                label(for="paymentType") Phương thức thanh toán
+                                select(class="form-control" id="paymentType" name="paymentType" onchange="togglePaymentSection()" required)
+                                    option(value="" selected) --Chọn--
+                                    option(value="cod") Thanh toán khi nhận hàng (COD)
+                                    option(value="momo") Thanh toán qua MoMo
+                                    option(value="zalopay") Thanh toán qua ZaloPay
+
+                            div(id="paymentDetails" class="mt-3" style="display: none;")
+                                div(class="alert alert-info") Đã chọn phương thức thanh toán thành công.
+                                
+                                div(id="codPayment" style="display: none;")
+                                    p Thanh toán <b>tiền mặt</b> khi nhận hàng. Vui lòng chuẩn bị đủ tiền mặt cho đơn hàng.
+                                
+                                div(id="momoPayment" style="display: none;")
+                                    p Thanh toán qua <b>MoMo</b>. Bạn sẽ được chuyển hướng để thực hiện thanh toán.
+                                
+                                div(id="zalopayPayment" style="display: none;")
+                                    p Thanh toán qua <b>ZaloPay</b>. Bạn sẽ được chuyển hướng để thực hiện thanh toán.
+
+                            button(type="submit" class="btn btn-success btn-block mt-3") Đặt hàng
+
+    
+    script(src="/js/checkout.js")
+
+    

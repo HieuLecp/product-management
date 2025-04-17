@@ -91,7 +91,7 @@ module.exports.addCart =  async (req, res) => {
     }
 
     req.flash("success", "Đã thêm sản phẩm vào giỏ hàng");
-    res.redirect("back")
+    return res.redirect("back")
     // res.send("ok");
 };
 
