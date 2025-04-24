@@ -1684,5 +1684,203 @@ label {
         right: 5px;
     }
 }
+
+/* Thanh quảng cáo dọc */
+.ad-banner {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 170px;
+    height: 600px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+}
+
+.ad-banner:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+#ad-left {
+    left: 0;
+}
+
+#ad-right {
+    right: 0;
+}
+
+.ad-content h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.ad-content p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.ad-content .btn-primary {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #ff6200;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.ad-content .btn-primary:hover {
+    background-color: #e65100;
+}
+
+.ad-content img {
+    height: 250px; /* Tăng chiều cao hình ảnh */
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .ad-banner {
+        display: none; /* Ẩn trên màn hình nhỏ hơn 1200px */
+    }
+}
 /* end banner */
+
+/* sidebar product */
+.sidebar {
+    padding: 15px;
+    background: #f8f9fa; /* Màu nền nhạt */
+    border-radius: 10px;
+    height: fit-content; /* Chiều cao tự động theo nội dung */
+    position: sticky;
+    top: 20px;
+}
+
+/* Phần trong sidebar */
+.sidebar-section {
+    margin-bottom: 20px;
+}
+
+/* Danh mục sản phẩm (từ sub-menu) */
+.sidebar-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-section ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar-section ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.sidebar-section ul li a:hover {
+    color: #ff6200;
+}
+
+/* Danh mục con (thụt lề) */
+.sidebar-section ul ul {
+    padding-left: 15px;
+    margin-top: 5px;
+}
+
+.sidebar-section ul ul li a {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.sidebar-section ul ul li a:hover {
+    color: #ff6200;
+}
+
+/* Form lọc giá */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff6200;
+}
+
+/* Liên kết nhanh */
+.quick-links {
+    list-style: none;
+    padding: 0;
+}
+
+.quick-links li {
+    margin-bottom: 10px;
+}
+
+.quick-links li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.quick-links li a:hover {
+    color: #ff6200;
+}
+
+/* Nút lọc */
+.btn-primary {
+    background-color: #ff6200;
+    border: none;
+    padding: 8px 15px;
+    color: #fff;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #e65100;
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none; /* Ẩn sidebar trên thiết bị di động */
+    }
+
+    .col-9 {
+        width: 100%;
+        padding: 0;
+    }
+
+    .container-fluid {
+        padding: 0 15px;
+    }
+}
+/* end sidebar product */
 

@@ -22,6 +22,22 @@ block main
                 p Tặng balo và chuột cho đơn từ 15 triệu!
                 a.btn.btn-primary(href="/product" style="margin-top: 1rem;") Mua ngay
                 p.contact-info 0366809374 | Văn Quán, Hà Đông
+
+    // Thanh quảng cáo bên trái
+    #ad-left.ad-banner(style="display: none;")
+        .ad-content
+            img(src="/images/ad-left.jpg" alt="Ad Left" style="width: 100%; height: auto; border-radius: 10px;")
+            h3 Laptop14
+            p Giảm giá 20% cho laptop gaming!
+            a.btn.btn-primary(href="/product") Mua ngay
+
+    // Thanh quảng cáo bên phải
+    #ad-right.ad-banner(style="display: none;")
+        .ad-content
+            img(src="/images/ad-right.jpg" alt="Ad Right" style="width: 100%; height: auto; border-radius: 10px;")
+            h3 Laptop14
+            p Tặng balo cho đơn từ 15 triệu!
+            a.btn.btn-primary(href="/product") Mua ngay
     
     .section-banner.my-5
         .container
@@ -111,46 +127,10 @@ block main
     
 
 block script 
+    script(src="/js/home.js")
+
     script(type="module" src="/js/leon.js")
 
     script(src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js")
     
-    script.
-        document.addEventListener('DOMContentLoaded', () => {
-            const swiper = new Swiper('.swiper-container', {
-                slidesPerView: 1, // Chỉ hiển thị 1 slide tại một thời điểm
-                spaceBetween: 0,  // Không có khoảng cách giữa các slide
-                loop: true,
-                speed: 1000, // Tốc độ chuyển slide (1000ms = 1 giây, làm chậm hơn)
-                autoplay: {
-                    delay: 7000, // Tăng thời gian delay lên 5 giây
-                    disableOnInteraction: false,
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-            });
-
-            const popupOverlay = document.getElementById('popup-overlay');
-            const closePopup = document.getElementById('close-popup');
-
-            // Hiển thị popup
-            popupOverlay.style.display = 'flex';
-
-            // Đóng popup khi nhấn nút "X"
-            closePopup.addEventListener('click', () => {
-                popupOverlay.style.display = 'none';
-            });
-
-            // Đóng popup khi nhấn vào lớp phủ
-            popupOverlay.addEventListener('click', (e) => {
-                if (e.target === popupOverlay) {
-                    popupOverlay.style.display = 'none';
-                }
-            });
-        });
+    
