@@ -13,36 +13,36 @@ block main
             .col-12 
                 +box-head("Lịch sử mua hàng")
 
-        if(records.length > 0)
+        if(orders.length > 0)
             .row   
                 .col-12 
                     h4(class="mb-2") Danh sách đơn hàng đã mua
-                    table(class="table table-bordered order")
-                        thead 
-                            tr 
-                                th STT 
-                                th Ảnh
-                                th Tên
-                                th Giá #{"(vnd)"}
-                                th Số lượng
-                                th Tổng tiền #{"(vnd)"}
-                                th Trạng thái
-                        tbody
-                            if(records.length > 0)
-                                each item, index in records
-                                    tr
-                                        td #{index + 1}
-                                        td 
-                                            img(src=item.thumbnail, alt="sp1" width="80px")
-                                        td 
-                                            span #{item.title}
-                                        td #{item.price}
-                                        td #{item.quantity}
-                                        td #{item.totalPrice} 
-                                        td 
-                                            if(item.status == 'pending')
-                                                span Chưa thanh toán
-                                            if(item.status == 'paid')
-                                                span Đã thanh toán
-                                            if(item.status == 'failed')
-                                                span Thanh toán thất bại
+                    each order, index in orderDetails
+                        table.history-table
+                            thead
+                                tr
+                                    th stt
+                                    th ngày đặt
+                                    th tổng tiền
+                                    th trạng thái
+                                    th hành động
+                            tbody
+                                tr
+                                    td.text-center #{index + 1}
+                                    td #{order.createdAt}
+                                    td.total-price #{order.totalPrice}
+                                    td
+                                        span(class=`status ${order.status}`) #{order.status}
+                                    td.action-cell
+                                        button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem chi tiết
+                        div.details-container.hidden(id=`details-${order.orderId}`)
+                            h3.details-order Chi tiết đơn hàng
+                            div(id=`details-content-${order.orderId}`)
+                                                    
+
+    script(src="/js/user.js")
+    script.
+      // Nhúng dữ liệu orderDetails vào trang
+        window.orderDetails = JSON.parse('!{JSON.stringify(orderDetails).replace(/<\/script/g, "<\\/script")}');
+
+    link(href='https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' rel='stylesheet')

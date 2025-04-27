@@ -356,31 +356,62 @@ module.exports.listOrder= async (req, res) => {
     
     const orders= await Order.find({
         user_id: user.id
-    });
+    }).lean();
 
-    const listOrder= []
+    const listProduct= [];
+    const orderDetails = [];
 
-    for(const order of orders){
-        for (const item of order.products) {
-            const product = await Product.findOne({ _id: item.product_id });
+    // for(const order of orders){
+    //     for (const item of order.products) {
+    //         const product = await Product.findOne({ _id: item.product_id });
     
-            const object = {
+    //         const object = {
+    //             thumbnail: product.thumbnail,
+    //             title: product.title,
+    //             price: item.price.toLocaleString("vi-VN"),
+    //             quantity: item.quantity,
+    //             totalPrice: order.totalPrice.toLocaleString("vi-VN"),
+    //             status: order.status,
+    //             createdAt: new Date(order.createdAt).toLocaleString('vi-VN')
+    //         };
+    
+    //         listProduct.push(object);
+    //     }
+    // }
+    // console.log(listOrder);
+
+    for (const order of orders) {
+        const productsInOrder = [];
+        for (const item of order.products) {
+            const product = await Product.findOne({ _id: item.product_id }).lean();
+            // console.log(product.slug);
+            if (!product) continue;
+
+            productsInOrder.push({
                 thumbnail: product.thumbnail,
                 title: product.title,
                 price: item.price.toLocaleString("vi-VN"),
                 quantity: item.quantity,
+                slug: product.slug
+            });
+        }
+
+        if (productsInOrder.length > 0) {
+            orderDetails.push({
+                orderId: order._id.toString(),
+                createdAt: new Date(order.createdAt).toLocaleString('vi-VN'),
                 totalPrice: order.totalPrice.toLocaleString("vi-VN"),
-                status: order.status
-            };
-    
-            listOrder.push(object);
+                status: order.status,
+                products: productsInOrder
+            });
         }
     }
-    // console.log(listOrder);
 
     // res.send("ok");
     res.render("client/pages/user/list-order", {
         pageTitle: "Lịch sử mua hàng",
-        records: listOrder
+        // products: listProduct,
+        orderDetails: orderDetails,
+        orders: orders
     })
 }

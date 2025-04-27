@@ -6,15 +6,26 @@ const productCategoryHepler  = require("../../helpers/product-category");
 
 const paginationHelper = require("../../helpers/pagination");
 
-
 // [GET] /products
 module.exports.index = async (req, res) => {
     try{
+        // console.log(req.query);
         let find = {
             deleted: false,
             status: "active"
         }
 
+        if(req.query.priceMin || req.query.priceMax){
+            find.price= {};
+
+            if(req.query.priceMin){
+                find.price.$gte = req.query.priceMin;
+            }
+            if(req.query.priceMax){
+                find.price.$lte = req.query.priceMax;
+            }
+        }
+        
         // pagination
         const countProducts = await Product.countDocuments(find);
 
@@ -26,7 +37,7 @@ module.exports.index = async (req, res) => {
             req.query,
             countProducts
         )
-        // end pagination
+        // end pagination 
 
         // sort 
         let sort = {};

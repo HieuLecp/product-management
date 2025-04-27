@@ -119,12 +119,5 @@ if(sort){
         optionSelected.selected = true;
     }
 
-    // end sort
-    // sortClear.addEventListener("click", () => {
-    //     url.searchParams.delete("sortKey");
-    //     url.searchParams.delete("sortValue");
-    //     window.location.href = url.href;
-    // })
-
 }
 // end sort

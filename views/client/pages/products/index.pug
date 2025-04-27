@@ -3,6 +3,7 @@ include ../../mixins/box-head
 include ../../mixins/product-layout
 include ../../mixins/pagination
 include ../../mixins/sort
+include ../../mixins/filter
 include ../../mixins/sub-menu.pug
 
 //- block dashboard 
@@ -22,14 +23,11 @@ block main
                 // Lọc theo giá
                 .sidebar-section
                     +box-head("Lọc theo giá")
-                    form(action="/products" method="GET")
-                        .form-group
-                            label(for="price-min") Giá tối thiểu:
-                            input#price-min(type="number" name="priceMin" placeholder="0" min="0")
-                        .form-group
-                            label(for="price-max") Giá tối đa:
-                            input#price-max(type="number" name="priceMax" placeholder="50000000" min="0")
-                        button.btn.btn-primary(type="submit" style="margin-top: 1rem;") Lọc
+                    +filter()
+
+                .sidebar-section
+                    +box-head("Sắp xếp")
+                    +sort()
 
                 // Liên kết nhanh
                 .sidebar-section
@@ -42,18 +40,8 @@ block main
                         li
                             a(href="/products?featured=true") Sản phẩm nổi bật
 
-                .sidebar-section
-                    +box-head("Sắp xếp")
-                    +sort()
-
             // Nội dung chính
             .col-9
-                //- .card.mb-3
-                //-     .container-fluid
-                //-         .row
-                //-             .col-12
-                //-                 +box-head("Sắp xếp")
-                //-                 +sort()
 
                 .card.mb-3
                     .container-fluid
@@ -65,29 +53,5 @@ block main
                 +pagination(pagination)
             
 block script
-    script.
-        document.addEventListener('DOMContentLoaded', () => {
-            const sortSelects = document.querySelectorAll('[sort-select]');
-            sortSelects.forEach(select => {
-                select.addEventListener('change', (e) => {
-                    const selectedValue = e.target.value;
-                    sortSelects.forEach(otherSelect => {
-                        if (otherSelect !== select) {
-                            otherSelect.value = selectedValue;
-                        }
-                    });
-                    const form = select.closest('form') || document.createElement('form');
-                    if (!form.closest('body')) {
-                        form.method = 'GET';
-                        form.action = '/products';
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'sort';
-                        input.value = selectedValue;
-                        form.appendChild(input);
-                        document.body.appendChild(form);
-                    }
-                    form.submit();
-                });
-            });
-        });
+    script(src="/js/product.js")
+    
