@@ -2078,4 +2078,24 @@ label {
     padding: 16px;
 }
 
+.cancel-order-btn {
+    background-color: #ef4444;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.cancel-order-btn:hover {
+    background-color: #dc2626;
+}
+
+.cancel-order-btn.disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 /* end list-order */

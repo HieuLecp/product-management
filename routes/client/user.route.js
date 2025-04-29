@@ -91,4 +91,9 @@ router.get('/info/list-order',
     controller.listOrder
 );
 
+router.patch('/info/list-order/:orderId',
+    authMiddleware.requireAuth,
+    controller.cancelOrder
+);
+
 module.exports = router;

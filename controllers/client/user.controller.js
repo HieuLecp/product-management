@@ -414,4 +414,17 @@ module.exports.listOrder= async (req, res) => {
         orderDetails: orderDetails,
         orders: orders
     })
+};
+
+// [PATCH] /user/info/list-order
+module.exports.cancelOrder= async (req, res) => {
+    const orderId= req.params.orderId;
+
+    try{
+        await Order.updateOne({_id: orderId}, {status: "cancelled"});
+    } catch(error){
+
+    }
+
+    return res.redirect("back");
 }

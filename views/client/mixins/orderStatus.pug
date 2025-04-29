@@ -1,0 +1,11 @@
+mixin orderStatus(status)
+    if status == "pending"
+        span(class=`status ${status}`) Chờ xác nhận
+    if status == "processing"
+        span(class=`status ${status}`) Chờ lấy hàng
+    if status == "shipped"
+        span(class=`status ${status}`) Đang giao
+    if status == "delivered"
+        span(class=`status ${status}`) Đã giao
+    if status == "cancelled"
+        span(class=`status ${status}`) Đã huỷ

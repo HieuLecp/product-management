@@ -1,8 +1,7 @@
+// Danh sách đơn hàng
 function toggleDetails(orderId) {
     const detailsContainer = document.getElementById(`details-${orderId}`);
     const detailsContent = document.getElementById(`details-content-${orderId}`);
-    console.log(detailsContainer);
-    console.log(detailsContent);
 
     // Toggle hiển thị toàn bộ container (bao gồm tiêu đề và nội dung)
     if (detailsContainer.classList.contains('hidden')) {
@@ -36,3 +35,29 @@ function toggleDetails(orderId) {
         detailsContainer.classList.remove('slide-down');
     }
 }
+// end danh sách đơn hàng
+
+// lọc trạng thái đơn hàng
+
+const btnCancelOrder= document.querySelectorAll(".cancel-order-btn");
+
+if(btnCancelOrder.length > 0){
+
+    btnCancelOrder.forEach(button => {
+        const formCancelOrder= button.querySelector("#button-cancel-order");
+
+        button.addEventListener("click", () => {
+      
+            const orderId= button.getAttribute("order-id");
+            const path= formCancelOrder.getAttribute("data-path")
+    
+            const action= `${path}/${orderId}?_method=PATCH`;
+            formCancelOrder.action= action;
+            
+            formCancelOrder.submit();
+        })
+    })
+    
+}
+
+// end lọc trạng thái đơn hàng

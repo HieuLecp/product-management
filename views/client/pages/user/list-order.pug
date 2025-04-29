@@ -2,7 +2,7 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head
 include ../../mixins/product-layout
 include ../../mixins/alert
-
+include ../../mixins/orderStatus
 
 block main
     +alert-success(3000)
@@ -29,16 +29,28 @@ block main
                             tbody
                                 tr
                                     td.text-center #{index + 1}
-                                    td #{order.createdAt}
+                                    td #{order.createdAt} 
                                     td.total-price #{order.totalPrice}
                                     td
-                                        span(class=`status ${order.status}`) #{order.status}
+                                        +orderStatus(order.status)
+                                        //- span(class=`status ${order.status}`) #{order.status}
                                     td.action-cell
                                         button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem chi tiết
+                                        if(order.status != "cancelled")
+                                            button.cancel-order-btn(
+                                                order-id= order.orderId 
+                                                button-cancel-order
+                                            ) Hủy đơn
+                                                form(
+                                                    action=""
+                                                    method="POST"
+                                                    id= "button-cancel-order"
+                                                    data-path= `/user/info/list-order`
+                                                )
                         div.details-container.hidden(id=`details-${order.orderId}`)
                             h3.details-order Chi tiết đơn hàng
                             div(id=`details-content-${order.orderId}`)
-                                                    
+       
 
     script(src="/js/user.js")
     script.
