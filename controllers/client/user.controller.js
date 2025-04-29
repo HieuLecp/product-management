@@ -358,27 +358,7 @@ module.exports.listOrder= async (req, res) => {
         user_id: user.id
     }).lean();
 
-    const listProduct= [];
     const orderDetails = [];
-
-    // for(const order of orders){
-    //     for (const item of order.products) {
-    //         const product = await Product.findOne({ _id: item.product_id });
-    
-    //         const object = {
-    //             thumbnail: product.thumbnail,
-    //             title: product.title,
-    //             price: item.price.toLocaleString("vi-VN"),
-    //             quantity: item.quantity,
-    //             totalPrice: order.totalPrice.toLocaleString("vi-VN"),
-    //             status: order.status,
-    //             createdAt: new Date(order.createdAt).toLocaleString('vi-VN')
-    //         };
-    
-    //         listProduct.push(object);
-    //     }
-    // }
-    // console.log(listOrder);
 
     for (const order of orders) {
         const productsInOrder = [];

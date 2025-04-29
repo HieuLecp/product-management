@@ -16,7 +16,7 @@ module.exports.index = async (req, res) => {
     // console.log(req.query.status);
 
     try{
-        const filterStatus = filterStatusHelper(req.query);
+        const filterStatus = filterStatusHelper.products(req.query);
         // console.log(filterStatus);
 
         let find = {
@@ -380,7 +380,7 @@ module.exports.deleteItem = async (req, res) => {
 // [GET] /admin/products/bin
 module.exports.bin = async (req, res) => {
 
-    const filterStatus = filterStatusHelper(req.query);
+    const filterStatus = filterStatusHelper.products(req.query);
 
     let find = {
         deleted: true

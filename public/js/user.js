@@ -37,7 +37,7 @@ function toggleDetails(orderId) {
 }
 // end danh sách đơn hàng
 
-// lọc trạng thái đơn hàng
+// Huỷ đơn
 
 const btnCancelOrder= document.querySelectorAll(".cancel-order-btn");
 
@@ -60,4 +60,4 @@ if(btnCancelOrder.length > 0){
     
 }
 
-// end lọc trạng thái đơn hàng
+// end huỷ đơn
