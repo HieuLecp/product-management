@@ -35,18 +35,28 @@ block main
                                         +orderStatus(order.status)
                                         //- span(class=`status ${order.status}`) #{order.status}
                                     td.action-cell
-                                        button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem chi tiết
-                                        if(order.status != "cancelled")
+                                        button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem 
+                                        if order.status != "cancelled" && order.status != "delivered"
                                             button.cancel-order-btn(
-                                                order-id= order.orderId 
+                                                order-id= order.orderId
                                                 button-cancel-order
                                             ) Hủy đơn
                                                 form(
                                                     action=""
                                                     method="POST"
                                                     id= "button-cancel-order"
-                                                    data-path= `/user/info/list-order`
+                                                    data-path= `/user/info/list-order/cancel`
                                                 )
+                                            button.delivered-order-btn(
+                                                    order-id= order.orderId 
+                                                    button-delivered-order
+                                                ) Đã nhận 
+                                                    form(
+                                                        action=""
+                                                        method="POST"
+                                                        id= "button-delivered-order"
+                                                        data-path= `/user/info/list-order/delivered`
+                                                    )
                         div.details-container.hidden(id=`details-${order.orderId}`)
                             h3.details-order Chi tiết đơn hàng
                             div(id=`details-content-${order.orderId}`)

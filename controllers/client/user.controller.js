@@ -396,7 +396,7 @@ module.exports.listOrder= async (req, res) => {
     })
 };
 
-// [PATCH] /user/info/list-order
+// [PATCH] /user/info/list-order/cancel/:orderId
 module.exports.cancelOrder= async (req, res) => {
     const orderId= req.params.orderId;
 
@@ -406,5 +406,18 @@ module.exports.cancelOrder= async (req, res) => {
 
     }
 
+    return res.redirect("back");
+};
+
+// [PATCH] /user/info/list-order/delivered/orderId
+module.exports.deliveredOrder= async (req, res) => {
+    const orderId= req.params.orderId;
+
+    try{
+        await Order.updateOne({_id: orderId}, {status: "delivered"});
+
+    } catch(error){
+
+    }
     return res.redirect("back");
 }

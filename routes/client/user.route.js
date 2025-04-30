@@ -91,9 +91,14 @@ router.get('/info/list-order',
     controller.listOrder
 );
 
-router.patch('/info/list-order/:orderId',
+router.patch('/info/list-order/cancel/:orderId',
     authMiddleware.requireAuth,
     controller.cancelOrder
+);
+
+router.patch('/info/list-order/delivered/:orderId',
+    authMiddleware.requireAuth,
+    controller.deliveredOrder
 );
 
 module.exports = router;

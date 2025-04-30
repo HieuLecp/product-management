@@ -38,7 +38,6 @@ function toggleDetails(orderId) {
 // end danh sách đơn hàng
 
 // Huỷ đơn
-
 const btnCancelOrder= document.querySelectorAll(".cancel-order-btn");
 
 if(btnCancelOrder.length > 0){
@@ -56,8 +55,28 @@ if(btnCancelOrder.length > 0){
             
             formCancelOrder.submit();
         })
-    })
-    
-}
+    })  
+};
+// end nhận đơn
 
-// end huỷ đơn
+// Huỷ đơn
+const btnDeliveOrder= document.querySelectorAll(".delivered-order-btn");
+
+if(btnDeliveOrder.length > 0){
+
+    btnDeliveOrder.forEach(button => {
+        const formCancelOrder= button.querySelector("#button-delivered-order");
+
+        button.addEventListener("click", () => {
+      
+            const orderId= button.getAttribute("order-id");
+            const path= formCancelOrder.getAttribute("data-path")
+    
+            const action= `${path}/${orderId}?_method=PATCH`;
+            formCancelOrder.action= action;
+            
+            formCancelOrder.submit();
+        })
+    })  
+};
+// end nhận đơn

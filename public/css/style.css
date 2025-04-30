@@ -2120,4 +2120,24 @@ label {
     box-shadow: none;
 }
 
+.delivered-order-btn {
+    background-color: #d88f3b;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.delivered-order-btn:hover {
+    background-color: #e3a762;
+}
+
+.delivered-order-btn.disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 /* end list-order */
