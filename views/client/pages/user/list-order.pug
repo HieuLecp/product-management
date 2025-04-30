@@ -3,6 +3,7 @@ include ../../mixins/box-head
 include ../../mixins/product-layout
 include ../../mixins/alert
 include ../../mixins/orderStatus
+include ../../mixins/filter
 
 block main
     +alert-success(3000)
@@ -13,9 +14,12 @@ block main
             .col-12 
                 +box-head("Danh sách đơn hàng")
 
-        if(orders.length > 0)
-            .row   
-                .col-12 
+        .row   
+            .col-12 
+                +filterOrder()
+
+                if(orders.length > 0)
+
                     h4(class="mb-2") Danh sách đơn hàng đã mua
                     each order, index in orderDetails
                         table.history-table

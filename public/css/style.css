@@ -2141,3 +2141,68 @@ label {
 }
 
 /* end list-order */
+
+/* fileterOrder */
+.order-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #f8fafc; /* Nền xám nhạt, đồng bộ với footer */
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+}
+
+.filter-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937; /* Màu chữ đậm, dễ đọc */
+}
+
+.filter-select {
+    width: 200px; /* Độ rộng cố định, thay cho w-48 của Tailwind */
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb; /* Viền nhạt */
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    appearance: none; /* Ẩn mũi tên mặc định của select */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%234b5563" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 0.75rem center;
+    background-size: 12px;
+    padding-right: 2rem; /* Khoảng cách để không che mũi tên */
+    color: #4b5563;
+}
+
+.filter-select:focus {
+    border-color: #3b82f6; /* Viền xanh sáng khi focus */
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+    outline: none;
+}
+
+.filter-select option {
+    color: #4b5563;
+    background-color: #ffffff;
+}
+
+@media (max-width: 576px) {
+    .order-filter {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .filter-label {
+        font-size: 14px;
+    }
+
+    .filter-select {
+        width: 100%; /* Chiếm toàn bộ chiều rộng trên mobile */
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+}
+/* end filterOrder */

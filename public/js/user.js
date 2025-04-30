@@ -1,3 +1,4 @@
+
 // Danh sách đơn hàng
 function toggleDetails(orderId) {
     const detailsContainer = document.getElementById(`details-${orderId}`);
@@ -80,3 +81,31 @@ if(btnDeliveOrder.length > 0){
     })  
 };
 // end nhận đơn
+
+// lọc trạng thái đơn hàng
+const filterOrder= document.querySelector(".order-filter");
+
+if(filterOrder){
+    let url= new URL(window.location.href);
+
+    const filterSelect= filterOrder.querySelector("#statusFilter");
+    // console.log(filterSelect);
+
+    filterSelect.addEventListener("change", (e) => {
+        const value= e.target.value;
+
+        url.searchParams.set("value", value);
+
+        window.location.href= url.href;
+    });
+
+    const filterValue= url.searchParams.get("value");
+    if(filterValue){
+        const stringFilter= `${filterValue}`;
+
+        const optionSelect= filterSelect.querySelector(`option[value='${stringFilter}']`);
+        optionSelect.selected= true;
+    }
+
+}
+// end lọc trạng thái đơn hàng

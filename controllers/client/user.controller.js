@@ -353,10 +353,17 @@ module.exports.editPasswordPost =  async (req, res) => {
 // [GET] /user/info/list-order
 module.exports.listOrder= async (req, res) => {
     const user= await User.findOne({_id : res.locals.user.id});
-    
-    const orders= await Order.find({
+
+    let find= {
         user_id: user.id
-    }).lean();
+    }
+
+    const filterValue= req.query.value;
+    if(filterValue != "all"){
+        find.status= filterValue
+    }
+    
+    const orders= await Order.find(find).lean();
 
     const orderDetails = [];
 
