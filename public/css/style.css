@@ -1080,15 +1080,14 @@ label {
 
 /* chatbot */
 
-/* ====== Nút mở chat (Avatar) ====== */
-#chat-toggle {
+/* #chat-toggle {
     position: fixed;
     bottom: 20px;
     right: 20px;
     background: transparent;
     border: none;
     cursor: pointer;
-    z-index: 1001; /* Avatar trên cùng */
+    z-index: 1001; 
     transition: transform 0.2s ease-in-out;
 }
 
@@ -1096,7 +1095,6 @@ label {
     transform: scale(1.1);
 }
 
-/* Avatar chatbot */
 #chat-toggle .avatar {
     width: 70px;
     height: 70px;
@@ -1109,10 +1107,9 @@ label {
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* ====== Hộp thoại chat ====== */
 #chat-container {
     position: fixed;
-    bottom: 100px; /* Đẩy hộp chat lên cao hơn */
+    bottom: 100px; 
     right: 20px;
     width: 400px;
     height: 550px;
@@ -1120,12 +1117,11 @@ label {
     border-radius: 15px;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
     padding: 10px;
-    z-index: 1000; /* Hộp chat vẫn dưới avatar */
+    z-index: 1000; 
     display: none;
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Header của chatbot */
 .chat-header {
     display: flex;
     align-items: center;
@@ -1139,7 +1135,6 @@ label {
     position: relative;
 }
 
-/* Nút đóng chat */
 .chat-header button {
     background: none;
     border: none;
@@ -1148,7 +1143,6 @@ label {
     cursor: pointer;
 }
 
-/* Nội dung chat */
 #chatbox {
     height: 400px;
     overflow-y: auto;
@@ -1159,7 +1153,6 @@ label {
     align-items: flex-start;
 }
 
-/* Tin nhắn người dùng */
 .user-message {
     background: #007bff;
     color: white;
@@ -1171,7 +1164,6 @@ label {
     text-align: right;
 }
 
-/* Tin nhắn chatbot */
 .bot-message {
     background: #f1f1f1;
     color: black;
@@ -1184,7 +1176,6 @@ label {
     align-self: flex-start !important;
 }
 
-/* Avatar trong tin nhắn chatbot */
 .bot-message .avatar {
     width: 30px;
     height: 30px;
@@ -1192,8 +1183,6 @@ label {
     margin-right: 10px;
 }
 
-
-/* Ô nhập tin nhắn */
 #chatForm {
     display: flex;
     padding-top: 10px;
@@ -1224,7 +1213,6 @@ label {
     background: #0056b3;
 }
 
-/* Animation mở chat */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -1234,8 +1222,7 @@ label {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
+} */
 
 /* end chatbot */
 
@@ -2206,3 +2193,194 @@ label {
     }
 }
 /* end filterOrder */
+
+
+/* Thêm vào cuối file public/css/style.css */
+
+/* ChatBot Widget */
+/* Nút toggle bên ngoài */
+.chatbot-toggle-outside {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    /* background-color: #4f46e5; */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 1001;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .chatbot-toggle-outside:hover {
+    background-color: #4338ca;
+} */
+
+/* Ẩn nút bên ngoài khi có class hidden */
+.chatbot-toggle-outside.hidden {
+    display: none;
+}
+
+/* Avatar trong nút bên ngoài */
+.chatbot-toggle-outside .avatar {
+    width: 60px; /* Tăng kích thước avatar */
+    height: auto;
+    border-radius: 50%;
+}
+
+/* Nút toggle chung (bao gồm nút trong header) */
+.chatbot-header .chatbot-toggle {
+    background-color: #4f46e5;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatbot-toggle:hover {
+    background-color: #4338ca;
+}
+
+/* Ký tự "X" trong nút */
+.chatbot-toggle span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Hộp chatbot ẩn mặc định */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    max-height: 500px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+    display: none;
+}
+
+.chatbot-container.active {
+    display: block;
+}
+
+/* Header của chatbot */
+.chatbot-header {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent; /* Xóa nền xanh */
+}
+
+/* Tiêu đề với avatar */
+.chatbot-title {
+    display: flex;
+    align-items: center;
+}
+
+.chatbot-title .avatar {
+    width: 60px; /* Tăng kích thước avatar */
+    height: auto;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+/* Body của chatbot */
+.chatbot-body {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+}
+
+.chatbot-body.hidden {
+    display: none;
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #f9fafb;
+}
+
+.chatbot-message {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.chatbot-message.bot {
+    background-color: #e0f2fe;
+    color: #1f2937;
+    align-self: flex-start;
+}
+
+.chatbot-message.user {
+    background-color: #4f46e5;
+    color: #ffffff;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.chatbot-input {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #e5e7eb;
+    background-color: #ffffff;
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    margin-right: 8px;
+}
+
+.chatbot-input input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+.chatbot-input button {
+    background-color: #4f46e5;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.chatbot-input button:hover {
+    background-color: #4338ca;
+}
+
+@media (max-width: 576px) {
+    .chatbot-container {
+        width: 90%;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .chatbot-body {
+        height: 300px;
+    }
+}
+
+/* end botchat */

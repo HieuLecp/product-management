@@ -27,6 +27,7 @@
     "express-flash": "github:RGBboy/express-flash",
     "express-recaptcha": "^5.1.0",
     "express-session": "^1.18.1",
+    "fuzzball": "^2.2.2",
     "md5": "^2.3.0",
     "method-override": "^3.0.0",
     "moment": "^2.30.1",

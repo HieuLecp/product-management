@@ -354,14 +354,20 @@ module.exports.editPasswordPost =  async (req, res) => {
 module.exports.listOrder= async (req, res) => {
     const user= await User.findOne({_id : res.locals.user.id});
 
-    let find= {
-        user_id: user.id
-    }
+    // let find= {
+    //     user_id: user.id
+    // }
 
-    const filterValue= req.query.value;
-    if(filterValue != "all"){
-        find.status= filterValue
-    }
+    const filterValue= req.query.value || "all";
+
+    const find = {
+        user_id: user.id,
+        ...(filterValue !== "all" && { status: filterValue }) // Chỉ thêm status nếu filterValue không phải "all"
+    };
+    
+    // if(filterValue != "all"){
+    //     find.status= filterValue;
+    // }
     
     const orders= await Order.find(find).lean();
 
@@ -371,7 +377,7 @@ module.exports.listOrder= async (req, res) => {
         const productsInOrder = [];
         for (const item of order.products) {
             const product = await Product.findOne({ _id: item.product_id }).lean();
-            // console.log(product.slug);
+
             if (!product) continue;
 
             productsInOrder.push({
@@ -427,4 +433,4 @@ module.exports.deliveredOrder= async (req, res) => {
 
     }
     return res.redirect("back");
-}
+};

@@ -13,6 +13,7 @@ const userRouter = require("./user.route");
 const usersRouter = require("./users.route");
 const chatRouter = require("./chat.route");
 const roomChatRouter = require("./roomChat.route");
+const chatbotRouter = require("./chatbot.route");
 
 module.exports = (app) => {
 
@@ -49,6 +50,10 @@ module.exports = (app) => {
     app.use('/rooms-chat',
         authMiddleware.requireAuth,
         roomChatRouter
+    );
+
+    app.use('/chatbot',
+        chatbotRouter
     );
     
 }

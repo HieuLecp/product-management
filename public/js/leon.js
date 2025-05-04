@@ -15,7 +15,7 @@ document.getElementById("close-chatbot").addEventListener("click", function () {
     document.getElementById("chat-container").style.display = "none";
 });
 
-// Xử lý gửi tin nhắn
+// Xử lý gửi tin nhắn botchat
 document.getElementById("chatForm").addEventListener("submit", async function (e) {
     e.preventDefault(); // Ngăn tải lại trang
 

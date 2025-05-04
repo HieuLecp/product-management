@@ -21,6 +21,21 @@ html
             .content
                 block main 
 
+            button.chatbot-toggle.chatbot-toggle-outside
+                <img src="/images/chatBot.jpeg" class="avatar" >
+            .chatbot-container
+                .chatbot-header
+                    div.chatbot-title
+                        <img src="/images/chatBot.jpeg" class="avatar" >
+                    button.chatbot-toggle
+                        span X
+                .chatbot-body.hidden
+                    .chatbot-messages#chatbotMessages
+                        .chatbot-message.bot Xin chào! Tôi có thể giúp gì cho bạn hôm nay?
+                    .chatbot-input
+                        input#chatbotInput(type="text" placeholder="Nhập câu hỏi của bạn...")
+                        button#chatbotSend Gửi
+
             include ../partials/footer.pug 
 
 
@@ -38,5 +53,6 @@ html
         <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.js"></script>
         
         script(src="/js/script.js")
+        script(src="/js/chatbot.js")
         
         block script 

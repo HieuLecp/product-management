@@ -211,6 +211,14 @@ module.exports.createItem = async (req, res) => {
         req.body.price = parseInt(req.body.price);
         req.body.discountPercentage = parseInt(req.body.discountPercentage);
         req.body.stock = parseInt(req.body.stock);
+        let category
+
+        if(req.body.product_category_id){
+            category= await ProductCategory.findOne({_id: req.body.product_category_id});
+            req.body.brand= category.title;
+        } else{
+            req.body.brand= "Laptop";
+        }
 
         if(req.body.position == ""){
             const countProducts = await Product.countDocuments();
@@ -273,7 +281,16 @@ module.exports.editItem = async (req, res) => {
         req.body.price = parseInt(req.body.price);
         req.body.discountPercentage = parseInt(req.body.discountPercentage);
         req.body.stock = parseInt(req.body.stock);
-        req.body.position = parseInt(req.body.position);    
+        req.body.position = parseInt(req.body.position); 
+        
+        let category;
+
+        if(req.body.product_category_id){
+            category= await ProductCategory.findOne({_id: req.body.product_category_id});
+            brand= category.title;
+        } else{
+            brand= "Laptop";
+        }
         
         if(req.file){
             req.body.thumbnail = `${req.body.thumbnail}`;
@@ -287,6 +304,7 @@ module.exports.editItem = async (req, res) => {
 
             await Product.updateOne({_id : id},{
                 ...req.body,
+                brand: brand,
                 $push: {updatedBy: updatedBy}
             });
 

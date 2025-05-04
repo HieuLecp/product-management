@@ -29,7 +29,7 @@ const port = process.env.PORT;
 app.use(methodOverride('_method'));
 
 app.use(cors());
-
+app.use(express.json());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
