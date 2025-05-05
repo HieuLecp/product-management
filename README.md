@@ -1,4 +1,4 @@
-git clone -b test-merge https://github.com/HieuLecp/product-management.git
+git clone -b botchat https://github.com/HieuLecp/product-management.git
 
 cd product-management
 
