@@ -39,9 +39,6 @@ app.set('view engine', 'pug');
 
 const server= http.createServer(app);
 const io= new Server(server, {
-  // reconnection: true,
-  // pingTimeout: 60000,  
-  // pingInterval: 25000, 
 });
 global._io = io;
 
