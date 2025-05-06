@@ -12,8 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedMessages = localStorage.getItem('chatbotMessages');
     if (savedMessages) {
         chatbotMessages.innerHTML = savedMessages;
+        // Cuộn xuống tin nhắn mới nhất khi tải trang
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     } else {
         chatbotMessages.innerHTML = '<div class="chatbot-message bot">Xin chào! Tôi có thể giúp gì cho bạn hôm nay?</div>';
+        // Cuộn xuống tin nhắn mặc định
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
     // Đảm bảo nút bên ngoài hiển thị mặc định khi tải trang
@@ -26,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (chatbotContainer.classList.contains('active')) {
                 chatbotBody.classList.remove('hidden');
                 toggleOutsideBtn.classList.add('hidden');
+                // Cuộn xuống tin nhắn mới nhất khi mở chatbot
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             } else {
                 chatbotBody.classList.add('hidden');
                 toggleOutsideBtn.classList.remove('hidden');
@@ -109,3 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') sendMessage();
     });
 });
+
+// xoá lịch sử botchat
+document.getElementById('clearChat').addEventListener('click', () => {
+    if (confirm('Bạn có chắc muốn xóa lịch sử chat?')) {
+        localStorage.removeItem('chatbotMessages');
+        chatbotMessages.innerHTML = '<div class="chatbot-message bot">Xin chào! Tôi có thể giúp gì cho bạn hôm nay?</div>';
+    }
+});
+
+// end xoá lịch sử botchat

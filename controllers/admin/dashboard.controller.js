@@ -73,7 +73,7 @@ module.exports.dashboard = async (req, res) => {
     ]);
 
     if (recordInDay.length > 0) {
-        statistic.totalRevenue.inDay = recordInDay[0].totalRevenue;
+        statistic.totalRevenue.inDay = recordInDay[0].totalRevenue.toLocaleString("vi-VN");
     }
 
     const revenuePerDay = await Order.aggregate([
@@ -91,11 +91,10 @@ module.exports.dashboard = async (req, res) => {
         { $sort: { _id: 1 } }
     ]);
 
-    // console.log('Revenue per day:', revenuePerDay); // Thêm log để kiểm tra
-
     if (revenuePerDay.length > 0) {
         statistic.revenuePerDay = revenuePerDay;
     }
+    // console.log('Revenue per day:', revenuePerDay);
 
     const recordInMonth = await Order.aggregate([
         {
@@ -112,7 +111,7 @@ module.exports.dashboard = async (req, res) => {
     ]);
 
     if (recordInMonth.length > 0) {
-        statistic.totalRevenue.inMonth = recordInMonth[0].totalRevenue;
+        statistic.totalRevenue.inMonth = recordInMonth[0].totalRevenue.toLocaleString("vi-VN");
     }
 
     // Số lượng người dùng
@@ -153,13 +152,14 @@ module.exports.dashboard = async (req, res) => {
         const lowStock = await Product.find({ stock: { $lte: 10, $gte: 0 } })
             .sort({ stock: 1 })
             .limit(5)
-            .select("title stock")
+            .select("title stock id")
             .lean();
         statistic.lowStockProducts = lowStock || []; // Đảm bảo luôn là mảng
     } catch (error) {
         console.error('Error fetching low stock products:', error);
         statistic.lowStockProducts = []; // Nếu có lỗi, gán mảng rỗng
     }
+    // console.log(statistic.lowStockProducts)
 
     // Tỷ lệ bán theo danh mục (product_category_id)
     const categorySales = await Product.aggregate([

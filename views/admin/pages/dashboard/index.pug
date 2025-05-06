@@ -58,7 +58,7 @@ block main
                             ul
                                 each product in lowStockProducts
                                     li
-                                        b= product.title
+                                        a(href=`${prefixAdmin}/products/detail/${product._id}` class="lowStockProduct") #{product.title}
                                         |  - Còn: 
                                         span= product.stock
                                         |  sản phẩm

@@ -68,7 +68,7 @@ async function getDashboardStatistic() {
         ]);
 
         if (recordInDay.length > 0) {
-            statistic.totalRevenue.inDay = recordInDay[0].totalRevenue;
+            statistic.totalRevenue.inDay = recordInDay[0].totalRevenue.toLocaleString("vi-VN");
         }
 
         const recordInMonth = await Order.aggregate([
@@ -86,7 +86,7 @@ async function getDashboardStatistic() {
         ]);
 
         if (recordInMonth.length > 0) {
-            statistic.totalRevenue.inMonth = recordInMonth[0].totalRevenue;
+            statistic.totalRevenue.inMonth = recordInMonth[0].totalRevenue.toLocaleString("vi-VN");
         }
 
         // Doanh thu theo ngày trong tháng hiện tại

@@ -58,9 +58,9 @@ if(btnCancelOrder.length > 0){
         })
     })  
 };
-// end nhận đơn
+// end Huỷ đơn
 
-// Huỷ đơn
+// Nhận đơn
 const btnDeliveOrder= document.querySelectorAll(".delivered-order-btn");
 
 if(btnDeliveOrder.length > 0){
@@ -80,7 +80,7 @@ if(btnDeliveOrder.length > 0){
         })
     })  
 };
-// end huỷ đơn
+// end nhận đơn
 
 // lọc trạng thái đơn hàng
 const filterOrder= document.querySelector(".order-filter");
@@ -93,6 +93,7 @@ if(filterOrder){
 
     filterSelect.addEventListener("change", (e) => {
         const value= e.target.value;
+        console.log(value);
 
         url.searchParams.set("value", value);
 
