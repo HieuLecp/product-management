@@ -10,6 +10,7 @@ const generateHelper= require("../../helpers/generate");
 const sendMailHelper= require("../../helpers/sendMail");
 
 const { use } = require("../../routes/client/user.route");
+const { getDashboardStatistic } = require("../../socket/admin/dashboard.socket");
 
 // [GET] /user/register
 module.exports.register =  async (req, res) => {
@@ -107,6 +108,9 @@ module.exports.loginPost =  async (req, res) => {
         }, {
             userId: user.id
         })
+
+        const updatedStatistic = await getDashboardStatistic();
+        _io.emit('updateDashboard', updatedStatistic);
     
         res.redirect("/");
     }
@@ -128,6 +132,9 @@ module.exports.logout =  async (req, res) => {
     _io.once("connection", (socket) => [
         socket.broadcast.emit("server_return_user_offline", res.locals.user.id)
     ])
+
+    const updatedStatistic = await getDashboardStatistic();
+    _io.emit('updateDashboard', updatedStatistic);
 
     res.clearCookie("tokenUser");
 
@@ -422,12 +429,12 @@ module.exports.cancelOrder= async (req, res) => {
     return res.redirect("back");
 };
 
-// [PATCH] /user/info/list-order/delivered/orderId
+// [PATCH] /user/info/list-order/completed/orderId
 module.exports.deliveredOrder= async (req, res) => {
     const orderId= req.params.orderId;
 
     try{
-        await Order.updateOne({_id: orderId}, {status: "delivered"});
+        await Order.updateOne({_id: orderId}, {status: "completed"});
 
     } catch(error){
 

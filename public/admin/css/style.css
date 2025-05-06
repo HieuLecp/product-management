@@ -315,6 +315,7 @@
 .purple { background: #9b59b6; }
 .red { background: #e74c3c; }
 .green { background: #2ecc71; }
+.orange { background: #f38d11; }
 
 .dashboard .row {
     display: flex;

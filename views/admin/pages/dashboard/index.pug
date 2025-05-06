@@ -1,7 +1,7 @@
 extends ../../layouts/default
 
 block main
-    h1 Tổng quan Dashboard
+    h1 Dashboard
 
     - var bestProduct = statistic.products && statistic.products.length > 0 ? statistic.products[0] : {};
     - var thumbnail = bestProduct.thumbnail || '';
@@ -11,6 +11,13 @@ block main
     - var revenueMonth = statistic.totalRevenue ? statistic.totalRevenue.inMonth || 0 : 0;
     - var userTotal = statistic.user ? statistic.user.total || 0 : 0;
     - var userOnline = statistic.user ? statistic.user.statusOnline || 0 : 0;
+    - var recentProduct = statistic.recentlyUpdatedProducts && statistic.recentlyUpdatedProducts.length > 0 ? statistic.recentlyUpdatedProducts[0] : {};
+    - var recentTitle = recentProduct.title || 'Chưa có sản phẩm vừa bán';
+    - var recentSold = recentProduct.sold || 0;
+    - var orderCompletionRateDay = statistic.orderCompletionRate ? statistic.orderCompletionRate.inDay || 0 : 0;
+    - var orderCompletionRateMonth = statistic.orderCompletionRate ? statistic.orderCompletionRate.inMonth || 0 : 0;
+    - var lowStockProducts = Array.isArray(statistic.lowStockProducts) ? statistic.lowStockProducts : [];
+
 
     .dashboard
         .row.mt-4
@@ -25,6 +32,11 @@ block main
                                 b= title
                             h3 Đã bán: <b><span id="bestProductSold"> #{sold} </span></b>
 
+                        .stat-card.orange
+                            h3 Tỷ lệ hoàn thành đơn hàng
+                            h3 Trong ngày: <b><span id="orderCompletionRateDay"> #{orderCompletionRateDay} </span>%</b>
+                            h3 Trong tháng: <b><span id="orderCompletionRateMonth"> #{orderCompletionRateMonth} </span>%</b>
+
                         .stat-card.purple
                             h3 Doanh thu
                             h3 Trong ngày: <b><span id="revenueDay"> #{revenueDay} </span> VND</b>
@@ -35,5 +47,40 @@ block main
                             h3 Tất cả: <b><span id="userTotal"> #{userTotal} </span></b>
                             h3 Đang truy cập: <b><span id="userOnline"> #{userOnline} </span></b>
 
+
+        // Danh sách sản phẩm tồn kho thấp
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Sản phẩm sắp hết hàng
+                    .card-body
+                        if lowStockProducts.length > 0
+                            ul
+                                each product in lowStockProducts
+                                    li
+                                        b= product.title
+                                        |  - Còn: 
+                                        span= product.stock
+                                        |  sản phẩm
+
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Doanh thu theo ngày trong tháng
+                    .card-body
+                        canvas#revenueChart(width="400" height="200")
+
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Tỷ lệ sản phẩm đã bán theo danh mục
+                    .card-body
+                        canvas#categorySalesChart(width="400" height="400")
+
+
 block script
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js")
+    script.
+        // Truyền dữ liệu statistic từ controller vào JavaScript
+        const initialStatistic = !{JSON.stringify(statistic)};
     script(src="/admin/js/dashboard.js")

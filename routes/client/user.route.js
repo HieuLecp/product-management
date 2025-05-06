@@ -96,7 +96,7 @@ router.patch('/info/list-order/cancel/:orderId',
     controller.cancelOrder
 );
 
-router.patch('/info/list-order/delivered/:orderId',
+router.patch('/info/list-order/completed/:orderId',
     authMiddleware.requireAuth,
     controller.deliveredOrder
 );

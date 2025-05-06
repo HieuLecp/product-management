@@ -17,7 +17,12 @@ module.exports.dashboard = async (req, res) => {
             total: 0,
             statusOnline: 0,
         },
-        revenuePerDay: []
+        revenuePerDay: [],
+        orderCompletionRate: { // Thêm orderCompletionRate vào cấu trúc
+            inDay: 0,
+            inMonth: 0
+        },
+        lowStockProducts: []
     };
 
     // Sản phẩm bán chạy
@@ -50,6 +55,9 @@ module.exports.dashboard = async (req, res) => {
     startOfCurrentMonth.setDate(1);
     startOfCurrentMonth.setHours(0, 0, 0, 0);
 
+    const startOfMarch = new Date(2025, 2, 1); // Tháng 3/2025 (tháng 2 trong JavaScript vì index bắt đầu từ 0)
+    startOfMarch.setHours(0, 0, 0, 0);
+
     const recordInDay = await Order.aggregate([
         {
             $match: {
@@ -71,7 +79,7 @@ module.exports.dashboard = async (req, res) => {
     const revenuePerDay = await Order.aggregate([
         {
             $match: {
-                createdAt: { $gte: startOfCurrentMonth, $lte: endOfMonth }
+                createdAt: { $gte: startOfMarch, $lte: endOfDay }
             }
         },
         {
@@ -82,6 +90,8 @@ module.exports.dashboard = async (req, res) => {
         },
         { $sort: { _id: 1 } }
     ]);
+
+    // console.log('Revenue per day:', revenuePerDay); // Thêm log để kiểm tra
 
     if (revenuePerDay.length > 0) {
         statistic.revenuePerDay = revenuePerDay;
@@ -114,6 +124,99 @@ module.exports.dashboard = async (req, res) => {
         statusOnline: "online",
         deleted: false
     });
+
+    // Tỷ lệ hoàn thành đơn hàng
+    const totalOrdersInDay = await Order.countDocuments({
+        createdAt: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    const completedOrdersInDay = await Order.countDocuments({
+        createdAt: { $gte: startOfDay, $lte: endOfDay },
+        status: "completed"
+    });
+
+    statistic.orderCompletionRate.inDay = totalOrdersInDay > 0 ? (completedOrdersInDay / totalOrdersInDay * 100).toFixed(2) : 0;
+
+    const totalOrdersInMonth = await Order.countDocuments({
+        createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+    });
+
+    const completedOrdersInMonth = await Order.countDocuments({
+        createdAt: { $gte: startOfMonth, $lte: endOfMonth },
+        status: "completed"
+    });
+
+    statistic.orderCompletionRate.inMonth = totalOrdersInMonth > 0 ? (completedOrdersInMonth / totalOrdersInMonth * 100).toFixed(2) : 0;
+
+    // Sản phẩm tồn kho thấp
+    try {
+        const lowStock = await Product.find({ stock: { $lte: 10, $gte: 0 } })
+            .sort({ stock: 1 })
+            .limit(5)
+            .select("title stock")
+            .lean();
+        statistic.lowStockProducts = lowStock || []; // Đảm bảo luôn là mảng
+    } catch (error) {
+        console.error('Error fetching low stock products:', error);
+        statistic.lowStockProducts = []; // Nếu có lỗi, gán mảng rỗng
+    }
+
+    // Tỷ lệ bán theo danh mục (product_category_id)
+    const categorySales = await Product.aggregate([
+        {
+            $match: {
+                sold: { $gt: 0 },
+                deleted: false,
+                product_category_id: { $ne: "" }
+            }
+        },
+        {
+            // Ép kiểu product_category_id từ String sang ObjectId
+            $addFields: {
+                categoryObjectId: { $toObjectId: "$product_category_id" }
+            }
+        },
+        {
+            $group: {
+                _id: "$categoryObjectId",
+                totalSold: { $sum: "$sold" }
+            }
+        },
+        {
+            $lookup: {
+                from: "products-category", // Collection đúng
+                localField: "_id",
+                foreignField: "_id",
+                as: "category"
+            }
+        },
+        {
+            $unwind: {
+                path: "$category",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                categoryId: "$_id",
+                categoryName: { $ifNull: ["$category.title", "Không xác định"] },
+                totalSold: 1
+            }
+        }
+    ]);
+    
+    const totalSoldOverall = categorySales.reduce((sum, item) => sum + item.totalSold, 0);
+    
+    statistic.categorySalesRatio = categorySales.map(item => ({
+        categoryId: item.categoryId,
+        categoryName: item.categoryName,
+        totalSold: item.totalSold,
+        percentage: totalSoldOverall > 0
+            ? ((item.totalSold / totalSoldOverall) * 100).toFixed(2)
+            : "0.00"
+    }));
+    
+    // console.log('Category sales ratio:', statistic.categorySalesRatio);
 
     res.render("admin/pages/dashboard/index", {
         pageTitle: "Trang chủ",

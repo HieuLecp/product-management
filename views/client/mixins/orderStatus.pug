@@ -7,7 +7,7 @@ mixin orderStatus(status)
         span(class=`status ${status}`) Đang chuẩn bị
     if status == "shipped"
         span(class=`status ${status}`) Đang giao
-    if status == "delivered"
+    if status == "completed"
         span(class=`status ${status}`) Đã nhận
     if status == "cancelled"
         span(class=`status ${status}`) Đã huỷ

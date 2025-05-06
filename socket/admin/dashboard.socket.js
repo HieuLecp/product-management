@@ -19,7 +19,8 @@ async function getDashboardStatistic() {
                 total: 0,
                 statusOnline: 0,
             },
-            revenuePerDay: []
+            revenuePerDay: [],
+            recentlyUpdatedProducts: []
         };
 
         // Sản phẩm bán chạy
@@ -88,6 +89,30 @@ async function getDashboardStatistic() {
             statistic.totalRevenue.inMonth = recordInMonth[0].totalRevenue;
         }
 
+        // Doanh thu theo ngày trong tháng hiện tại
+        const revenuePerDay = await Order.aggregate([
+            {
+                $match: {
+                    createdAt: { $gte: startOfCurrentMonth, $lte: endOfMonth }
+                }
+            },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    totalRevenue: { $sum: "$totalPrice" }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+        
+        statistic.revenuePerDay = revenuePerDay;
+
+        // console.log('Revenue per day:', revenuePerDay);
+
+        // if (revenuePerDay.length > 0) {
+        //     statistic.revenuePerDay = revenuePerDay;
+        // }
+
         // Số lượng người dùng
         statistic.user.total = await User.countDocuments({
             deleted: false
@@ -105,12 +130,14 @@ async function getDashboardStatistic() {
             products: [],
             totalRevenue: { inDay: 0, inMonth: 0 },
             user: { total: 0, statusOnline: 0 },
-            revenuePerDay: []
+            revenuePerDay: [],
+            recentlyUpdatedProducts: []
         };
     }
 }
 
 module.exports = {
+    getDashboardStatistic,
     setupSocket: () => {
         global._io.on('connection', async (socket) => {
             console.log('Client connected:', socket.id);
@@ -120,9 +147,12 @@ module.exports = {
                 socket.emit('initialDashboardData', statistic);
             });
 
-            Order.watch().on('change', async (change) => {
+            const changeStream = Order.watch();
+            changeStream.on('change', async (change) => {
+                console.log('Order change detected:', change);
                 if (change.operationType === 'insert') {
                     const updatedStatistic = await getDashboardStatistic();
+                    console.log('Emitting updateDashboard with revenuePerDay:', updatedStatistic.revenuePerDay);
                     global._io.emit('updateDashboard', updatedStatistic);
                 }
             });

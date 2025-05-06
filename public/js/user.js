@@ -80,7 +80,7 @@ if(btnDeliveOrder.length > 0){
         })
     })  
 };
-// end nhận đơn
+// end huỷ đơn
 
 // lọc trạng thái đơn hàng
 const filterOrder= document.querySelector(".order-filter");

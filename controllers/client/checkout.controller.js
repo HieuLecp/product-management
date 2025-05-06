@@ -5,6 +5,8 @@ const User= require("../../models/users.model");
 
 const {default: axios} = require("axios");
 
+const { getDashboardStatistic } = require("../../socket/admin/dashboard.socket");
+
 const crypto = require('crypto');
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const moment = require('moment');
@@ -131,6 +133,10 @@ module.exports.order= async (req, res) => {
             $pull: { products: { _id: { $in: listProductIds } } }
         }
     );
+
+    const updatedStatistic = await getDashboardStatistic();
+    // console.log('Updated statistic after order:', updatedStatistic);
+    global._io.emit('updateDashboard', updatedStatistic);
 
     if(paymentType === "momo"){
         var accessKey = 'F8BBA842ECF85';
