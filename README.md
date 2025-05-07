@@ -1,4 +1,4 @@
-git clone -b botchat https://github.com/HieuLecp/product-management.git
+git clone -b prj_httt https://github.com/HieuLecp/product-management.git
 
 cd product-management
 
