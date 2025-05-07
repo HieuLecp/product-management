@@ -1,13 +1,57 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head
 include ../../mixins/product-layout
-    
-block main     
+include ../../mixins/pagination
+include ../../mixins/sort
+include ../../mixins/filter
+include ../../mixins/sub-menu.pug
 
-    .container.my-3
-        .row 
-            .col-12 
-                +box-head(pageTitle)
-        
-        +product-grid(products)
+//- block dashboard 
+//-     include ../dashboard/index.pug
+    
+block main
+
+    .container.my-4
+        .row
+            // Sidebar bên trái
+            .col-3.sidebar
+                // Danh mục sản phẩm
+                .sidebar-section
+                    +box-head("Danh mục sản phẩm")
+                    +sub-menu(layoutProductCategory, "/product")
+
+                // Lọc theo giá
+                .sidebar-section
+                    +box-head("Lọc theo giá")
+                    +filter()
+
+                .sidebar-section
+                    +box-head("Sắp xếp")
+                    +sort()
+
+                // Liên kết nhanh
+                .sidebar-section
+                    +box-head("Liên kết nhanh")
+                    ul.quick-links
+                        li
+                            a(href="/products?sort=price-desc") Sản phẩm đắt nhất
+                        li
+                            a(href="/products?sort=price-asc") Sản phẩm rẻ nhất
+                        li
+                            a(href="/products?featured=true") Sản phẩm nổi bật
+
+            // Nội dung chính
+            .col-9
+
+                .card.mb-3
+                    .container-fluid
+                        .row
+                            .col-12
+                                +box-head(pageTitle)
+                        +product-grid(products)
+
+                +pagination(pagination)
             
+block script
+    script(src="/js/product.js")
+    

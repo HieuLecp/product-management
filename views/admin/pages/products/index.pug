@@ -85,7 +85,7 @@ block main
                                             height= "auto"
                                         )
                                     td #{item.title }
-                                    td #{item.price}$
+                                    td #{item.priceFormat} #{"(vnd)"}
                                     td 
                                         input(
                                             type= "number"
@@ -146,7 +146,7 @@ block main
                                             form(
                                                 action="" 
                                                 method="POST"
-                                                id= "form-delete-item"
+                                                id= "form-delete-product"
                                                 data-path= `${prefixAdmin}/products/delete`
                                             )
         

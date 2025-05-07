@@ -3,11 +3,14 @@ const md5= require("md5");
 const User= require("../../models/users.model");
 const ForgotPassword= require("../../models/forgot-password.model");
 const Carts= require("../../models/carts.model");
+const Order= require("../../models/orders.model");
+const Product= require("../../models/product.model");
 
 const generateHelper= require("../../helpers/generate");
 const sendMailHelper= require("../../helpers/sendMail");
 
 const { use } = require("../../routes/client/user.route");
+const { getDashboardStatistic } = require("../../socket/admin/dashboard.socket");
 
 // [GET] /user/register
 module.exports.register =  async (req, res) => {
@@ -40,12 +43,15 @@ module.exports.registerPost =  async (req, res) => {
         res.redirect("back");
         return;
     }
+    req.body.statusOnline= "online"
 
     req.body.password= md5(req.body.password);
     req.body.tokenUser = generateHelper.generateRandomString(20); 
     const record = new User(req.body);
     await record.save();
-    // console.log(record);
+
+    const updatedStatistic = await getDashboardStatistic();
+    _io.emit('updateDashboard', updatedStatistic);
 
     req.flash("success", "Bạn đã đăng ký tài khoản thành công!");
     res.cookie("tokenUser", record.tokenUser);
@@ -99,20 +105,21 @@ module.exports.loginPost =  async (req, res) => {
         _io.once("connection", (socket) => [
             socket.broadcast.emit("server_return_user_online", user.id)
         ])
-    
         await Carts.updateOne({
             _id: req.cookies.cartId
         }, {
             userId: user.id
         })
+
+        const updatedStatistic = await getDashboardStatistic();
+        _io.emit('updateDashboard', updatedStatistic);
     
         res.redirect("/");
     }
     else{
         req.flash("error", "Vui lòng xác minh captcha!");
         res.redirect("back");
-    }
-    
+    }    
 };
 
 // [POST] /user/logout
@@ -127,6 +134,9 @@ module.exports.logout =  async (req, res) => {
     _io.once("connection", (socket) => [
         socket.broadcast.emit("server_return_user_offline", res.locals.user.id)
     ])
+
+    const updatedStatistic = await getDashboardStatistic();
+    _io.emit('updateDashboard', updatedStatistic);
 
     res.clearCookie("tokenUser");
 
@@ -347,4 +357,90 @@ module.exports.editPasswordPost =  async (req, res) => {
         req.flash("success", "Đặt lại mật khẩu thành công");
         res.redirect("back");
     }
+};
+
+// [GET] /user/info/list-order
+module.exports.listOrder= async (req, res) => {
+    const user= await User.findOne({_id : res.locals.user.id});
+
+    // let find= {
+    //     user_id: user.id
+    // }
+
+    const filterValue= req.query.value || "all";
+    // console.log(filterValue);
+
+    const find = {
+        user_id: user.id,
+        ...(filterValue !== "all" && { status: filterValue }) // Chỉ thêm status nếu filterValue không phải "all"
+    };
+    
+    // if(filterValue != "all"){
+    //     find.status= filterValue;
+    // }
+    
+    const orders= await Order.find(find).lean();
+
+    const orderDetails = [];
+
+    for (const order of orders) {
+        const productsInOrder = [];
+        for (const item of order.products) {
+            const product = await Product.findOne({ _id: item.product_id }).lean();
+
+            if (!product) continue;
+
+            productsInOrder.push({
+                thumbnail: product.thumbnail,
+                title: product.title,
+                price: item.price.toLocaleString("vi-VN"),
+                quantity: item.quantity,
+                slug: product.slug
+            });
+        }
+
+        if (productsInOrder.length > 0) {
+            orderDetails.push({
+                orderId: order._id.toString(),
+                createdAt: new Date(order.createdAt).toLocaleString('vi-VN'),
+                totalPrice: order.totalPrice.toLocaleString("vi-VN"),
+                status: order.status,
+                products: productsInOrder
+            });
+        }
+    }
+
+    // res.send("ok");
+    res.render("client/pages/user/list-order", {
+        pageTitle: "Lịch sử mua hàng",
+        // products: listProduct,
+        orderDetails: orderDetails,
+        orders: orders
+    })
+};
+
+// [PATCH] /user/info/list-order/cancel/:orderId
+module.exports.cancelOrder= async (req, res) => {
+    const orderId= req.params.orderId;
+
+    try{
+        await Order.updateOne({_id: orderId}, {status: "cancelled"});
+    } catch(error){
+
+    }
+
+    return res.redirect("back");
+};
+
+// [PATCH] /user/info/list-order/completed/orderId
+module.exports.deliveredOrder= async (req, res) => {
+    const orderId= req.params.orderId;
+
+    try{
+        await Order.updateOne({_id: orderId}, {status: "completed"});
+
+    } catch(error){
+
+    }
+    return res.redirect("back");
 };

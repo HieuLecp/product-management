@@ -3,7 +3,6 @@ const router = express.Router();
 const multer  = require('multer');
 
 const upload = multer();
-
 const Recaptcha = require('express-recaptcha').RecaptchaV2
 
 const controller = require("../../controllers/client/user.controller");
@@ -31,6 +30,7 @@ router.get('/login',
     recaptcha.middleware.render,
     controller.login
 );
+
 
 router.post('/login', 
     validate.loginPost,
@@ -84,6 +84,21 @@ router.post('/info/editPassword',
     authMiddleware.requireAuth,
     validate.editPasswordPost,
     controller.editPasswordPost
+);
+
+router.get('/info/list-order',
+    authMiddleware.requireAuth,
+    controller.listOrder
+);
+
+router.patch('/info/list-order/cancel/:orderId',
+    authMiddleware.requireAuth,
+    controller.cancelOrder
+);
+
+router.patch('/info/list-order/completed/:orderId',
+    authMiddleware.requireAuth,
+    controller.deliveredOrder
 );
 
 module.exports = router;

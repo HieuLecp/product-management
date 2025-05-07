@@ -1,0 +1,134 @@
+extends ../../layouts/default
+include ../../mixins/filterStatus
+include ../../mixins/pagination
+include ../../mixins/formChangeMulti
+include ../../mixins/alert
+include ../../mixins/moment
+include ../../mixins/orderStatus
+
+block main 
+
+    +alert-success(5000)
+    if(role.permissions.includes("products_view"))
+
+        h1 Danh sách đơn hàng
+        
+        .card.mb-3 
+            .card-header Bộ lọc và tìm kiếm
+            .card-body
+                .rol
+                    .col-6 
+                        +filterStatus(filterStatus)
+                        
+        .card.mb-3 
+            .card-header Danh sách đơn hàng
+                .card-body
+                    .row 
+                        .col-8 
+                            +formChangeMultiOrder(`${prefixAdmin}/orders/change-multi?_method=PATCH`)
+
+                    table.order-table(
+                        class="table table-hover table-sm"
+                        checkbox-multi
+                    )
+                        thead
+                            tr
+                                th 
+                                    input(
+                                        type="checkbox"
+                                        name="checkall"
+                                    )
+                                th Stt
+                                th Thời gian
+                                th Tổng tiền
+                                th Trạng thái
+                                th Hành động
+                        tbody
+                            each order, index in orderDetails
+                                tr
+                                    td 
+                                        input(
+                                            type="checkbox"
+                                            name="id"
+                                            value=order.orderId  
+                                        )
+                                    td.text-center #{pagination.limitItems * (pagination.currentPage - 1) + index + 1} 
+                                    td 
+                                        +formatDate(order.createdAt)
+                                    td.total-price #{order.totalPrice}
+                                    td
+                                        +orderStatus(order.status)
+                                    td.action-cell
+                                        button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem chi tiết
+                                tr.details-row.hidden(id=`details-${order.orderId}`)
+                                    td(colspan="5")
+                                        //- h3.details-order Chi tiết đơn hàng
+                                        div(id=`details-content-${order.orderId}`)
+
+
+                    //- each item, index in orders 
+                    //-     table(
+                    //-         class= "table table-hover table-sm"
+                    //-         checkbox-multi
+                    //-     )
+                    //-         thead 
+                    //-             tr 
+                    //-                 th 
+                    //-                     input(
+                    //-                         type="checkbox"
+                    //-                         name="checkall"
+                    //-                         ) 
+                    //-                 th STT 
+                    //-                 th Thời gian
+                    //-                 th Tổng tiền
+                    //-                 th Trạng thái
+                    //-                 th Hành động
+                            
+                    //-         tbody
+                                
+                    //-             tr
+                    //-                 td 
+                    //-                     input(
+                    //-                         type="checkbox"
+                    //-                         name="id"
+                    //-                         value=item.id  
+                    //-                     )
+                    //-                 td #{pagination.limitItems * (pagination.currentPage - 1) + index + 1}                                         
+                    //-                 td 
+                    //-                     +formatDate(item.createdAt)
+                    //-                 td #{item.totalPriceFormat} #{"(vnd)"}
+                    //-                 td
+                    //-                     +orderStatus(item.status)
+                                        
+                    //-                 td.action-cell
+                    //-                     button.view-details-btn(onclick=`toggleDetails('${item.id}')`) Xem chi tiết
+                    //-                     if(role.permissions.includes("orders_edit"))
+                    //-                         button.accept-order-btn(
+                    //-                             class= "btn btn-sm ml-1"
+                    //-                             order-id= item.id 
+                    //-                             button-accept-order
+                    //-                         ) Duyệt đơn
+                    //-                             form(
+                    //-                                 action=""
+                    //-                                 method="POST"
+                    //-                                 id= "button-accept-order"
+                    //-                                 data-path= `${prefixAdmin}/orders/accept`
+                    //-                             )
+                    //-     div.details-container.hidden(id=`details-${item.id}`)
+                    //-         h3.details-order Chi tiết đơn hàng
+                    //-         div(id=`details-content-${item.id}`)                                        
+        
+        +pagination(pagination)
+
+        form(
+            action="" 
+            method="POST"
+            id= "form-change-status"
+            data-path= `${prefixAdmin}/products/change-status`
+        )
+
+    script(src="/admin/js/order.js")
+    script.
+      // Nhúng dữ liệu orderDetails vào trang
+        window.orderDetails = JSON.parse('!{JSON.stringify(orderDetails).replace(/<\/script/g, "<\\/script")}');
+

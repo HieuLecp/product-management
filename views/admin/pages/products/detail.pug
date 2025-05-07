@@ -17,7 +17,7 @@ block main
                                 span Danh mục: 
                                 span(class="inner-category-title") #{product.category.title} 
                         if(product.price)
-                            div(class="inner-price-old") #{product.price}$
+                            div(class="inner-price-old") #{product.priceFormat} #{"(vnd)"}
                         if(product.discountPercentage)
                             div(class="inner-percent") Giảm giá: <span>#{product.discountPercentage}%</span>
                         if(product.stock)

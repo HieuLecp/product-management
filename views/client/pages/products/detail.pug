@@ -22,11 +22,11 @@ block main
                         if(products.category)
                             div(class="inner-category")
                                 span Danh mục: 
-                                a(href=`product/${products.category.slug}`) #{products.category.title} 
+                                a(href=`/product/${products.category.slug}`) #{products.category.title} 
                         if(products.priceNew)
-                            div(class="inner-price-new") Giá mới: <span>#{products.priceNew}$</span>
+                            div(class="inner-price-new") Giá mới: <span>#{products.priceNewFormat} #{"(vnd)"}</span>
                         if(products.price)
-                            div(class="inner-price-old") Giá cũ: <span>#{products.price}$</span>
+                            div(class="inner-price-old") Giá cũ: <span>#{products.priceFormat} #{"(vnd)"}</span>
                         if(products.discountPercentage)
                             div(class="inner-percent") Giảm tới <span>#{products.discountPercentage}%</span>
                         if(products.stock)

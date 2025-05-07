@@ -2,11 +2,91 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head
 include ../../mixins/product-layout
 include ../../mixins/alert
+include ../../mixins/dashboard
 
+block dashboard
+    //- +dashboard
 
 block main 
     +alert-success(3000)
     +alert-error(3000)
+
+    // Popup quảng cáo
+    #popup-overlay.popup-overlay(style="display: none;")
+        #popup.popup
+            button#close-popup.close-btn X
+            .popup-content
+                img(src="/images/popup.jpeg" alt="Popup Banner" style="width: 100%; height: auto; border-radius: 10px;")
+                h2 Laptop14 - Ưu đãi cực sốc!
+                p Giảm giá lên đến 20% cho mọi laptop!
+                p Tặng balo và chuột cho đơn từ 15 triệu!
+                a.btn.btn-primary(href="/product" style="margin-top: 1rem;") Mua ngay
+                p.contact-info 0366809374 | Văn Quán, Hà Đông
+
+    // Thanh quảng cáo bên trái
+    #ad-left.ad-banner(style="display: none;")
+        .ad-content
+            img(src="/images/ad-left.jpeg" alt="Ad Left" style="width: 100%; height: auto; border-radius: 10px;")
+            h3 Laptop14
+            p Giảm giá 20% cho laptop gaming!
+            a.btn.btn-primary(href="/product") Mua ngay
+
+    // Thanh quảng cáo bên phải
+    #ad-right.ad-banner(style="display: none;")
+        .ad-content
+            img(src="/images/ad-right.jpeg" alt="Ad Right" style="width: 100%; height: auto; border-radius: 10px;")
+            h3 Laptop14
+            p Tặng balo cho đơn từ 15 triệu!
+            a.btn.btn-primary(href="/product") Mua ngay
+    
+    .section-banner.my-5
+        .container
+            .swiper-container
+                .swiper-wrapper
+                    // Slide 1
+                    .swiper-slide
+                        .banner-slide
+                            // Banner trái
+                            .banner-item(style="background: url('/images/banner1.jpeg') no-repeat center/cover;")
+                                .banner-content
+                                    h2 Laptop14 - Đỉnh cao công nghệ!
+                                    p Mua laptop chính hãng, giá tốt nhất thị trường!
+                                    p.price Giảm giá cực sâu trên mọi sản phẩm!
+                                    a.btn.btn-primary(href="/product") Khám phá ngay
+                            // Banner phải
+                            .banner-item(style="background: url('/images/Dell Inspiron.jpg') no-repeat center/cover;")
+                                .banner-content
+                                    h2 Laptop Dell Inspiron
+                                    p Cân mọi tác vụ
+                                    p.price Giảm giá lên đến <span>20%</span>
+                                    a.btn.btn-primary(href="/product/detail/laptop-dell-inspiron-14-5440-71034770") Mua ngay
+
+                    // Slide 2
+                    .swiper-slide
+                        .banner-slide
+                            // Banner trái
+                            .banner-item(style="background: url('/images/nitro5.jpeg') no-repeat center/cover;")
+                                .banner-content
+                                    h2 Acer Nitro V
+                                    p Giảm giá 20% cho laptop gaming
+                                    p.price Chỉ từ <span>30.771.900đ</span>
+                                    .gift
+                                        img(src="/images/mouse1.jpeg" alt="Quà tặng chuột")
+                                        span Tặng chuột gaming
+                                    a.btn.btn-primary(href="/product/detail/laptop-gaming-acer-nitro-5-tiger-an515-58-773y") Mua ngay
+                            // Banner phải
+                            .banner-item(style="background: url('/images/msi.jpg') no-repeat center/cover;")
+                                .banner-content
+                                    h2 MSI Prestige
+                                    p Giảm giá sốc 14%
+                                    p.price Chỉ từ <span>25.714.000đ</span>
+                                    a.btn.btn-primary(href="/product/detail/laptop-msi-prestige-14-ai-studio-c1udxg-058vn") Mua ngay
+
+                // Nút điều khiển
+                .swiper-button-next
+                .swiper-button-prev
+                // Chấm phân trang
+                .swiper-pagination
 
     .section-products-featured.my5
         .container
@@ -17,7 +97,7 @@ block main
                     
             +product-grid(productFeatured)
 
-    .section-products-featured.my5
+    .section-products-new.my5
         .container
             .row 
                 .col-12 
@@ -25,3 +105,32 @@ block main
                         +box-head("Sản phẩm mới")
                     
             +product-grid(productNew)
+
+    //- if(user)
+    //-     //- Nút mở chatbot
+    //-     #chat-toggle
+    //-         <img src="/images/chatBot.jpeg" class="avatar">
+    //-         //- i.fa-solid.fa-comments
+
+    //-     //- Khung chatbot (ẩn mặc định)
+    //-     #chat-container(style="display: none;")
+    //-         .chat-header
+    //-             span Leo
+    //-             button#close-chatbot X
+
+    //-         #chatbox
+    //-         form#chatForm
+    //-             input#userInput(type="text" placeholder="Nhập tin nhắn..." required)
+    //-             button(type="submit")
+    //-                 i.fa-solid.fa-paper-plane
+
+    
+
+block script 
+    script(src="/js/home.js")
+
+    //- script(type="module" src="/js/leon.js")
+
+    script(src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js")
+    
+    

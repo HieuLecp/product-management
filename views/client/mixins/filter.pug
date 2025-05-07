@@ -1,0 +1,29 @@
+mixin filter()
+    .price-filter
+        .form-group
+            label(for="price-min") Giá tối thiểu:
+            input#price-min(type="number" placeholder="Điền vào đây" min="0" value=priceMin)
+        .form-group
+            label(for="price-max") Giá tối đa:
+            input#price-max(type="number" placeholder="Điền vào đây" min="0" value=priceMax)
+        button.btn.btn-primary#filter-price-btn(type="button" style="margin-top: 1rem;") Lọc
+        p#price-range.text-muted(style="margin-top: 0.5rem;")
+            if priceMin || priceMax
+                | Giá: #{(priceMin || 0).toLocaleString('vi-VN')} - #{(priceMax || 50000000).toLocaleString('vi-VN')} đ
+            else
+                | Chưa chọn khoảng giá
+        p#price-error.text-danger(style="margin-top: 0.5rem;")
+        if error
+            p.text-danger= error
+
+mixin filterOrder()
+    .order-filter.mb-4
+        label(for="statusFilter" class="mr-2 font-semibold text-gray-700") Lọc theo trạng thái:
+        select#statusFilter(class="form-control filter-select")
+            option(value="all") Tất cả
+            option(value="pending") Chờ xác nhận
+            option(value="approved") Đã duyệt
+            option(value="processing") Đang chuẩn bị
+            option(value="shipped") Đang giao
+            option(value="completed") Đã nhận
+            option(value="cancelled") Đã huỷ

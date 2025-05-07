@@ -7,14 +7,13 @@ header.header
             .col-2 
                 .inner-logo
                     a(href="/")
-                        img(src=settingGeneral.logo, alt="Avt", width=max-width, height= "auto")
-                    //- a(href="/" ) Trang chủ
+                    a(href="/" class="calligraphy-text") Laptop14
             .col-4 
                 form(
                     action="/search"
                     method="GET"
                 )
-                    div(class="form-group d-flex mb-0")
+                    div(class="input-group d-flex mb-0")
                         input(
                             type= "text"
                             placeholder= "Nhập từ khoá"
@@ -24,28 +23,29 @@ header.header
                         )
                         button(
                             type= "submit"
-                            class="btn btn-primary"
-                        ) Tìm
+                            class="button-search btn-primary"
+                        )
+                            i(class="bi bi-search fs-3 icon-centered") 
 
             .col-6
                 .inner-menu.flex-wrap
-                    ul 
-                        //- li(class="d-flex align-items-center")
-                        //-         a(href="/leon" ) Leon
-                                    
+                    ul
                         li(class="sub-menu d-flex align-items-center")
                             - const pathProduct = "/product";
-                            a(href=pathProduct ) 
-                                i(class="bi bi-list fs-3 icon-centered")
+                            a(href=pathProduct )
+                                //- i(class="bi bi-list fs-3 icon-centered")
+                                span Sản phẩm
                                 +sub-menu(layoutProductCategory, pathProduct)
                         if(user)
                             //- li 
                             //-     a(href="/chat" )
                             //-         <i class="bi bi-chat-dots-fill fs-3 icon-centered"></i>
-                            li 
+                            li(class="sub-menu d-flex align-items-center") 
+                                a(href="/user/info/list-order" ) Đơn hàng
+                            li(class="sub-menu d-flex align-items-center") 
                                 a(href="/users/friends" ) Bạn bè
-                            li 
-                                a(href="/rooms-chat" ) Phòng chat
+                            //- li(class="sub-menu d-flex align-items-center") 
+                            //-     a(href="/rooms-chat" ) Phòng chat
                             li(class="d-flex align-items-center")
                                 a(href="/user/info" ) 
                                     i(class="bi bi-person fs-3 icon-centered")    
