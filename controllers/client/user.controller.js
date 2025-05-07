@@ -43,13 +43,15 @@ module.exports.registerPost =  async (req, res) => {
         res.redirect("back");
         return;
     }
+    req.body.statusOnline= "online"
 
     req.body.password= md5(req.body.password);
     req.body.tokenUser = generateHelper.generateRandomString(20); 
     const record = new User(req.body);
     await record.save();
-    // console.log(record);
 
+    const updatedStatistic = await getDashboardStatistic();
+    _io.emit('updateDashboard', updatedStatistic);
 
     req.flash("success", "Bạn đã đăng ký tài khoản thành công!");
     res.cookie("tokenUser", record.tokenUser);

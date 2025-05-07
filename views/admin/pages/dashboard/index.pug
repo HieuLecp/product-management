@@ -14,8 +14,8 @@ block main
     - var recentProduct = statistic.recentlyUpdatedProducts && statistic.recentlyUpdatedProducts.length > 0 ? statistic.recentlyUpdatedProducts[0] : {};
     - var recentTitle = recentProduct.title || 'Chưa có sản phẩm vừa bán';
     - var recentSold = recentProduct.sold || 0;
-    - var orderCompletionRateDay = statistic.orderCompletionRate ? statistic.orderCompletionRate.inDay || 0 : 0;
-    - var orderCompletionRateMonth = statistic.orderCompletionRate ? statistic.orderCompletionRate.inMonth || 0 : 0;
+    - var orderPlacementRateDay = (statistic.orderPlacementRate && statistic.orderPlacementRate.inDay) ? statistic.orderPlacementRate.inDay : 0;
+    - var orderPlacementRateMonth = (statistic.orderPlacementRate && statistic.orderPlacementRate.inMonth) ? statistic.orderPlacementRate.inMonth : 0;
     - var lowStockProducts = Array.isArray(statistic.lowStockProducts) ? statistic.lowStockProducts : [];
 
 
@@ -33,9 +33,20 @@ block main
                             h3 Đã bán: <b><span id="bestProductSold"> #{sold} </span></b>
 
                         .stat-card.orange
-                            h3 Tỷ lệ hoàn thành đơn hàng
-                            h3 Trong ngày: <b><span id="orderCompletionRateDay"> #{orderCompletionRateDay} </span>%</b>
-                            h3 Trong tháng: <b><span id="orderCompletionRateMonth"> #{orderCompletionRateMonth} </span>%</b>
+                            h3 Tỷ lệ đặt hàng
+                            h3 Trong ngày: <b><span id="orderPlacementRateDay"> #{orderPlacementRateDay} </span> Đơn</b>
+                            h3 Trong tháng: <b><span id="orderPlacementRateMonth"> #{orderPlacementRateMonth} </span> Đơn</b>
+
+                        //- .stat-card.orange
+                        //-     h3 Tỷ lệ đặt hàng
+                        //-     h3 Trong ngày: 
+                        //-         b 
+                        //-             <span id="orderPlacementRateDay"> #{orderPlacementRateDay}
+                        //-             |  đơn
+                        //-     h3 Trong tháng: 
+                        //-         b
+                        //-             <span id="orderPlacementRateMonth"> #{orderPlacementRateMonth}
+                        //-             |  đơn
 
                         .stat-card.purple
                             h3 Doanh thu
@@ -66,16 +77,23 @@ block main
         .row.mt-4
             .col-10
                 .card.mb-4
-                    .card-header Doanh thu theo ngày trong tháng
+                    .card-header Thống kê doanh thu theo ngày
                     .card-body
                         canvas#revenueChart(width="400" height="200")
 
         .row.mt-4
             .col-10
                 .card.mb-4
-                    .card-header Tỷ lệ sản phẩm đã bán theo danh mục
+                    .card-header Thống kê theo hãng
                     .card-body
                         canvas#categorySalesChart(width="400" height="400")
+
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Thống kê theo phương thức thanh toán
+                    .card-body
+                        canvas#paymentMethodChart(width="400" height="400")
 
 
 block script

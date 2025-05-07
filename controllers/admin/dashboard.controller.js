@@ -18,11 +18,16 @@ module.exports.dashboard = async (req, res) => {
             statusOnline: 0,
         },
         revenuePerDay: [],
-        orderCompletionRate: { // Thêm orderCompletionRate vào cấu trúc
+        orderPlacementRate: { // Thay orderCompletionRate bằng orderPlacementRate
             inDay: 0,
             inMonth: 0
         },
-        lowStockProducts: []
+        lowStockProducts: [],
+        paymentTypeStats: { // Thêm paymentTypeStats
+            cod: 0,
+            momo: 0,
+            zalopay: 0
+        }
     };
 
     // Sản phẩm bán chạy
@@ -94,7 +99,6 @@ module.exports.dashboard = async (req, res) => {
     if (revenuePerDay.length > 0) {
         statistic.revenuePerDay = revenuePerDay;
     }
-    // console.log('Revenue per day:', revenuePerDay);
 
     const recordInMonth = await Order.aggregate([
         {
@@ -124,28 +128,16 @@ module.exports.dashboard = async (req, res) => {
         deleted: false
     });
 
-    // Tỷ lệ hoàn thành đơn hàng
+    // Tỷ lệ đặt hàng
     const totalOrdersInDay = await Order.countDocuments({
         createdAt: { $gte: startOfDay, $lte: endOfDay }
     });
-
-    const completedOrdersInDay = await Order.countDocuments({
-        createdAt: { $gte: startOfDay, $lte: endOfDay },
-        status: "completed"
-    });
-
-    statistic.orderCompletionRate.inDay = totalOrdersInDay > 0 ? (completedOrdersInDay / totalOrdersInDay * 100).toFixed(2) : 0;
+    statistic.orderPlacementRate.inDay = totalOrdersInDay;
 
     const totalOrdersInMonth = await Order.countDocuments({
         createdAt: { $gte: startOfMonth, $lte: endOfMonth }
     });
-
-    const completedOrdersInMonth = await Order.countDocuments({
-        createdAt: { $gte: startOfMonth, $lte: endOfMonth },
-        status: "completed"
-    });
-
-    statistic.orderCompletionRate.inMonth = totalOrdersInMonth > 0 ? (completedOrdersInMonth / totalOrdersInMonth * 100).toFixed(2) : 0;
+    statistic.orderPlacementRate.inMonth = totalOrdersInMonth;
 
     // Sản phẩm tồn kho thấp
     try {
@@ -159,7 +151,6 @@ module.exports.dashboard = async (req, res) => {
         console.error('Error fetching low stock products:', error);
         statistic.lowStockProducts = []; // Nếu có lỗi, gán mảng rỗng
     }
-    // console.log(statistic.lowStockProducts)
 
     // Tỷ lệ bán theo danh mục (product_category_id)
     const categorySales = await Product.aggregate([
@@ -216,7 +207,21 @@ module.exports.dashboard = async (req, res) => {
             : "0.00"
     }));
     
-    // console.log('Category sales ratio:', statistic.categorySalesRatio);
+    // Thống kê phương thức thanh toán
+    const paymentTypeStats = await Order.aggregate([
+        {
+            $group: {
+                _id: "$paymentType",
+                count: { $sum: 1 }
+            }
+        }
+    ]);
+
+    paymentTypeStats.forEach(stat => {
+        if (stat._id) {
+            statistic.paymentTypeStats[stat._id] = stat.count;
+        }
+    });
 
     res.render("admin/pages/dashboard/index", {
         pageTitle: "Trang chủ",

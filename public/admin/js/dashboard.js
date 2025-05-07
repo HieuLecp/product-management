@@ -1,7 +1,6 @@
-
-
 let revenueChart; // Biến để lưu trữ biểu đồ doanh thu
-let categorySalesChart; // Biến để lưu trữ biểu đồ tròn
+let categorySalesChart; // Biến để lưu trữ biểu đồ tỷ lệ sản phẩm đã bán
+let paymentMethodChart; // Biến để lưu trữ biểu đồ tròn tỷ lệ phương thức thanh toán
 
 // Kiểm tra kết nối Socket.IO
 socket.on('connect', () => {
@@ -14,6 +13,7 @@ socket.on('initialDashboardData', (data) => {
     updateDashboard(data);
     createOrUpdateChart(data);
     createOrUpdateCategorySalesChart(data);
+    createOrUpdatePaymentMethodChart(data);
 });
 
 socket.on('updateDashboard', (data) => {
@@ -21,6 +21,7 @@ socket.on('updateDashboard', (data) => {
     updateDashboard(data);
     createOrUpdateChart(data);
     createOrUpdateCategorySalesChart(data);
+    createOrUpdatePaymentMethodChart(data);
 });
 
 function updateDashboard(data) {
@@ -45,24 +46,22 @@ function updateDashboard(data) {
     document.getElementById('userTotal').textContent = data.user?.total || 0;
     document.getElementById('userOnline').textContent = data.user?.statusOnline || 0;
 
-    // Cập nhật tỷ lệ hoàn thành đơn hàng
-    document.getElementById('orderCompletionRateDay').textContent = data.orderCompletionRate?.inDay || 0;
-    document.getElementById('orderCompletionRateMonth').textContent = data.orderCompletionRate?.inMonth || 0;
+    // Cập nhật tỷ lệ đặt hàng
+    document.getElementById('orderPlacementRateDay').textContent = data.orderPlacementRate?.inDay || 0;
+    document.getElementById('orderPlacementRateMonth').textContent = data.orderPlacementRate?.inMonth || 0;
 }
 
 function createOrUpdateChart(data) {
     console.log('Revenue per day for chart:', data.revenuePerDay);
     const ctx = document.getElementById('revenueChart').getContext('2d');
 
-    // Chỉ lấy các ngày có doanh thu
     const labels = data.revenuePerDay.map(item => item._id) || ['Không có dữ liệu'];
     const revenues = data.revenuePerDay.map(item => item.totalRevenue) || [0];
 
-    // Nếu biểu đồ đã tồn tại, hủy bỏ và tạo mới
     if (revenueChart) {
         revenueChart.data.labels = labels;
         revenueChart.data.datasets[0].data = revenues;
-        revenueChart.update(); // Cập nhật biểu đồ mượt
+        revenueChart.update();
     } else {
         revenueChart = new Chart(ctx, {
             type: 'line',
@@ -79,7 +78,7 @@ function createOrUpdateChart(data) {
             },
             options: {
                 animation: {
-                    duration: 500, // hiệu ứng mượt khi thay đổi dữ liệu
+                    duration: 500,
                 },
                 scales: {
                     y: {
@@ -105,7 +104,6 @@ function createOrUpdateCategorySalesChart(data) {
     console.log('Category sales ratio for chart:', data.categorySalesRatio);
     const ctx = document.getElementById('categorySalesChart').getContext('2d');
 
-    // Dữ liệu cho biểu đồ tròn
     const labels = data.categorySalesRatio.map(item => item.categoryName);
     const percentages = data.categorySalesRatio.map(item => item.percentage);
     const colors = [
@@ -117,16 +115,15 @@ function createOrUpdateCategorySalesChart(data) {
         'rgba(255, 159, 64, 0.6)'
     ];
 
-    // Nếu biểu đồ đã tồn tại, hủy bỏ và tạo mới
     if (categorySalesChart) {
         categorySalesChart.data.labels = labels.length > 0 ? labels : ['Không có dữ liệu'];
         categorySalesChart.data.datasets[0].data = percentages.length > 0 ? percentages : [100];
         categorySalesChart.data.datasets[0].backgroundColor = percentages.length > 0 ? colors.slice(0, percentages.length) : ['rgba(200, 200, 200, 0.6)'];
         categorySalesChart.data.datasets[0].borderColor = percentages.length > 0 ? colors.slice(0, percentages.length).map(c => c.replace('0.6', '1')) : ['rgba(200, 200, 200, 1)'];
-        categorySalesChart.update(); // cập nhật mượt
+        categorySalesChart.update();
     } else {
         categorySalesChart = new Chart(ctx, {
-            type: 'pie',
+            type: 'bar',
             data: {
                 labels: labels.length > 0 ? labels : ['Không có dữ liệu'],
                 datasets: [{
@@ -155,13 +152,82 @@ function createOrUpdateCategorySalesChart(data) {
                             }
                         }
                     }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Phần trăm (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Danh mục'
+                        }
+                    }
                 }
             }
         });
     }
 }
 
-// Vẽ biểu đồ ngay khi tải trang với dữ liệu từ controller
+function createOrUpdatePaymentMethodChart(data) {
+    console.log('Payment method stats for chart:', data.paymentTypeStats);
+    const ctx = document.getElementById('paymentMethodChart').getContext('2d');
+
+    const labels = ['COD', 'MoMo', 'ZaloPay'];
+    const counts = [
+        data.paymentTypeStats?.cod || 0,
+        data.paymentTypeStats?.momo || 0,
+        data.paymentTypeStats?.zalopay || 0
+    ];
+    const colors = ['rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)'];
+
+    if (paymentMethodChart) {
+        paymentMethodChart.data.labels = labels;
+        paymentMethodChart.data.datasets[0].data = counts;
+        paymentMethodChart.data.datasets[0].backgroundColor = colors;
+        paymentMethodChart.data.datasets[0].borderColor = colors.map(c => c.replace('0.6', '1'));
+        paymentMethodChart.update();
+    } else {
+        paymentMethodChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Phương thức thanh toán',
+                    data: counts,
+                    backgroundColor: colors,
+                    borderColor: colors.map(c => c.replace('0.6', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.raw + ' đơn hàng';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, setting up event listeners');
     if (initialStatistic) {
@@ -169,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDashboard(initialStatistic);
         createOrUpdateChart(initialStatistic);
         createOrUpdateCategorySalesChart(initialStatistic);
+        createOrUpdatePaymentMethodChart(initialStatistic);
     }
 
     const buttons = document.querySelectorAll('[button-delete]');

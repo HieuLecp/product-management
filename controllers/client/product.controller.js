@@ -91,6 +91,10 @@ module.exports.detail = async (req, res) => {
             products.category= category;
 
             productHepler.priceNewProduct(products);
+            products.priceFormat= products.price.toLocaleString("vi-VN");
+            
+            products.priceNewFormat= Number(products.priceNew).toLocaleString("vi-VN");
+            // console.log(products.priceNewFormat);
         }
         // console.log(products.priceNew);
         // console.log(products.category.slug);

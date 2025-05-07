@@ -2250,6 +2250,19 @@ label {
     font-weight: bold;
 }
 
+#clearChat {
+    background-color: #f44336;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #clearChat:hover {
+    background-color: #d32f2f;
+  }
+
 /* Hộp chatbot ẩn mặc định */
 .chatbot-container {
     position: fixed;
@@ -2285,7 +2298,7 @@ label {
 }
 
 .chatbot-title .avatar {
-    width: 60px;
+    width: 90px;
     height: auto;
     margin-right: 10px;
     border-radius: 50%;
