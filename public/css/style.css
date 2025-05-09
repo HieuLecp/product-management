@@ -1826,14 +1826,21 @@ label {
     margin-bottom: 10px;
 }
 
-.quick-links li a {
+.quick-links li button {
     text-decoration: none;
     color: #333;
     font-size: 1rem;
     transition: color 0.3s ease;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
 }
 
-.quick-links li a:hover {
+.quick-links li button:hover {
     color: #ff6200;
 }
 

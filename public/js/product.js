@@ -1,32 +1,3 @@
-// const filterPrice= document.querySelector('.price-filter');
-// if(filterPrice){
-//     let url = new URL(window.location.href);
-
-//     const btnFilter= filterPrice.querySelector('#filter-price-btn');
-    
-//     btnFilter.addEventListener("click", () => {
-//         const priceMinInput = document.querySelector('#price-min');
-//         const priceMaxInput = document.querySelector('#price-max');
-
-//         const priceMin= priceMinInput.value;
-//         const priceMax= priceMaxInput.value;
-        
-//         url.searchParams.set("priceMin", priceMin);
-//         url.searchParams.set("priceMax", priceMax);
-
-//         window.location.href = url.href;
-//     })
-
-//     const max= url.searchParams.get("priceMax");
-//     const min= url.searchParams.get("priceMin");
-
-//     const priceMinInput = document.querySelector('#price-min');
-//     const priceMaxInput = document.querySelector('#price-max');
-
-//     priceMaxInput.setAttribute("value", max);
-//     priceMinInput.setAttribute("value", min);
-
-// }
 
 // public/js/priceFilter.js
 document.addEventListener('DOMContentLoaded', () => {

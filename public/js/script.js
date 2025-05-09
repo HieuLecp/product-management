@@ -1,3 +1,5 @@
+const { url } = require("inspector");
+
 // show alert
 const showAlert = document.querySelector("[show-alert]");
 if(showAlert){
@@ -121,3 +123,20 @@ if(sort){
 
 }
 // end sort
+
+// quick link
+const quickLink= document.querySelector(".quick-links");
+
+if(quickLink){
+    let url = new URL(window.location.href);
+
+    const btnPriceMax= quickLink.querySelector("#priceMax");
+    console.log(btnPriceMax);
+
+    if(btnPriceMax){
+        btnPriceMax.addEventListener("click", () => {
+
+        })
+    }
+}
+// end quick link

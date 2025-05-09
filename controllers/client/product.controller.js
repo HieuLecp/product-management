@@ -57,6 +57,12 @@ module.exports.index = async (req, res) => {
     
         const newproducts= productHepler.priceNewProducts(products);    
         // console.log(newproducts);
+
+        const listProductMax= Product.find().sort({ price: -1 }).limit(5).select("slug");
+        const listProductMin= Product.find().sort({ price: 1 }).limit(5).select("slug");
+        const listProductFeatured= Product.find({
+            featured: true
+        }).limit(3)
     
         res.render('client/pages/products/index',  {
             pageTitle: "Danh sách sản phẩm",

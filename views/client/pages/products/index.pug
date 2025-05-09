@@ -34,11 +34,21 @@ block main
                     +box-head("Liên kết nhanh")
                     ul.quick-links
                         li
-                            a(href="/products?sort=price-desc") Sản phẩm đắt nhất
+                            //- a(href="/products?value=priceMax") Sản phẩm đắt nhất 
+                            button(
+                                id= "priceMax" 
+                                class="text-button"
+                            ) Sản phẩm đắt nhất 
                         li
-                            a(href="/products?sort=price-asc") Sản phẩm rẻ nhất
+                            button(
+                                id= "priceMin" 
+                                class="text-button"
+                            ) Sản phẩm rẻ nhất
                         li
-                            a(href="/products?featured=true") Sản phẩm nổi bật
+                            button(
+                                id= "featured" 
+                                class="text-button"
+                                ) Sản phẩm nổi bật
 
             // Nội dung chính
             .col-9
