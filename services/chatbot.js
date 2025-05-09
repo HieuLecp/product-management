@@ -17,7 +17,9 @@ class ChatBot {
             'deell': 'dell',
             'del': 'dell',
             'asuss': 'asus',
-            'assus': 'asus'
+            'assus': 'asus',
+            'acerr': 'acer',
+            'aceer': 'acer'
         };
 
         this.intentKeywords = {
@@ -131,71 +133,95 @@ class ChatBot {
         if (!this.productModel) {
             return { type: 'text', reply: "Hệ thống chưa kết nối với cơ sở dữ liệu sản phẩm." };
         }
-
+    
         user_input = user_input.toLowerCase().trim();
         if (!user_input) {
             return { type: 'text', reply: "Vui lòng nhập thông tin tìm kiếm." };
         }
-
+    
         const keywords = user_input.split(/\s+/).filter(word => word.length > 0);
         const normalizedKeywords = keywords.map(keyword => this.brandVariants[keyword] || keyword);
-
+    
         const expensiveKeywords = ['đắt', 'cao cấp', 'giá cao', 'đắt tiền', 'cao giá'];
         const cheapKeywords = ['rẻ', 'giá thấp', 'bình dân', 'giá rẻ', 'thấp giá'];
         const isExpensive = keywords.some(keyword => expensiveKeywords.includes(keyword));
         const isCheap = keywords.some(keyword => cheapKeywords.includes(keyword));
-
+    
         try {
             const products = await this.productModel.find({
                 deleted: false,
                 status: 'active'
             }).lean();
-
+    
             if (!products) {
                 return { type: 'text', reply: "Lỗi: Không thể truy vấn dữ liệu sản phẩm." };
             }
-
+    
             if (!products.length) {
                 return { type: 'productList', products: [] };
             }
-
+    
             let matchedProducts = [];
-
+    
             const specificKeywords = keywords.filter(keyword => !cheapKeywords.includes(keyword) && !expensiveKeywords.includes(keyword));
-
+    
             if (specificKeywords.length === 0 && (isCheap || isExpensive)) {
                 matchedProducts = products;
             } else {
-                for (const product of products) {
-                    const title = product.title?.toLowerCase() || '';
-                    const description = product.description?.toLowerCase() || '';
-                    const brand = product.brand?.toLowerCase() || '';
-
-                    let isMatch = false;
-                    for (const keyword of specificKeywords) {
-                        const titleWords = title.split(/\s+/);
-                        const descriptionWords = description.split(/\s+/);
-
-                        const titleScore = Math.max(...titleWords.map(word => fuzzball.ratio(keyword, word)), 0);
-                        const descriptionScore = Math.max(...descriptionWords.map(word => fuzzball.ratio(keyword, word)), 0);
-                        const brandScore = brand ? fuzzball.ratio(keyword, brand) : 0;
-
-                        if (titleScore > 60 || descriptionScore > 60 || brandScore > 60) {
-                            isMatch = true;
-                            break;
+                // Danh sách các hãng trong intentKeywords.productSearch
+                const brandKeywords = this.intentKeywords.productSearch.filter(keyword => 
+                    ['dell', 'asus', 'hp', 'lenovo', 'macbook', 'acer', 'msi'].includes(keyword)
+                );
+    
+                // Xác định từ khóa là tên hãng
+                const brandKeyword = specificKeywords.find(keyword => 
+                    brandKeywords.includes(this.brandVariants[keyword] || keyword)
+                );
+    
+                if (brandKeyword) {
+                    // Nếu có từ khóa là tên hãng, chỉ khớp với brand
+                    const normalizedBrand = this.brandVariants[brandKeyword] || brandKeyword;
+                    for (const product of products) {
+                        const brand = product.brand?.toLowerCase() || '';
+                        // Khớp chính xác hoặc rất gần với brand
+                        const brandScore = brand ? fuzzball.ratio(normalizedBrand, brand) : 0;
+                        if (brandScore >= 90) { // Tăng ngưỡng để tránh khớp nhầm (như acer vs asus)
+                            matchedProducts.push(product);
                         }
                     }
-
-                    if (isMatch) {
-                        matchedProducts.push(product);
+                } else {
+                    // Nếu không phải tên hãng, khớp như trước nhưng tăng ngưỡng
+                    for (const product of products) {
+                        const title = product.title?.toLowerCase() || '';
+                        const description = product.description?.toLowerCase() || '';
+                        const brand = product.brand?.toLowerCase() || '';
+    
+                        let isMatch = false;
+                        for (const keyword of specificKeywords) {
+                            const titleWords = title.split(/\s+/);
+                            const descriptionWords = description.split(/\s+/);
+    
+                            const titleScore = Math.max(...titleWords.map(word => fuzzball.ratio(keyword, word)), 0);
+                            const descriptionScore = Math.max(...descriptionWords.map(word => fuzzball.ratio(keyword, word)), 0);
+                            const brandScore = brand ? fuzzball.ratio(keyword, brand) : 0;
+    
+                            if (titleScore > 90 || descriptionScore > 90 || brandScore > 90) {
+                                isMatch = true;
+                                break;
+                            }
+                        }
+    
+                        if (isMatch) {
+                            matchedProducts.push(product);
+                        }
                     }
                 }
-
+    
                 if (matchedProducts.length === 0 && specificKeywords.length > 0) {
                     return { type: 'text', reply: "Không tìm thấy sản phẩm phù hợp với yêu cầu của bạn." };
                 }
             }
-
+    
             let sortedProducts;
             if (isExpensive) {
                 sortedProducts = matchedProducts.sort((a, b) => {
@@ -212,9 +238,9 @@ class ChatBot {
             } else {
                 sortedProducts = matchedProducts.sort((a, b) => (b.sold || 0) - (a.sold || 0));
             }
-
+    
             sortedProducts = sortedProducts.slice(0, 3);
-
+    
             const productList = sortedProducts.map(product => {
                 const price = product.price || 0;
                 const discount = product.discountPercentage || 0;
@@ -229,7 +255,7 @@ class ChatBot {
                     slug: product.slug || ''
                 };
             });
-
+    
             return { type: 'productList', products: productList };
         } catch (error) {
             console.error('Lỗi khi tìm kiếm laptop:', error.message);

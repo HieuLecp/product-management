@@ -1,4 +1,4 @@
-const { url } = require("inspector");
+// const { url } = require("inspector");
 
 // show alert
 const showAlert = document.querySelector("[show-alert]");
@@ -88,12 +88,14 @@ if(buttonPagination){
 
 
 // sort
+console.log("ok");
 const sort = document.querySelector("[sort]");
-// console.log(sort);
+console.log(sort);
 if(sort){
     let url = new URL(window.location.href);
 
     const sortSelect = sort.querySelector("[sort-select]");
+    console.log(sortSelect);
     // const sortClear = sort.querySelector("[sort-clear]");
 
     sortSelect.addEventListener("change", (e) => {
