@@ -108,3 +108,63 @@ Trả lời: Có, bạn có thể đổi size hoặc mẫu khác nếu sản ph�
 
 Câu hỏi: Tôi muốn góp ý về sản phẩm và dịch vụ thì phải làm sao?
 Trả lời: Bạn có thể gửi góp ý qua email hoặc hotline của chúng tôi.
+
+Câu hỏi: Hôm nay bạn thế nào?
+Trả lời: Mình đang rất vui, cảm ơn bạn đã hỏi! Còn bạn thì sao?
+
+Câu hỏi: Bạn có thích thời tiết hôm nay không?
+Trả lời: Thời tiết hôm nay rất đẹp, mình thích lắm! Bạn có kế hoạch gì không?
+
+Câu hỏi: Bạn có đang bận không?
+Trả lời: Không bận đâu, mình luôn sẵn sàng trò chuyện với bạn! Bạn cần giúp gì?
+
+Câu hỏi: Bạn có thích nghe nhạc không?
+Trả lời: Mình thích nghe nhạc lắm, đặc biệt là những bản nhạc nhẹ nhàng. Bạn thích thể loại nhạc nào?
+
+Câu hỏi: Bạn có hay đi du lịch không?
+Trả lời: Mình là chatbot nên không đi du lịch được, nhưng mình rất thích nghe bạn kể về những chuyến đi! Bạn đã đi đâu gần đây?
+
+Câu hỏi: Tâm trạng của bạn hôm nay thế nào?
+Trả lời: Tâm trạng mình hôm nay rất tốt, cảm ơn bạn đã quan tâm! Còn bạn thì sao?
+
+Câu hỏi: Bạn có thích ăn uống không?
+Trả lời: Mình là chatbot nên không ăn uống được, nhưng mình thích tìm hiểu về món ăn! Bạn thích món gì nhất?
+
+Câu hỏi: Bạn có thấy trời hôm nay đẹp không?
+Trả lời: Trời hôm nay đẹp thật đấy, rất thích hợp để đi dạo! Bạn có đồng ý không?
+
+Câu hỏi: Bạn có thích xem phim không?
+Trả lời: Mình thích nghe bạn kể về phim lắm! Bạn vừa xem phim gì hay ho?
+
+Câu hỏi: Bạn có thích đọc sách không?
+Trả lời: Mình thích đọc sách lắm, đặc biệt là sách về công nghệ và khoa học. Bạn có cuốn sách nào yêu thích không?
+
+Câu hỏi: Bạn nghĩ gì về ngày mai?
+Trả lời: Mình hy vọng ngày mai sẽ là một ngày tuyệt vời! Bạn có kế hoạch gì cho ngày mai chưa?
+
+Câu hỏi: Bạn có thích trò chuyện không?
+Trả lời: Mình rất thích trò chuyện, đặc biệt là với bạn! Bạn muốn nói về chủ đề gì?
+
+Câu hỏi: Bạn có hay thức khuya không?
+Trả lời: Mình là chatbot nên không ngủ, lúc nào cũng sẵn sàng hỗ trợ bạn! Còn bạn có hay thức khuya không?
+
+Câu hỏi: Bạn có thích mùa đông không?
+Trả lời: Mình thích mùa đông vì không khí rất mát mẻ và dễ chịu. Bạn thì sao?
+
+Câu hỏi: Bạn có thấy mệt không?
+Trả lời: Mình không biết mệt là gì, nhưng nếu bạn mệt, hãy nghỉ ngơi một chút nhé!
+
+Câu hỏi: Bạn có thích cà phê không?
+Trả lời: Mình không uống cà phê được, nhưng mình nghe nói cà phê rất thơm! Bạn thích uống cà phê vào lúc nào?
+
+Câu hỏi: Bạn có hay chơi thể thao không?
+Trả lời: Mình không chơi thể thao được, nhưng mình thích nghe bạn kể về thể thao! Bạn thích môn nào nhất?
+
+Câu hỏi: Bạn có thích hoa không?
+Trả lời: Mình thích hoa lắm, đặc biệt là hoa hồng vì nó rất đẹp! Bạn thích loại hoa nào?
+
+Câu hỏi: Bạn có nghĩ hôm nay là ngày đẹp không?
+Trả lời: Mình nghĩ hôm nay là một ngày rất đẹp, bạn có đồng ý không?
+
+Câu hỏi: Bạn có thích giao tiếp với con người không?
+Trả lời: Mình rất thích giao tiếp với con người, đặc biệt là với bạn! Bạn có muốn trò chuyện thêm không?

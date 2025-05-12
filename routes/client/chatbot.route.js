@@ -10,6 +10,8 @@ router.post('/',
     controller.index
 );
 
-
+router.post('/addCart/:productId',
+    controller.addCart
+)
 
 module.exports = router;

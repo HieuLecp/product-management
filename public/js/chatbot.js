@@ -57,31 +57,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendMessage = async () => {
         const message = chatbotInput.value.trim();
         if (!message) return;
-
+    
         const userMsg = document.createElement('div');
         userMsg.className = 'chatbot-message user';
         userMsg.textContent = message;
         chatbotMessages.appendChild(userMsg);
         scrollToBottom();
-
+    
         const loadingMsg = showLoading();
-
+    
         try {
             const response = await fetch('/chatbot', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message })
             });
-
+    
             if (!response.ok) throw new Error('Lỗi kết nối server');
-
+    
             const data = await response.json();
-
+            console.log(data);
+    
             removeLoading();
-
+    
             const botMsg = document.createElement('div');
             botMsg.className = 'chatbot-message bot';
-
+    
             // Xử lý danh sách sản phẩm
             if (data.type === 'productList' && Array.isArray(data.products)) {
                 if (data.products.length > 0) {
@@ -96,7 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         const productCard = document.createElement('div');
                         productCard.className = 'product-card';
                         productCard.innerHTML = `
-                            <img src="${product.thumbnail || '/images/default.jpg'}" alt="${product.title || 'Sản phẩm'}" class="product-image" onerror="this.src='/images/default.jpg'">
+                            <div class="product-image-container">
+                                <img src="${product.thumbnail || '/images/default.jpg'}" alt="${product.title || 'Sản phẩm'}" class="product-image" onerror="this.src='/images/default.jpg'">
+                                <button class="add-to-cart-btn" data-product-id="${product.id}" title="Thêm vào giỏ hàng">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </div>
                             <div class="product-info">
                                 <a href="/product/detail/${product.slug || '#'}" class="product-title">${product.title || 'Sản phẩm'}</a>
                                 <div class="product-price">
@@ -104,12 +110,54 @@ document.addEventListener('DOMContentLoaded', () => {
                                     ${product.discount > 0 ? `<span class="original-price">(${product.original_price || 'N/A'} VNĐ)</span>` : ''}
                                     ${product.discount > 0 ? `<span class="discount">(-${product.discount}%)</span>` : ''}
                                 </div>
-                                <div class="product-description">${product.description || 'Không có mô tả'}</div>
                             </div>
                         `;
                         productList.appendChild(productCard);
                     });
                     botMsg.appendChild(productList);
+    
+                    // Thêm sự kiện cho các nút "Thêm vào giỏ hàng"
+                    const addToCartButtons = productList.querySelectorAll('.add-to-cart-btn');
+                    addToCartButtons.forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const productId = btn.getAttribute('data-product-id');
+                            if (!productId) {
+                                const errorMsg = document.createElement('div');
+                                errorMsg.className = 'chatbot-message bot';
+                                errorMsg.textContent = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng (thiếu thông tin sản phẩm).';
+                                chatbotMessages.appendChild(errorMsg);
+                                scrollToBottom();
+                                return;
+                            }
+    
+                            const loadingMsg = showLoading();
+                            try {
+                                const response = await fetch(`/chatbot/addCart/${productId}`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ quantity: 1 })
+                                });
+    
+                                if (!response.ok) throw new Error('Lỗi khi thêm vào giỏ hàng');
+    
+                                const data = await response.json();
+                                removeLoading();
+    
+                                const successMsg = document.createElement('div');
+                                successMsg.className = 'chatbot-message bot';
+                                successMsg.textContent = data.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
+                                chatbotMessages.appendChild(successMsg);
+                                scrollToBottom();
+                            } catch (error) {
+                                removeLoading();
+                                const errorMsg = document.createElement('div');
+                                errorMsg.className = 'chatbot-message bot';
+                                errorMsg.textContent = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.';
+                                chatbotMessages.appendChild(errorMsg);
+                                scrollToBottom();
+                            }
+                        });
+                    });
                 } else {
                     botMsg.textContent = 'Không tìm thấy sản phẩm phù hợp.';
                 }
@@ -118,10 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 botMsg.textContent = 'Không có phản hồi từ server.';
             }
-
+    
             chatbotMessages.appendChild(botMsg);
             scrollToBottom();
-
+    
             const maxMessages = 50;
             const messages = chatbotMessages.querySelectorAll('.chatbot-message');
             if (messages.length > maxMessages) {
@@ -139,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollToBottom();
             localStorage.setItem('chatbotMessages', chatbotMessages.innerHTML);
         }
-
+    
         chatbotInput.value = '';
     };
 
