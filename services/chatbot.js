@@ -382,15 +382,15 @@ class ChatBot {
         if (!this.productModel) {
             return { type: 'text', reply: "Hệ thống chưa kết nối với cơ sở dữ liệu sản phẩm." };
         }
-
+    
         user_input = user_input.toLowerCase().trim();
         if (!user_input) {
             return { type: 'text', reply: "Vui lòng nhập thông tin tìm kiếm." };
         }
-
+    
         const keywords = user_input.split(/\s+/).filter(word => word.length > 0);
         const normalizedKeywords = keywords.map(keyword => this.brandVariants[keyword] || keyword);
-
+    
         let contextBrand = this.conversationContext.lastBrand;
         if (history.length > 0) {
             for (const msg of history) {
@@ -399,45 +399,93 @@ class ChatBot {
                 }
             }
         }
-
+    
         const expensiveKeywords = ['đắt', 'cao cấp', 'giá cao', 'đắt tiền', 'cao giá'];
         const cheapKeywords = ['rẻ', 'giá thấp', 'bình dân', 'giá rẻ', 'thấp giá'];
         const isExpensive = keywords.some(keyword => expensiveKeywords.includes(keyword));
         const isCheap = keywords.some(keyword => cheapKeywords.includes(keyword));
-
+    
         const hasProductKeyword = keywords.some(keyword => this.intentKeywords.productSearch.includes(keyword));
         if (!hasProductKeyword && !contextBrand) {
             return { type: 'text', reply: "Mình không thấy bạn nhắc đến sản phẩm nào. Bạn muốn tìm laptop hay thiết bị gì?" };
         }
-
+    
         try {
             const products = await this.productModel.find({
                 deleted: false,
                 status: 'active'
             }).lean();
-
+    
             if (!products) {
                 return { type: 'text', reply: "Lỗi: Không thể truy vấn dữ liệu sản phẩm." };
             }
-
+    
             if (!products.length) {
                 return { type: 'productList', products: [] };
             }
-
+    
             let matchedProducts = [];
             const specificKeywords = keywords.filter(keyword => !cheapKeywords.includes(keyword) && !expensiveKeywords.includes(keyword));
-
-            if (specificKeywords.length === 0 && (isCheap || isExpensive)) {
+    
+            const categoryKeywords = {
+                'laptop': ['laptop', 'máy tính'],
+                'desktop': ['desktop', 'máy bàn']
+            };
+            const brandKeywords = this.intentKeywords.productSearch.filter(keyword =>
+                ['dell', 'asus', 'hp', 'lenovo', 'apple', 'acer', 'msi'].includes(keyword)
+            );
+    
+            let containsProductOrBrand = false;
+            let detectedCategory = null;
+            let detectedBrand = null;
+    
+            for (const keyword of specificKeywords) {
+                if (brandKeywords.includes(this.brandVariants[keyword] || keyword)) {
+                    containsProductOrBrand = true;
+                    detectedBrand = this.brandVariants[keyword] || keyword;
+                }
+                for (const [category, synonyms] of Object.entries(categoryKeywords)) {
+                    if (synonyms.includes(keyword)) {
+                        detectedCategory = category;
+                        containsProductOrBrand = true;
+                        break;
+                    }
+                }
+                if (containsProductOrBrand) break;
+    
+                if (!detectedCategory && !brandKeywords.includes(keyword)) {
+                    for (const product of products) {
+                        const title = product.title?.toLowerCase() || '';
+                        const description = product.description?.toLowerCase() || '';
+                        const brand = product.brand?.toLowerCase() || '';
+    
+                        const titleWords = title.split(/\s+/);
+                        const descriptionWords = description.split(/\s+/);
+    
+                        const titleScore = Math.max(...titleWords.map(word => fuzzball.ratio(keyword, word)), 0);
+                        const descriptionScore = Math.max(...descriptionWords.map(word => fuzzball.ratio(keyword, word)), 0);
+                        const brandScore = brand ? fuzzball.ratio(keyword, brand) : 0;
+    
+                        if (titleScore > 90 || descriptionScore > 90 || brandScore > 90) {
+                            containsProductOrBrand = true;
+                            break;
+                        }
+                    }
+                }
+                if (containsProductOrBrand) break;
+            }
+    
+            // Chỉ lấy toàn bộ sản phẩm nếu không có thương hiệu và có yêu cầu giá
+            if (!detectedBrand && (detectedCategory === 'laptop' || !containsProductOrBrand) && (isCheap || isExpensive)) {
                 matchedProducts = products;
             } else {
-                const brandKeywords = this.intentKeywords.productSearch.filter(keyword =>
-                    ['dell', 'asus', 'hp', 'lenovo', 'apple', 'acer', 'msi'].includes(keyword)
+                const categoryKeyword = specificKeywords.find(keyword =>
+                    Object.values(categoryKeywords).flat().includes(keyword)
                 );
-
                 const brandKeyword = specificKeywords.find(keyword =>
                     brandKeywords.includes(this.brandVariants[keyword] || keyword)
                 ) || contextBrand;
-
+    
                 if (brandKeyword) {
                     const normalizedBrand = this.brandVariants[brandKeyword] || brandKeyword;
                     this.conversationContext.lastBrand = normalizedBrand;
@@ -448,50 +496,62 @@ class ChatBot {
                             matchedProducts.push(product);
                         }
                     }
+                } else if (categoryKeyword && detectedCategory !== 'laptop') {
+                    for (const product of products) {
+                        const category = product.category?.toLowerCase() || '';
+                        for (const [cat, synonyms] of Object.entries(categoryKeywords)) {
+                            if (synonyms.includes(categoryKeyword) && category === cat) {
+                                matchedProducts.push(product);
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     for (const product of products) {
                         const title = product.title?.toLowerCase() || '';
                         const description = product.description?.toLowerCase() || '';
                         const brand = product.brand?.toLowerCase() || '';
-
+    
                         let isMatch = false;
                         for (const keyword of specificKeywords) {
                             const titleWords = title.split(/\s+/);
                             const descriptionWords = description.split(/\s+/);
-
+    
                             const titleScore = Math.max(...titleWords.map(word => fuzzball.ratio(keyword, word)), 0);
                             const descriptionScore = Math.max(...descriptionWords.map(word => fuzzball.ratio(keyword, word)), 0);
                             const brandScore = brand ? fuzzball.ratio(keyword, brand) : 0;
-
+    
                             if (titleScore > 90 || descriptionScore > 90 || brandScore > 90) {
                                 isMatch = true;
                                 break;
                             }
                         }
-
+    
                         if (isMatch) {
                             matchedProducts.push(product);
                         }
                     }
                 }
-
+    
                 if (matchedProducts.length === 0 && specificKeywords.length > 0) {
-                    return { type: 'text', reply: "Không tìm thấy sản phẩm phù hợp với yêu cầu của bạn." };
+                    return { type: 'text', reply: "Bạn có thể gợi ý về nhãn hàng bạn muốn mua hoặc một số thông tin về sản phẩm không?" };
                 }
             }
-
-            if (user_input.includes('1 - 150 triệu')) {
-                matchedProducts = matchedProducts.filter(product => {
-                    const price = product.price * (1 - (product.discountPercentage || 0) / 100);
-                    return price >= 1000 && price <= 150000000;
-                });
-            }
-
+    
+            matchedProducts = matchedProducts.filter(product => {
+                const price = product.price || 0;
+                const discount = product.discountPercentage || 0;
+                const finalPrice = price * (1 - discount / 100);
+                // console.log(`Product: ${product.title}, Final Price: ${finalPrice}`);
+                return finalPrice >= 1000;
+            });
+    
             let sortedProducts;
             if (isExpensive) {
                 sortedProducts = matchedProducts.sort((a, b) => {
                     const priceA = a.price * (1 - (a.discountPercentage || 0) / 100);
                     const priceB = b.price * (1 - (b.discountPercentage || 0) / 100);
+                    // console.log(`Sorting: ${a.title} (${priceA}) vs ${b.title} (${priceB})`);
                     return priceB - priceA;
                 });
             } else if (isCheap) {
@@ -503,9 +563,9 @@ class ChatBot {
             } else {
                 sortedProducts = matchedProducts.sort((a, b) => (b.sold || 0) - (a.sold || 0));
             }
-
+    
             sortedProducts = sortedProducts.slice(0, 3);
-
+    
             const productList = sortedProducts.map(product => {
                 const price = product.price || 0;
                 const discount = product.discountPercentage || 0;
@@ -521,7 +581,7 @@ class ChatBot {
                     slug: product.slug || ''
                 };
             });
-
+    
             this.conversationContext.lastProduct = productList[0]?.title || null;
             return { type: 'productList', products: productList };
         } catch (error) {
