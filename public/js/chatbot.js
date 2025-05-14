@@ -40,50 +40,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const showLoading = () => {
-        const loadingMsg = document.createElement('div');
-        loadingMsg.className = 'chatbot-message bot loading';
-        loadingMsg.textContent = 'Đang xử lý...';
-        chatbotMessages.appendChild(loadingMsg);
+    const showTypingIndicator = () => {
+        const typingMsg = document.createElement('div');
+        typingMsg.className = 'chatbot-message bot typing';
+        typingMsg.innerHTML = '<span class="typing-dot">.</span><span class="typing-dot">.</span><span class="typing-dot">.</span>';
+        chatbotMessages.appendChild(typingMsg);
         scrollToBottom();
-        return loadingMsg;
+        return typingMsg;
     };
 
-    const removeLoading = () => {
-        const loadingMsg = chatbotMessages.querySelector('.loading');
-        if (loadingMsg) loadingMsg.remove();
+    const removeTypingIndicator = () => {
+        const typingMsg = chatbotMessages.querySelector('.typing');
+        if (typingMsg) typingMsg.remove();
+    };
+
+    const getConversationHistory = () => {
+        const messages = chatbotMessages.querySelectorAll('.chatbot-message');
+        return Array.from(messages)
+            .slice(-5) // Lấy 5 tin nhắn gần nhất
+            .map(msg => msg.textContent)
+            .filter(text => !text.includes('Đang xử lý') && !text.includes('...')); // Loại bỏ tin nhắn loading
     };
 
     const sendMessage = async () => {
         const message = chatbotInput.value.trim();
         if (!message) return;
-    
+
         const userMsg = document.createElement('div');
         userMsg.className = 'chatbot-message user';
         userMsg.textContent = message;
         chatbotMessages.appendChild(userMsg);
         scrollToBottom();
-    
-        const loadingMsg = showLoading();
-    
+
+        const typingMsg = showTypingIndicator();
+
         try {
+            const history = getConversationHistory();
             const response = await fetch('/chatbot', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message })
+                body: JSON.stringify({ message, history })
             });
-    
+
             if (!response.ok) throw new Error('Lỗi kết nối server');
-    
+
             const data = await response.json();
             console.log(data);
-    
-            removeLoading();
-    
+
+            removeTypingIndicator();
+
             const botMsg = document.createElement('div');
             botMsg.className = 'chatbot-message bot';
-    
-            // Xử lý danh sách sản phẩm
+
             if (data.type === 'productList' && Array.isArray(data.products)) {
                 if (data.products.length > 0) {
                     const messageText = document.createElement('div');
@@ -115,8 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         productList.appendChild(productCard);
                     });
                     botMsg.appendChild(productList);
-    
-                    // Thêm sự kiện cho các nút "Thêm vào giỏ hàng"
+
                     const addToCartButtons = productList.querySelectorAll('.add-to-cart-btn');
                     addToCartButtons.forEach(btn => {
                         btn.addEventListener('click', async () => {
@@ -129,27 +136,27 @@ document.addEventListener('DOMContentLoaded', () => {
                                 scrollToBottom();
                                 return;
                             }
-    
-                            const loadingMsg = showLoading();
+
+                            const typingMsg = showTypingIndicator();
                             try {
                                 const response = await fetch(`/chatbot/addCart/${productId}`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({ quantity: 1 })
                                 });
-    
+
                                 if (!response.ok) throw new Error('Lỗi khi thêm vào giỏ hàng');
-    
+
                                 const data = await response.json();
-                                removeLoading();
-    
+                                removeTypingIndicator();
+
                                 const successMsg = document.createElement('div');
                                 successMsg.className = 'chatbot-message bot';
                                 successMsg.textContent = data.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
                                 chatbotMessages.appendChild(successMsg);
                                 scrollToBottom();
                             } catch (error) {
-                                removeLoading();
+                                removeTypingIndicator();
                                 const errorMsg = document.createElement('div');
                                 errorMsg.className = 'chatbot-message bot';
                                 errorMsg.textContent = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.';
@@ -166,10 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 botMsg.textContent = 'Không có phản hồi từ server.';
             }
-    
+
             chatbotMessages.appendChild(botMsg);
             scrollToBottom();
-    
+
             const maxMessages = 50;
             const messages = chatbotMessages.querySelectorAll('.chatbot-message');
             if (messages.length > maxMessages) {
@@ -179,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             localStorage.setItem('chatbotMessages', chatbotMessages.innerHTML);
         } catch (error) {
-            removeLoading();
+            removeTypingIndicator();
             const botMsg = document.createElement('div');
             botMsg.className = 'chatbot-message bot';
             botMsg.textContent = 'Lỗi: Không thể kết nối với server. Vui lòng thử lại.';
@@ -187,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollToBottom();
             localStorage.setItem('chatbotMessages', chatbotMessages.innerHTML);
         }
-    
+
         chatbotInput.value = '';
     };
 
