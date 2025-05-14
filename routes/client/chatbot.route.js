@@ -12,6 +12,11 @@ router.post('/',
 
 router.post('/addCart/:productId',
     controller.addCart
-)
+);
+
+router.get('/check-auth', 
+    controller.checkAuth
+);
+
 
 module.exports = router;

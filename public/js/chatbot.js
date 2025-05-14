@@ -14,10 +14,109 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    const showTypingIndicator = () => {
+        const typingMsg = document.createElement('div');
+        typingMsg.className = 'chatbot-message bot typing';
+        typingMsg.innerHTML = '<span class="typing-dot">.</span><span class="typing-dot">.</span><span class="typing-dot">.</span>';
+        chatbotMessages.appendChild(typingMsg);
+        scrollToBottom();
+        return typingMsg;
+    };
+
+    const removeTypingIndicator = () => {
+        const typingMsg = chatbotMessages.querySelector('.typing');
+        if (typingMsg) typingMsg.remove();
+    };
+
+    const getConversationHistory = () => {
+        const messages = chatbotMessages.querySelectorAll('.chatbot-message');
+        return Array.from(messages)
+            .slice(-5)
+            .map(msg => msg.textContent)
+            .filter(text => !text.includes('Đang xử lý') && !text.includes('...'));
+    };
+
+    // Hàm gắn sự kiện click cho các nút "Thêm vào giỏ hàng"
+    const attachAddToCartEvents = () => {
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        addToCartButtons.forEach(btn => {
+            // Xóa sự kiện cũ để tránh trùng lặp
+            btn.removeEventListener('click', btn._clickHandler);
+            btn._clickHandler = async () => {
+                const productId = btn.getAttribute('data-product-id');
+                if (!productId) {
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'chatbot-message bot error';
+                    errorMsg.textContent = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng (thiếu thông tin sản phẩm).';
+                    chatbotMessages.appendChild(errorMsg);
+                    scrollToBottom();
+                    return;
+                }
+
+                try {
+                    const authResponse = await fetch('/chatbot/check-auth', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include'
+                    });
+
+                    if (!authResponse.ok) throw new Error('Lỗi kiểm tra đăng nhập: ' + authResponse.status);
+
+                    const authData = await authResponse.json();
+                    if (!authData.isLoggedIn) {
+                        const loginMsg = document.createElement('div');
+                        loginMsg.className = 'chatbot-message bot error';
+                        loginMsg.textContent = 'Vui lòng đăng nhập để dùng chức năng này';
+                        chatbotMessages.appendChild(loginMsg);
+                        scrollToBottom();
+                        return;
+                    }
+
+                    const typingMsg = showTypingIndicator();
+                    try {
+                        const response = await fetch(`/chatbot/addCart/${productId}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ quantity: 1 }),
+                            credentials: 'include'
+                        });
+
+                        if (!response.ok) throw new Error('Lỗi thêm giỏ hàng: ' + response.status);
+
+                        const data = await response.json();
+                        removeTypingIndicator();
+
+                        const successMsg = document.createElement('div');
+                        successMsg.className = 'chatbot-message bot';
+                        successMsg.textContent = data.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
+                        chatbotMessages.appendChild(successMsg);
+                        scrollToBottom();
+                    } catch (error) {
+                        removeTypingIndicator();
+                        const errorMsg = document.createElement('div');
+                        errorMsg.className = 'chatbot-message bot error';
+                        errorMsg.textContent = `Lỗi: Không thể thêm sản phẩm vào giỏ hàng (${error.message}). Vui lòng thử lại.`;
+                        chatbotMessages.appendChild(errorMsg);
+                        scrollToBottom();
+                    }
+                } catch (error) {
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'chatbot-message bot error';
+                    errorMsg.textContent = `Lỗi: Không thể kiểm tra trạng thái đăng nhập (${error.message}). Vui lòng thử lại.`;
+                    chatbotMessages.appendChild(errorMsg);
+                    scrollToBottom();
+                }
+            };
+            btn.addEventListener('click', btn._clickHandler);
+        });
+    };
+
+    // Khôi phục tin nhắn từ localStorage
     const savedMessages = localStorage.getItem('chatbotMessages');
     if (savedMessages) {
         chatbotMessages.innerHTML = savedMessages;
         scrollToBottom();
+        attachAddToCartEvents(); // Gắn sự kiện cho các nút "Thêm vào giỏ hàng"
     } else {
         chatbotMessages.innerHTML = '<div class="chatbot-message bot">Xin chào! Tôi có thể giúp gì cho bạn hôm nay?</div>';
         scrollToBottom();
@@ -40,28 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const showTypingIndicator = () => {
-        const typingMsg = document.createElement('div');
-        typingMsg.className = 'chatbot-message bot typing';
-        typingMsg.innerHTML = '<span class="typing-dot">.</span><span class="typing-dot">.</span><span class="typing-dot">.</span>';
-        chatbotMessages.appendChild(typingMsg);
-        scrollToBottom();
-        return typingMsg;
-    };
-
-    const removeTypingIndicator = () => {
-        const typingMsg = chatbotMessages.querySelector('.typing');
-        if (typingMsg) typingMsg.remove();
-    };
-
-    const getConversationHistory = () => {
-        const messages = chatbotMessages.querySelectorAll('.chatbot-message');
-        return Array.from(messages)
-            .slice(-5) // Lấy 5 tin nhắn gần nhất
-            .map(msg => msg.textContent)
-            .filter(text => !text.includes('Đang xử lý') && !text.includes('...')); // Loại bỏ tin nhắn loading
-    };
-
     const sendMessage = async () => {
         const message = chatbotInput.value.trim();
         if (!message) return;
@@ -79,13 +156,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/chatbot', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, history })
+                body: JSON.stringify({ message, history }),
+                credentials: 'include'
             });
 
-            if (!response.ok) throw new Error('Lỗi kết nối server');
+            if (!response.ok) {
+                throw new Error(`Lỗi server: ${response.status} ${response.statusText}`);
+            }
 
             const data = await response.json();
-            console.log(data);
+            console.log('Phản hồi từ /chatbot:', data);
 
             removeTypingIndicator();
 
@@ -123,59 +203,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         productList.appendChild(productCard);
                     });
                     botMsg.appendChild(productList);
-
-                    const addToCartButtons = productList.querySelectorAll('.add-to-cart-btn');
-                    addToCartButtons.forEach(btn => {
-                        btn.addEventListener('click', async () => {
-                            const productId = btn.getAttribute('data-product-id');
-                            if (!productId) {
-                                const errorMsg = document.createElement('div');
-                                errorMsg.className = 'chatbot-message bot';
-                                errorMsg.textContent = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng (thiếu thông tin sản phẩm).';
-                                chatbotMessages.appendChild(errorMsg);
-                                scrollToBottom();
-                                return;
-                            }
-
-                            const typingMsg = showTypingIndicator();
-                            try {
-                                const response = await fetch(`/chatbot/addCart/${productId}`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ quantity: 1 })
-                                });
-
-                                if (!response.ok) throw new Error('Lỗi khi thêm vào giỏ hàng');
-
-                                const data = await response.json();
-                                removeTypingIndicator();
-
-                                const successMsg = document.createElement('div');
-                                successMsg.className = 'chatbot-message bot';
-                                successMsg.textContent = data.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
-                                chatbotMessages.appendChild(successMsg);
-                                scrollToBottom();
-                            } catch (error) {
-                                removeTypingIndicator();
-                                const errorMsg = document.createElement('div');
-                                errorMsg.className = 'chatbot-message bot';
-                                errorMsg.textContent = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.';
-                                chatbotMessages.appendChild(errorMsg);
-                                scrollToBottom();
-                            }
-                        });
-                    });
+                    chatbotMessages.appendChild(botMsg);
+                    scrollToBottom();
+                    attachAddToCartEvents(); // Gắn sự kiện cho các nút "Thêm vào giỏ hàng" mới
                 } else {
                     botMsg.textContent = 'Không tìm thấy sản phẩm phù hợp.';
+                    chatbotMessages.appendChild(botMsg);
+                    scrollToBottom();
                 }
             } else if (data.type === 'text' && data.reply) {
                 botMsg.textContent = data.reply;
+                chatbotMessages.appendChild(botMsg);
+                scrollToBottom();
             } else {
-                botMsg.textContent = 'Không có phản hồi từ server.';
+                botMsg.textContent = 'Không có phản hồi hợp lệ từ server.';
+                chatbotMessages.appendChild(botMsg);
+                scrollToBottom();
             }
-
-            chatbotMessages.appendChild(botMsg);
-            scrollToBottom();
 
             const maxMessages = 50;
             const messages = chatbotMessages.querySelectorAll('.chatbot-message');
@@ -188,11 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             removeTypingIndicator();
             const botMsg = document.createElement('div');
-            botMsg.className = 'chatbot-message bot';
-            botMsg.textContent = 'Lỗi: Không thể kết nối với server. Vui lòng thử lại.';
+            botMsg.className = 'chatbot-message bot error';
+            botMsg.textContent = `Lỗi: Không thể kết nối với server (${error.message}). Vui lòng thử lại.`;
             chatbotMessages.appendChild(botMsg);
             scrollToBottom();
             localStorage.setItem('chatbotMessages', chatbotMessages.innerHTML);
+            console.error('Lỗi trong sendMessage:', error);
         }
 
         chatbotInput.value = '';

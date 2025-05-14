@@ -2514,4 +2514,13 @@ label {
     100% { opacity: 0.2; }
 }
 
+.chatbot-message.bot.error {
+    color: #ff0000;
+    font-weight: bold;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
 /* end botchat */

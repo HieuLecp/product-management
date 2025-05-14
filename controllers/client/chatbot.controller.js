@@ -77,6 +77,10 @@ module.exports.index = async (req, res) => {
 
 // [POST]/chatbot/addCart/:productId
 module.exports.addCart = async (req, res) => {
+    if(!req.cookies.tokenUser){
+        res.json({ success: false, message: 'Mời bạn đăng nhập để dùng chức năng này!' });
+    }
+
     try {
         const user = await User.findOne({ tokenUser: req.cookies.tokenUser });
         if (!user) {
@@ -113,3 +117,16 @@ module.exports.addCart = async (req, res) => {
         res.status(500).json({ success: false, message: 'Lỗi server. Vui lòng thử lại.' });
     }
 };
+
+//[GET] /chatbot/check-auth
+module.exports.checkAuth= async (req, res) => {
+    try {
+        if (!req.cookies.tokenUser) {
+            return res.json({ isLoggedIn: false });
+        }
+        const user = await User.findOne({ tokenUser: req.cookies.tokenUser });
+        res.json({ isLoggedIn: !!user });
+    } catch {
+        res.json({ isLoggedIn: false });
+    }
+}
