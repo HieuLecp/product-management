@@ -2338,9 +2338,22 @@ label {
 }
 
 .chatbot-message.bot {
-    background-color: #e0f2fe;
-    color: #1f2937;
-    align-self: flex-start;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px; /* Khoảng cách giữa các phần tử */
+}
+
+.chatbot-message.bot .bot-name {
+    font-weight: bold;
+    color: #333; /* Màu sắc tùy chọn */
+    margin-right: 5px; /* Khoảng cách giữa tên và avatar */
+}
+
+.chatbot-message.bot .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .chatbot-message.user {

@@ -8,6 +8,7 @@ class ChatBot {
     static API_KEY = "3e95ca7740038bb5e66cf609dfaaf482";
     static GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
+    // Khởi tạo chatbot, tải dữ liệu câu hỏi/trả lời từ file, thiết lập các từ khóa và ngữ cảnh
     constructor(productModel) {
         this.qa_dict = {};
         this.qa_keywords = {};
@@ -76,6 +77,7 @@ class ChatBot {
         this.buildProductKeywords();
     }
 
+    // Xây dựng từ điển từ khóa sản phẩm từ cơ sở dữ liệu để hỗ trợ tìm kiếm
     async buildProductKeywords() {
         if (!this.productModel) {
             console.warn('Không có productModel, bỏ qua xây dựng từ khóa sản phẩm.');
@@ -109,6 +111,7 @@ class ChatBot {
         }
     }
 
+    // Phân tích cảm xúc của câu hỏi người dùng (positive, negative, neutral) bằng Gemini API hoặc từ khóa
     async analyzeSentiment(user_input) {
         try {
             const model = this.gemini.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -132,6 +135,7 @@ class ChatBot {
         }
     }
 
+    // Xác định ý định (intent) và cảm xúc (sentiment) của câu hỏi người dùng dựa trên Gemini API hoặc từ khóa
     async classifyIntentAndSentiment(user_input, history = []) {
         user_input = user_input.toLowerCase().trim();
         let contextScore = 0;
@@ -167,11 +171,10 @@ class ChatBot {
             const result = await model.generateContent(prompt);
             let generatedText = result.response.text().trim();
     
-            // Làm sạch chuỗi: loại bỏ ```json, ``` và các ký tự xuống dòng không cần thiết
             generatedText = generatedText
-                .replace(/```json\s*/, '') // Loại bỏ ```json
-                .replace(/```\s*$/, '')   // Loại bỏ ```
-                .replace(/\n/g, '')       // Loại bỏ xuống dòng
+                .replace(/```json\s*/, '')
+                .replace(/```\s*$/, '')
+                .replace(/\n/g, '')
                 .trim();
     
             let resultJson;
@@ -264,6 +267,7 @@ class ChatBot {
         }
     }
 
+    // Gợi ý sản phẩm dựa trên lịch sử duyệt web của người dùng, ưu tiên danh mục phổ biến
     async getBrowsingHistoryRecommendations(browsingHistory = []) {
         if (!this.productModel) {
             return { type: 'text', reply: "Hệ thống chưa kết nối với cơ sở dữ liệu sản phẩm." };
@@ -320,6 +324,7 @@ class ChatBot {
         }
     }
 
+    // Gợi ý sản phẩm laptop dựa trên thương hiệu hoặc ngữ cảnh từ lịch sử trò chuyện
     async recommend_products(user_input, history = []) {
         if (!this.productModel) {
             return { type: 'text', reply: "Hệ thống chưa kết nối với cơ sở dữ liệu sản phẩm." };
@@ -378,6 +383,7 @@ class ChatBot {
         }
     }
 
+    // Tìm kiếm laptop dựa trên từ khóa, thương hiệu, hoặc yêu cầu giá (rẻ, đắt) từ người dùng
     async searchLaptops(user_input, history = []) {
         if (!this.productModel) {
             return { type: 'text', reply: "Hệ thống chưa kết nối với cơ sở dữ liệu sản phẩm." };
@@ -475,7 +481,6 @@ class ChatBot {
                 if (containsProductOrBrand) break;
             }
     
-            // Chỉ lấy toàn bộ sản phẩm nếu không có thương hiệu và có yêu cầu giá
             if (!detectedBrand && (detectedCategory === 'laptop' || !containsProductOrBrand) && (isCheap || isExpensive)) {
                 matchedProducts = products;
             } else {
@@ -500,7 +505,7 @@ class ChatBot {
                     for (const product of products) {
                         const category = product.category?.toLowerCase() || '';
                         for (const [cat, synonyms] of Object.entries(categoryKeywords)) {
-                            if (synonyms.includes(categoryKeyword) && category === cat) {
+                            if (synonyms.includes(categoryKeyword) && category == cat) {
                                 matchedProducts.push(product);
                                 break;
                             }
@@ -542,7 +547,6 @@ class ChatBot {
                 const price = product.price || 0;
                 const discount = product.discountPercentage || 0;
                 const finalPrice = price * (1 - discount / 100);
-                // console.log(`Product: ${product.title}, Final Price: ${finalPrice}`);
                 return finalPrice >= 1000;
             });
     
@@ -551,7 +555,6 @@ class ChatBot {
                 sortedProducts = matchedProducts.sort((a, b) => {
                     const priceA = a.price * (1 - (a.discountPercentage || 0) / 100);
                     const priceB = b.price * (1 - (b.discountPercentage || 0) / 100);
-                    // console.log(`Sorting: ${a.title} (${priceA}) vs ${b.title} (${priceB})`);
                     return priceB - priceA;
                 });
             } else if (isCheap) {
@@ -590,6 +593,7 @@ class ChatBot {
         }
     }
 
+    // Trả về câu trả lời cho câu hỏi FAQ dựa trên từ khóa hoặc độ tương đồng với câu hỏi trong file chatbot.txt
     get_faq_response(user_input, sentiment) {
         user_input = user_input.toLowerCase().trim();
         const user_keywords = user_input.split(/\s+/).filter(word => word.length > 2);
@@ -631,6 +635,7 @@ class ChatBot {
         return { type: 'text', reply };
     }
 
+    // Xử lý các câu chào và trả về phản hồi thân thiện dựa trên cảm xúc người dùng
     static greeting(sentence, sentiment) {
         const GREETING_INPUTS = ["hello", "hi", "greetings", "sup", "what's up", "hey", "chào", "xin chào", "chào bạn"];
         const GREETING_RESPONSES = {
@@ -650,6 +655,7 @@ class ChatBot {
         return null;
     }
 
+    // Tạo phản hồi tự nhiên bằng Gemini API hoặc từ khóa cho các câu hỏi không thuộc FAQ
     async generate_nlp_response(user_input, history = [], sentiment) {
         try {
             const model = this.gemini.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -713,6 +719,7 @@ class ChatBot {
         }
     }
 
+    // Xử lý toàn bộ logic trò chuyện, phân loại ý định và trả về phản hồi phù hợp
     async chat_with_bot(user_input, history = [], browsingHistory = []) {
         user_input = user_input.toLowerCase().trim();
     
@@ -724,7 +731,6 @@ class ChatBot {
         const { intent, sentiment } = await this.classifyIntentAndSentiment(user_input, history);
         console.log('Detected Intent:', intent, 'Sentiment:', sentiment);
     
-        // Chỉ kích hoạt gợi ý sản phẩm nếu người dùng rõ ràng yêu cầu (ví dụ: chứa "gợi ý", "không biết")
         const needsSuggestion = intent === 'chitchat' && 
             this.suggestionTriggers.some(trigger => user_input.includes(trigger));
     
