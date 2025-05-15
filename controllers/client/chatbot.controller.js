@@ -77,9 +77,6 @@ module.exports.index = async (req, res) => {
 
 // [POST]/chatbot/addCart/:productId
 module.exports.addCart = async (req, res) => {
-    if(!req.cookies.tokenUser){
-        res.json({ success: false, message: 'Mời bạn đăng nhập để dùng chức năng này!' });
-    }
 
     try {
         const user = await User.findOne({ tokenUser: req.cookies.tokenUser });

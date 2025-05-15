@@ -1,26 +1,55 @@
 footer.footer.container-fluid.bg-light.p-4
-    .row.align-items-center
+    .row.align-items-start.justify-content-between
         // Cột 1: Giới thiệu website
-        .col-md-6
-            .d-flex.align-items-center.justify-content-center
+        .col-md-4
+            .d-flex.align-items-center
                 h5.ms-2.text-success Laptop14 - Chuyên cung cấp laptop chính hãng, giá tốt
-            p.text-white Laptop14.vn là hệ thống bán lẻ laptop uy tín, chuyên cung cấp các dòng laptop chính hãng từ Dell, HP, Asus, Lenovo... với giá tốt nhất. Cam kết sản phẩm chất lượng, bảo hành chính hãng, hỗ trợ trả góp 0%.  
+            p.text-muted Laptop14.vn là hệ thống bán lẻ laptop uy tín, chuyên cung cấp các dòng laptop chính hãng từ Dell, HP, Asus, Lenovo... với giá tốt nhất. Cam kết sản phẩm chất lượng, bảo hành chính hãng, hỗ trợ trả góp 0%.
 
-        // Cột 2: Theo dõi chúng tôi trên (Căn giữa)
-        .col-md-6.d-flex.flex-column.align-items-center
-            h6.text-danger.font-weight-bold.mb-2 Theo dõi chúng tôi trên:
-            ul.list-unstyled.text-center
-                li 
-                    a(href="https://www.facebook.com/profile.php?id=100031735639475" class="d-flex align-items-center justify-content-center") 
-                        i(class="bi bi-facebook text-primary fs-4 me-2") 
-                        | Facebook
-                li 
-                    a(href="#" class="d-flex align-items-center justify-content-center") 
-                        i(class="bi bi-youtube text-danger fs-4 me-2") 
-                        | Youtube
-                li 
-                    a(href="#" class="d-flex align-items-center justify-content-center") 
-                        i(class="bi bi-twitter text-info fs-4 me-2") 
-                        | Zalo
+        // Cột 2: Liên kết nhanh
+        .col-md-2
+            h6.text-warning.font-weight-bold.mb-3 Liên kết nhanh
+            ul.list-unstyled
+                li
+                    a.text-light(href="/") Giới thiệu
+                li
+                    a.text-light(href="/product") Sản phẩm
+                li
+                    a.text-light(href="/") Liên hệ
+                li
+                    a.text-light(href="/") Hỗ trợ
 
-    p #{settingGeneral.copyright}
+        // Cột 3: Thông tin liên hệ
+        .col-md-3
+            h6.text-warning.font-weight-bold.mb-3 Thông tin liên hệ
+            ul.list-unstyled
+                li.text-muted
+                    i.bi.bi-geo-alt.me-2
+                    | 123 Đường Trần Phú, Hà Đông, Hà Nội
+                li.text-muted
+                    i.bi.bi-telephone.me-2
+                    | 0123 456 789
+                li.text-muted
+                    i.bi.bi-envelope.me-2
+                    | support@laptop14.vn
+
+        // Cột 4: Theo dõi chúng tôi trên
+        .col-md-3.d-flex.flex-column.align-items-start
+            h6.text-warning.font-weight-bold.mb-3 Theo dõi chúng tôi trên:
+            ul.list-unstyled.d-flex.gap-3
+                li
+                    a.text-primary(href="https://www.facebook.com/profile.php?id=100031735639475")
+                        i.bi.bi-facebook.fs-4
+                        |  Facebook
+                li
+                    a.text-danger(href="#")
+                        i.bi.bi-youtube.fs-4
+                        |  Youtube
+                li
+                    a.text-info(href="#")
+                        img.zalo-icon(src="/images/zalo1.png", alt="Zalo")
+                        |  Zalo
+
+    p.text-center.text-white.mt-4 © 2025 Laptop14. All rights reserved.
+
+    //- p #{settingGeneral.copyright}

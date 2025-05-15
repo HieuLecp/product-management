@@ -3,65 +3,71 @@ include ../../mixins/box-head
 include ../../mixins/alert
 
 block main
-    +alert-success(3000)
-
     .product-detail
+        +alert-success(3000)
+
         .container.my-5
-            button(
-                class="btn btn-secondary"
-                button-go-back
-            ) Quay lại
-            .row 
-                .col-6 
-                    .inner-thumb 
-                        img(src= products.thumbnail alt= products.title)
-                .col-6
-                    div(class="inner-info")
-                        h1(class="mb-4 title-detail") <b>#{products.title}</b>
+            button(class="btn btn-secondary mb-3" button-go-back)
+                i.bi.bi-arrow-left.me-2 Quay lại
+            .row
+                .col-md-6
+                    .card.shadow-sm.rounded
+                        .card-body.text-center
+                            img(src=products.thumbnail alt=products.title class="img-fluid rounded")
+                .col-md-6
+                    .card.shadow-sm.rounded
+                        .card-body
+                            h1.mb-4.title-detail
+                                b #{products.title}
+                            if products.category
+                                .inner-category.mb-3
+                                    span Danh mục: 
+                                    a(href=`/product/${products.category.slug}`) #{products.category.title}
+                            if products.priceNew
+                                .inner-price-new.mb-3
+                                    | Giá mới: 
+                                    span #{products.priceNewFormat} (vnd)
+                            if products.price
+                                .inner-price-old.mb-3
+                                    | Giá cũ: 
+                                    span #{products.priceFormat} (vnd)
+                            if products.discountPercentage
+                                .inner-percent.mb-3
+                                    | Giảm tới 
+                                    span #{products.discountPercentage}%
+                            if products.stock
+                                .inner-stock.mb-3
+                                    | Còn lại: 
+                                    span #{products.stock} sản phẩm
+                            if user
+                                form(action=`/cart/add/${products.id}` method="POST" class="mb-3")
+                                    .input-group
+                                        input(class="form-control" type="number" name="quantity" value="1" min="1" max=products.stock)
+                                        button(type="submit" class="btn btn-success") Thêm vào giỏ hàng
+                            else
+                                a(href="/user/login" class="btn btn-success w-100 mb-3") Thêm vào giỏ hàng
 
-                        if(products.category)
-                            div(class="inner-category")
-                                span Danh mục: 
-                                a(href=`/product/${products.category.slug}`) #{products.category.title} 
-                        if(products.priceNew)
-                            div(class="inner-price-new") Giá mới: <span>#{products.priceNewFormat} #{"(vnd)"}</span>
-                        if(products.price)
-                            div(class="inner-price-old") Giá cũ: <span>#{products.priceFormat} #{"(vnd)"}</span>
-                        if(products.discountPercentage)
-                            div(class="inner-percent") Giảm tới <span>#{products.discountPercentage}%</span>
-                        if(products.stock)
-                            div(class="inner-stock") Còn lại: <span>#{products.stock}</span> sản phẩm
-                        
-                        if(user)
-                            form(
-                                action= `/cart/add/${products.id}`
-                                method="POST"
-                            )
-                                input(
-                                    class="form-control mb-2"
-                                    type= "number"
-                                    name= "quantity"
-                                    value= "1"
-                                    min= "1"
-                                    max= products.stock
-                                )
-                                button(
-                                    type= "submit"
-                                    class= "btn btn-success btn-block"
-                                ) Thêm vào giỏ hàng
-                        else
-                            a(
-                                href="/user/login"
-                                class= "btn btn-success btn-block"
-                            ) Thêm vào giỏ hàng
-                    
+        hr
 
-        hr 
-
-        .container.my-5 
-            .row 
-                .col-12 
+        .container.my-5
+            .row
+                .col-12
                     +box-head("Mô tả sản phẩm")
-                    .inner-desc !{products.description}
+                    .card.shadow-sm.rounded.mb-4
+                        .card-body
+                            .inner-desc !{products.description}
+
+                    +box-head("Đánh giá")
+                    .card.shadow-sm.rounded
+                        .card-body
+                            if reviews && reviews.length > 0
+                                each review in reviews
+                                    .review-item.mb-3
+                                        .d-flex.justify-content-between
+                                            strong #{review.userName}
+                                            span.text-muted #{review.createdAt}
+                                        p #{review.comment}
+                            else
+                                p.text-center.text-muted Chưa có đánh giá nào.
 
     script(src="/admin/js/product.js")

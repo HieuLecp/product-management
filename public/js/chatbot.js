@@ -288,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') debouncedSendMessage();
     });
 
+    // xoá lịch sử
     clearChatBtn.addEventListener('click', () => {
         if (confirm('Bạn có chắc muốn xóa lịch sử chat?')) {
             localStorage.removeItem('chatbotMessages');
