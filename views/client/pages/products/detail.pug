@@ -5,6 +5,7 @@ include ../../mixins/alert
 block main
     .product-detail
         +alert-success(3000)
+        +alert-error(3000)
 
         .container.my-5
             button(class="btn btn-secondary mb-3" button-go-back)
@@ -13,36 +14,36 @@ block main
                 .col-md-6
                     .card.shadow-sm.rounded
                         .card-body.text-center
-                            img(src=products.thumbnail alt=products.title class="img-fluid rounded")
+                            img(src=product.thumbnail alt=product.title class="img-fluid rounded")
                 .col-md-6
                     .card.shadow-sm.rounded
                         .card-body
                             h1.mb-4.title-detail
-                                b #{products.title}
-                            if products.category
+                                b #{product.title}
+                            if product.category
                                 .inner-category.mb-3
                                     span Danh mục: 
-                                    a(href=`/product/${products.category.slug}`) #{products.category.title}
-                            if products.priceNew
+                                    a(href=`/products/${product.category.slug}`) #{product.category.title}
+                            if product.priceNew
                                 .inner-price-new.mb-3
                                     | Giá mới: 
-                                    span #{products.priceNewFormat} (vnd)
-                            if products.price
+                                    span #{product.priceNewFormat} (vnd)
+                            if product.price
                                 .inner-price-old.mb-3
                                     | Giá cũ: 
-                                    span #{products.priceFormat} (vnd)
-                            if products.discountPercentage
+                                    span #{product.priceFormat} (vnd)
+                            if product.discountPercentage
                                 .inner-percent.mb-3
                                     | Giảm tới 
-                                    span #{products.discountPercentage}%
-                            if products.stock
+                                    span #{product.discountPercentage}%
+                            if product.stock
                                 .inner-stock.mb-3
                                     | Còn lại: 
-                                    span #{products.stock} sản phẩm
+                                    span #{product.stock} sản phẩm
                             if user
-                                form(action=`/cart/add/${products.id}` method="POST" class="mb-3")
+                                form(action=`/cart/add/${product.id}` method="POST" class="mb-3")
                                     .input-group
-                                        input(class="form-control" type="number" name="quantity" value="1" min="1" max=products.stock)
+                                        input(class="form-control" type="number" name="quantity" value="1" min="1" max=product.stock)
                                         button(type="submit" class="btn btn-success") Thêm vào giỏ hàng
                             else
                                 a(href="/user/login" class="btn btn-success w-100 mb-3") Thêm vào giỏ hàng
@@ -55,19 +56,56 @@ block main
                     +box-head("Mô tả sản phẩm")
                     .card.shadow-sm.rounded.mb-4
                         .card-body
-                            .inner-desc !{products.description}
+                            .inner-desc !{product.description}
 
                     +box-head("Đánh giá")
                     .card.shadow-sm.rounded
                         .card-body
-                            if reviews && reviews.length > 0
-                                each review in reviews
+                            h5 Điểm trung bình: #{product.reviews.averageRating.toFixed(1)}/5 (#{product.reviews.totalRatings} lượt)
+                            if product.reviews.comments && product.reviews.comments.length > 0
+                                each comment in product.reviews.comments
                                     .review-item.mb-3
                                         .d-flex.justify-content-between
-                                            strong #{review.userName}
-                                            span.text-muted #{review.createdAt}
-                                        p #{review.comment}
+                                            strong #{comment.userName || 'Ẩn danh'}
+                                            span.text-muted #{comment.createdAt.toLocaleString('vi-VN')}
+                                        if comment.rating
+                                            .stars
+                                                - for (let i = 1; i <= 5; i++)
+                                                    if i <= comment.rating
+                                                        span.text-warning ★
+                                                    else
+                                                        span.text-muted ☆
+                                        p #{comment.content || 'Không có nhận xét'}
+                                        if comment.replies && comment.replies.length > 0
+                                            .replies.mt-2
+                                                each reply in comment.replies
+                                                    .reply-item.mb-2
+                                                        strong #{reply.userName || 'Ẩn danh'}: 
+                                                        span #{reply.content}
+                                                        br
+                                                        small.text-muted #{reply.createdAt.toLocaleString('vi-VN')}
                             else
                                 p.text-center.text-muted Chưa có đánh giá nào.
+
+                            if user
+                                form(action=`/product/detail/${product.slug}/comment` method="POST" class="mt-4")
+                                    .form-group.mb-3
+                                        label(for="content") Nhận xét
+                                        textarea#content.form-control(name="content" rows="4" placeholder="Nhập nhận xét của bạn")
+                                    .form-group.mb-3
+                                        label(for="rating") Đánh giá
+                                        select#rating.form-control(name="rating")
+                                            option(value="") Chọn số sao
+                                            option(value="1") 1 sao
+                                            option(value="2") 2 sao
+                                            option(value="3") 3 sao
+                                            option(value="4") 4 sao
+                                            option(value="5") 5 sao
+                                    button(type="submit" class="btn btn-primary") Gửi nhận xét
+                            else
+                                p.text-center
+                                    a(href="/user/login") Đăng nhập để gửi nhận xét
+
+    script(src="/client/js/product.js")
 
     script(src="/admin/js/product.js")
