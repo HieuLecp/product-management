@@ -519,6 +519,11 @@ input[type="checkbox"] {
     color: #fff;
 }
 
+.status.completed {
+    background-color: #28a745;
+    color: #fff;
+}
+
 .status.cancelled {
     background-color: #dc3545;
     color: #fff;

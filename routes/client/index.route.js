@@ -14,6 +14,7 @@ const usersRouter = require("./users.route");
 const chatRouter = require("./chat.route");
 const roomChatRouter = require("./roomChat.route");
 const chatbotRouter = require("./chatbot.route");
+const listOrderRouter = require("./listOrder.route");
 
 module.exports = (app) => {
 
@@ -54,6 +55,11 @@ module.exports = (app) => {
 
     app.use('/chatbot',
         chatbotRouter
+    );
+
+    app.use('/list-order',
+        authMiddleware.requireAuth,
+        listOrderRouter
     );
     
 }

@@ -86,19 +86,5 @@ router.post('/info/editPassword',
     controller.editPasswordPost
 );
 
-router.get('/info/list-order',
-    authMiddleware.requireAuth,
-    controller.listOrder
-);
-
-router.patch('/info/list-order/cancel/:orderId',
-    authMiddleware.requireAuth,
-    controller.cancelOrder
-);
-
-router.patch('/info/list-order/completed/:orderId',
-    authMiddleware.requireAuth,
-    controller.deliveredOrder
-);
 
 module.exports = router;

@@ -40,7 +40,7 @@ block main
                                         //- span(class=`status ${order.status}`) #{order.status}
                                     td.action-cell
                                         button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem 
-                                        if order.status != "cancelled" && order.status != "delivered"
+                                        if order.status != "cancelled" && order.status != "completed"
                                             button.cancel-order-btn(
                                                 order-id= order.orderId
                                                 button-cancel-order
@@ -49,7 +49,7 @@ block main
                                                     action=""
                                                     method="POST"
                                                     id= "button-cancel-order"
-                                                    data-path= `/user/info/list-order/cancel`
+                                                    data-path= `/list-order/cancel`
                                                 )
                                             button.delivered-order-btn(
                                                     order-id= order.orderId 
@@ -59,14 +59,14 @@ block main
                                                         action=""
                                                         method="POST"
                                                         id= "button-delivered-order"
-                                                        data-path= `/user/info/list-order/completed`
+                                                        data-path= `/list-order/completed`
                                                     )
                         div.details-container.hidden(id=`details-${order.orderId}`)
                             h3.details-order Chi tiết đơn hàng
                             div(id=`details-content-${order.orderId}`)
        
 
-    script(src="/js/user.js")
+    script(src="/js/list-order.js")
     script.
       // Nhúng dữ liệu orderDetails vào trang
         window.orderDetails = JSON.parse('!{JSON.stringify(orderDetails).replace(/<\/script/g, "<\\/script")}');

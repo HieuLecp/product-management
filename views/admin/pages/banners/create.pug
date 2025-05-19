@@ -1,0 +1,45 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .container.my-5
+        h1 Thêm Banner
+        form(action="/admin/banner/create" method="POST" enctype="multipart/form-data")
+            .form-group.mb-3
+                label Loại Banner
+                select.form-control(name="type" required)
+                    option(value="popup") Popup
+                    option(value="ad-left") Quảng cáo trái
+                    option(value="ad-right") Quảng cáo phải
+                    option(value="slide-left") Slide trái
+                    option(value="slide-right") Slide phải
+            .form-group.mb-3
+                label Hình ảnh
+                input.form-control(type="file" name="image" accept="image/*" required)
+            .form-group.mb-3
+                label Tiêu đề
+                input.form-control(type="text" name="title" required)
+            .form-group.mb-3
+                label Mô tả
+                textarea.form-control(name="description" rows="4")
+            .form-group.mb-3
+                label Giá/Ưu đãi
+                input.form-control(type="text" name="price" placeholder="VD: Giảm 20%")
+            .form-group.mb-3
+                label Link
+                input.form-control(type="text" name="link" required)
+            .form-group.mb-3
+                label Ảnh quà tặng
+                input.form-control(type="file" name="giftImage" accept="image/*")
+            .form-group.mb-3
+                label Mô tả quà tặng
+                input.form-control(type="text" name="giftDescription")
+            .form-group.mb-3
+                label Trạng thái
+                select.form-control(name="status")
+                    option(value="active") Hiển thị
+                    option(value="inactive") Ẩn
+            button.btn.btn-primary(type="submit") Thêm Banner

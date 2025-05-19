@@ -1,54 +1,4 @@
-// function togglePaymentSection() {
-//     const paymentMethod = document.getElementById("paymentMethod").value;
-//     const paymentDetails = document.getElementById("paymentDetails");
-//     const momoPayment = document.getElementById("momoPayment");
-//     const vnpayPayment = document.getElementById("vnpayPayment");
-//     console.log(momoPayment);
 
-//     // Hiển thị khung thanh toán
-//     paymentDetails.style.display = "block";
-
-//     // Ẩn tất cả khung con
-//     momoPayment.style.display = "none";
-//     vnpayPayment.style.display = "none";
-
-//     // Hiển thị nội dung phù hợp
-//     if (paymentMethod === "momo"){
-//         momoPayment.style.display = "block";
-//     } else if (paymentMethod === "vnpay"){
-//         vnpayPayment.style.display = "block";
-//     } else {
-//         paymentDetails.style.display = "none"; // Ẩn nếu chọn COD
-//     }
-// }
-
-// function togglePaymentSection() {
-//     const paymentMethod = document.getElementById("paymentMethod").value;
-//     const paymentDetails = document.getElementById("paymentDetails");
-//     const momoPayment = document.getElementById("momoPayment");
-//     const vnpayPayment = document.getElementById("vnpayPayment");
-//     const zalopayPayment = document.getElementById("zalopayPayment");
-//     console.log(zalopayPayment);
-
-//     // Hiển thị khung thanh toán tổng thể
-//     paymentDetails.style.display = "block";
-
-//     // Ẩn tất cả phương thức thanh toán
-//     momoPayment.style.display = "none";
-//     vnpayPayment.style.display = "none";
-//     zalopayPayment.style.display = "none";
-
-//     // Hiển thị phương thức phù hợp
-//     if (paymentMethod === "momo") {
-//         momoPayment.style.display = "block";
-//     } else if (paymentMethod === "vnpay") {
-//         vnpayPayment.style.display = "block";
-//     } else if (paymentMethod === "zalopay") {
-//         zalopayPayment.style.display = "block";
-//     } else {
-//         paymentDetails.style.display = "none"; // Ẩn nếu chọn COD
-//     }
-// }
 function togglePaymentSection() {
     const paymentType = document.getElementById("paymentType").value;
     const paymentDetails = document.getElementById("paymentDetails");
@@ -94,10 +44,10 @@ function validateFullName() {
 function validatePhone() {
     const phoneInput = document.getElementById("phone");
     const phoneError = document.getElementById("phoneError");
-    const phoneRegex = /^(0|\+84)(\d{10})$/; // 0 or +84 followed by 9 or 10 digits
+    const phoneRegex = /^(0|\+84)(\d{9})$/; // 0 or +84 followed by 9 or 10 digits
 
     if (!phoneRegex.test(phoneInput.value)) {
-        phoneError.textContent = "Số điện thoại phải bắt đầu bằng 0 hoặc +84, theo sau là 9-10 chữ số.";
+        phoneError.textContent = "Số điện thoại phải bắt đầu bằng 0 hoặc +84 và phải đủ 10 chữ số.";
         phoneInput.classList.add("is-invalid");
         return false;
     } else {

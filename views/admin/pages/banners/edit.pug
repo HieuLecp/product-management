@@ -1,0 +1,48 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .container.my-5
+        h1 Sửa Banner
+        form(action=`/admin/banner/edit/${banner._id}` method="POST" enctype="multipart/form-data")
+            .form-group.mb-3
+                label Loại Banner
+                select.form-control(name="type" required)
+                    option(value="popup" selected=banner.type === 'popup') Popup
+                    option(value="ad-left" selected=banner.type === 'ad-left') Quảng cáo trái
+                    option(value="ad-right" selected=banner.type === 'ad-right') Quảng cáo phải
+                    option(value="slide-left" selected=banner.type === 'slide-left') Slide trái
+                    option(value="slide-right" selected=banner.type === 'slide-right') Slide phải
+            .form-group.mb-3
+                label Hình ảnh hiện tại
+                img(src=banner.image width="100")
+                input.form-control(type="file" name="image" accept="image/*")
+            .form-group.mb-3
+                label Tiêu đề
+                input.form-control(type="text" name="title" value=banner.title required)
+            .form-group.mb-3
+                label Mô tả
+                textarea.form-control(name="description" rows="4") #{banner.description}
+            .form-group.mb-3
+                label Giá/Ưu đãi
+                input.form-control(type="text" name="price" value=banner.price)
+            .form-group.mb-3
+                label Link
+                input.form-control(type="text" name="link" value=banner.link required)
+            .form-group.mb-3
+                label Ảnh quà tặng hiện tại
+                if banner.gift.image
+                    img(src=banner.gift.image width="100")
+                input.form-control(type="file" name="giftImage" accept="image/*")
+            .form-group.mb-3
+                label Mô tả quà tặng
+                input.form-control(type="text" name="giftDescription" value=banner.gift.description)
+            .form-group.mb-3
+                label Trạng thái
+                select.form-control(name="status")
+                    option(value="active" selected=banner.status === 'active') Hiển thị
+                    option(value="inactive" selected=banner.status === 'inactive') Ẩn
+            button.btn.btn-primary(type="submit") Cập nhật Banner

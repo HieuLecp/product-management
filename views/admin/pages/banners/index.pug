@@ -1,0 +1,53 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .container.my-5
+        h1 Quản lý Banner
+        a.btn.btn-primary.mb-3(href="/admin/banner/create") Thêm Banner
+
+        if banners.length > 0
+            table.table.table-bordered
+                thead
+                    tr
+                        th Loại
+                        th Hình ảnh
+                        th Tiêu đề
+                        th Mô tả
+                        th Link
+                        th Trạng thái
+                        th Hành động
+                tbody
+                    each banner in banners
+                        tr
+                            td #{banner.type}
+                            td
+                                img(src=banner.image width="100")
+                            td #{banner.title}
+                            td #{banner.description || 'Không có'}
+                            td
+                                a(href=banner.link target="_blank") #{banner.link}
+                            td #{banner.status === 'active' ? 'Hiển thị' : 'Ẩn'}
+                            td
+                                a.btn.btn-sm.btn-warning(href=`/admin/banner/edit/${banner._id}`) Sửa
+                                button.btn.btn-sm.btn-danger(data-id=banner._id onclick="deleteBanner(this)") Xóa
+        else
+            p Không có banner nào.
+
+    script.
+        function deleteBanner(btn) {
+            if (confirm('Xác nhận xóa banner?')) {
+                fetch(`/admin/banner/delete/${btn.dataset.id}`, { method: 'DELETE' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert('Xóa thất bại');
+                        }
+                    });
+            }
+        }

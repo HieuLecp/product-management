@@ -12,32 +12,34 @@ block main
     +alert-error(3000)
 
     // Popup quảng cáo
-    #popup-overlay.popup-overlay(style="display: none;")
-        #popup.popup
-            button#close-popup.close-btn X
-            .popup-content
-                img(src="/images/popup.jpeg" alt="Popup Banner" style="width: 100%; height: auto; border-radius: 10px;")
-                h2 Laptop14 - Ưu đãi cực sốc!
-                p Giảm giá lên đến 20% cho mọi laptop!
-                p Tặng balo và chuột cho đơn từ 15 triệu!
-                a.btn.btn-primary(href="/product" style="margin-top: 1rem;") Mua ngay
-                p.contact-info 0366809374 | Văn Quán, Hà Đông
+    if popupBanner
+        #popup-overlay.popup-overlay
+            #popup.popup
+                button#close-popup.close-btn X
+                .popup-content
+                    img(src=popupBanner.image alt=popupBanner.title style="width: 100%; height: auto; border-radius: 10px;")
+                    h2 #{popupBanner.title}
+                    p #{popupBanner.description}
+                    a.btn.btn-primary(href=popupBanner.link style="margin-top: 1rem;") Mua ngay
+                    p.contact-info 0366809374 | Văn Quán, Hà Đông
 
     // Thanh quảng cáo bên trái
-    #ad-left.ad-banner(style="display: none;")
-        .ad-content
-            img(src="/images/ad-left.jpeg" alt="Ad Left" style="width: 100%; height: auto; border-radius: 10px;")
-            h3 Laptop14
-            p Giảm giá 20% cho laptop gaming!
-            a.btn.btn-primary(href="/product") Mua ngay
+    if adLeftBanner
+        #ad-left.ad-banner
+            .ad-content
+                img(src=adLeftBanner.image alt=adLeftBanner.title style="width: 100%; height: auto; border-radius: 10px;")
+                h3 #{adLeftBanner.title}
+                p #{adLeftBanner.description}
+                a.btn.btn-primary(href=adLeftBanner.link) Mua ngay
 
     // Thanh quảng cáo bên phải
-    #ad-right.ad-banner(style="display: none;")
-        .ad-content
-            img(src="/images/ad-right.jpeg" alt="Ad Right" style="width: 100%; height: auto; border-radius: 10px;")
-            h3 Laptop14
-            p Tặng balo cho đơn từ 15 triệu!
-            a.btn.btn-primary(href="/product") Mua ngay
+    if adRightBanner
+        #ad-right.ad-banner
+            .ad-content
+                img(src=adRightBanner.image alt=adRightBanner.title style="width: 100%; height: auto; border-radius: 10px;")
+                h3 #{adRightBanner.title}
+                p #{adRightBanner.description}
+                a.btn.btn-primary(href=adRightBanner.link) Mua ngay
     
     .section-banner.my-5
         .container
@@ -88,32 +90,33 @@ block main
                 // Chấm phân trang
                 .swiper-pagination
 
-    .section-products-featured.my5
+    .section-products-featured.my-5
         .container
             .row 
                 .col-12 
-                    if(productFeatured.length > 0)
+                    if productFeatured.length > 0
                         +box-head("Sản phẩm nổi bật")
                     
             +product-grid(productFeatured)
 
-    .section-products-new.my5
+    .section-products-new.my-5
         .container
             .row 
                 .col-12 
-                    if(productNew.length > 0)
+                    if productNew.length > 0
                         +box-head("Sản phẩm mới")
                     
             +product-grid(productNew)
 
-
-    
+    .section-products-sold.my-5
+        .container
+            .row 
+                .col-12 
+                    if productSolds.length > 0
+                        +box-head("Sản phẩm bán chạy")
+                    
+            +product-grid(productSolds)
 
 block script 
     script(src="/js/home.js")
-
-    //- script(type="module" src="/js/leon.js")
-
     script(src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js")
-    
-    

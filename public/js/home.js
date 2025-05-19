@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loop: true,
         speed: 1000, // Tốc độ chuyển slide (1000ms = 1 giây, làm chậm hơn)
         autoplay: {
-            delay: 7000, // Tăng thời gian delay lên 5 giây
+            delay: 4000, // Tăng thời gian delay lên 5 giây
             disableOnInteraction: false,
         },
         navigation: {

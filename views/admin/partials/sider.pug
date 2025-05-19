@@ -5,19 +5,22 @@
                 a(href=`${prefixAdmin}/dashboard` ) Tổng quan
             if(role.permissions.includes("products-category_view"))
                 li 
-                    a(href=`${prefixAdmin}/products-category`) Danh mục sản phẩm
+                    a(href=`${prefixAdmin}/products-category`) Quản lí danh mục 
             if(role.permissions.includes("products_view"))
                 li 
-                    a(href=`${prefixAdmin}/products`) Danh sách sản phẩm
+                    a(href=`${prefixAdmin}/products`) Quản lí sản phẩm
             if(role.permissions.includes("orders_view"))
                 li 
-                    a(href=`${prefixAdmin}/orders`) Danh sách đơn hàng
+                    a(href=`${prefixAdmin}/orders`) Quản lí đơn hàng
             //- if(role.permissions.includes("blogs-category_view"))
             //-     li 
             //-         a(href=`${prefixAdmin}/blogs-category`) Danh mục bài viết
-            if(role.permissions.includes("blogs_view"))
+            //- if(role.permissions.includes("blogs_view"))
+            //-     li 
+            //-         a(href=`${prefixAdmin}/blogs`) Danh sách bài viết
+            if(role.permissions.includes("orders_view"))
                 li 
-                    a(href=`${prefixAdmin}/blogs`) Danh sách bài viết
+                    a(href=`${prefixAdmin}/banner`) Quản lí banner
             if(role.permissions.includes("roles_view"))
                 li 
                     a(href=`${prefixAdmin}/roles`) Nhóm quyền

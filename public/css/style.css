@@ -166,7 +166,7 @@ html, body {
 /* footer */
 /* Footer Styles - Cải tiến theo phong cách thương mại điện tử */
 .footer {
-    background: linear-gradient(90deg, #2c3e50, #3498db); /* Gradient xanh đậm sang xanh nhạt */
+    background: linear-gradient(90deg, #2c3e50, #5aaee6); /* Gradient xanh đậm sang xanh nhạt */
     color: #ecf0f1;
     padding: 40px 0;
     border-top: 3px solid #f39c12;
