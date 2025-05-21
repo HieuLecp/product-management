@@ -49,6 +49,20 @@ app.use(session({ cookie: { maxAge: 60000 }}));
 app.use(flash());
 // end flash
 
+// sesion
+app.use(session({
+  secret: 'HieuLeSessionSecret', // Bí mật cho session, nên lưu trong biến môi trường
+  resave: false, // Không lưu lại session nếu không có thay đổi
+  saveUninitialized: false, // Không tạo session cho đến khi có dữ liệu
+  cookie: {
+    maxAge: 3 * 60 * 1000, // lưu trong 3 phút
+    httpOnly: true, // Ngăn JavaScript truy cập cookie
+    secure: false, // Đặt true nếu dùng HTTPS
+    sameSite: 'strict', // Bảo vệ chống CSRF
+  },
+}));
+// end session
+
 // tinymce
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 // end tinymce

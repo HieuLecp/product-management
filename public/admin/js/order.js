@@ -52,6 +52,8 @@ if(formChangeMulti){
 }
 // end form changeMultiOrder
 
+
+// xem chi tiết đơn hàng
 function toggleDetails(orderId) {
     const detailsContainer = document.getElementById(`details-${orderId}`);
     const detailsContent = document.getElementById(`details-content-${orderId}`);

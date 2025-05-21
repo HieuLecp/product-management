@@ -94,32 +94,93 @@ module.exports.loginPost =  async (req, res) => {
             res.redirect("back");
             return;
         }
-    
-        res.cookie("tokenUser", user.tokenUser);
-        await User.updateOne({
-            _id: user.id
-        }, {
-            statusOnline: "online"
-        })
 
-        _io.once("connection", (socket) => [
-            socket.broadcast.emit("server_return_user_online", user.id)
-        ])
-        await Carts.updateOne({
-            _id: req.cookies.cartId
-        }, {
-            userId: user.id
-        })
+        // req.session.tokenUser = user.tokenUser;
+        const email= user.email;
 
-        const updatedStatistic = await getDashboardStatistic();
-        _io.emit('updateDashboard', updatedStatistic);
+        // Tạo collection forgot-password
+        const otp= generateHelper.generateRandomNumber(8);
+
+        const objectForgotPassword= {
+            email: email,
+            otp: otp,
+            expireAt: Date.now()
+        };
+
+        const forgotPassword= new ForgotPassword(objectForgotPassword);
+        await forgotPassword.save();
+
+        const subject= "Mã xác minh để lấy lại mật khẩu";
+        const html= `
+            Mã OTP xác minh lấy lại mật khẩu là <b>${otp}</b>. Thời gian hiệu lực là 2 phút. Lưu ý không được để lộ cho người khác
+        `
+
+        sendMailHelper.sendMail(email, subject, html);
+
+        res.redirect(`/user/login/check-mail?email=${email}`);
     
-        res.redirect("/");
     }
     else{
         req.flash("error", "Vui lòng xác minh captcha!");
         res.redirect("back");
     }    
+};
+
+// [GET] /login/check-mail
+module.exports.checkMail =  async (req, res) => {
+
+    // const tokenUser= req.session.tokenUser;
+    // const user= await User.findOne({tokenUser: tokenUser});
+    const email= req.query.email;
+
+    res.render("client/pages/user/check-mail.pug", {
+        pageTitle: "Xác thực Gmail",
+        email: email
+    });
+};
+
+// [POST] /login/check-mail
+module.exports.checkMailPost =  async (req, res) => {
+
+    const email= req.body.email;
+    const otp= req.body.otp;
+
+    const result= await ForgotPassword.findOne({
+        email: email,
+        otp: otp
+    });
+
+    // console.log(result);
+    if(!result){
+        req.flash("error", "Mã otp không hợp lệ!");
+        res.redirect("back");
+        return;
+    }
+
+    const user= await User.findOne({
+        email: email
+    });
+
+    res.cookie("tokenUser", user.tokenUser);
+    await User.updateOne({
+        _id: user.id
+    }, {
+        statusOnline: "online"
+    })
+
+    _io.once("connection", (socket) => [
+        socket.broadcast.emit("server_return_user_online", user.id)
+    ])
+    await Carts.updateOne({
+        _id: req.cookies.cartId
+    }, {
+        userId: user.id
+    })
+
+    const updatedStatistic = await getDashboardStatistic();
+    _io.emit('updateDashboard', updatedStatistic);
+
+    res.redirect("/");
 };
 
 // [POST] /user/logout

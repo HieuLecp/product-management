@@ -38,6 +38,10 @@ router.post('/login',
     controller.loginPost
 );
 
+router.get('/login/check-mail', controller.checkMail);
+
+router.post('/login/check-mail', controller.checkMailPost);
+
 router.get('/logout', controller.logout);
 
 router.get('/password/forgot', controller.forgotPassword);
