@@ -42,3 +42,18 @@ module.exports.changeStatus = async (req, res) => {
     res.redirect("back");
 };
 
+// [GET] /admin/detail/:id
+module.exports.detail = async (req, res) => {
+
+    const userId= req.params.id;
+
+    const user= await User.findOne({_id: userId}).select("-password -token");
+    
+    // console.log(records);
+
+    res.render("admin/pages/users/detail", {
+        pageTitle: "Danh sách người dùng",
+        user: user,
+    });
+};
+

@@ -10,6 +10,8 @@ const moment= require("moment");
 const http= require("http");
 const { Server } = require("socket.io")
 
+process.env.TZ = 'Asia/Ho_Chi_Minh'; // Đặt múi giờ Việt Nam (+07:00)
+
 
 require('dotenv').config();
 

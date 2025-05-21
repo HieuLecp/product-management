@@ -104,15 +104,15 @@ module.exports.loginPost =  async (req, res) => {
         const objectForgotPassword= {
             email: email,
             otp: otp,
-            expireAt: Date.now()
+            expireAt: new Date(Date.now() + 180 * 1000)
         };
 
         const forgotPassword= new ForgotPassword(objectForgotPassword);
         await forgotPassword.save();
 
-        const subject= "Mã xác minh để lấy lại mật khẩu";
+        const subject= "Mã xác minh để đăng nhập";
         const html= `
-            Mã OTP xác minh lấy lại mật khẩu là <b>${otp}</b>. Thời gian hiệu lực là 2 phút. Lưu ý không được để lộ cho người khác
+            Mã OTP xác minh đăng nhập là <b>${otp}</b>. Thời gian hiệu lực là 3 phút. Lưu ý không được để lộ cho người khác
         `
 
         sendMailHelper.sendMail(email, subject, html);

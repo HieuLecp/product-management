@@ -5,7 +5,7 @@ include ../../mixins/alert
 block main
     if(role.permissions.includes("accounts_view"))
 
-    h1(class="mb-4")  Danh sách tài khoản
+    h1(class="mb-4")  Danh sách người dùng
     .card.mb-3 
         .card-header Danh sách
             .card-body
@@ -56,7 +56,7 @@ block main
                                             span(class="btn btn-danger") Dừng hoạt động
                                 td
                                     a(
-                                        href=`${prefixAdmin}/accounts/detail/${item.id}`
+                                        href=`${prefixAdmin}/users/detail/${item.id}`
                                         class = "btn btn-secondary btn-sm"
                                     ) Chi tiết
                                     //- if(role.permissions.includes("accounts_edit"))
