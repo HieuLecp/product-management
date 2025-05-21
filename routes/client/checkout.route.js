@@ -9,4 +9,6 @@ router.post('/order', controller.order);
 
 router.get('/success/:id', controller.success);
 
+router.post('/confirm-order', controller.confirmOrder);
+
 module.exports = router;
