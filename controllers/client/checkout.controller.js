@@ -181,7 +181,8 @@ module.exports.confirmOrder = async (req, res) => {
         products,
         totalPrice,
         status: "pending",
-        paymentType
+        paymentType,
+        paymentStatus: "pending"
     };
 
     const order = new Order(objectOrder);
@@ -300,8 +301,90 @@ module.exports.success= async (req, res) => {
         _id: req.params.id
     })
 
+    let paymentStatus = "pending";
+    let paymentMessage = "Đang chờ thanh toán.";
+
+    // Kiểm tra trạng thái thanh toán nếu paymentType là momo
+    if (order.paymentType === "momo") {
+        const accessKey = 'F8BBA842ECF85';
+        const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+        const partnerCode = 'MOMO';
+        const orderId = order.id;
+        const requestId = orderId; // requestId trùng với orderId khi tạo giao dịch
+        const lang = 'vi';
+
+        // Tạo chữ ký bảo mật cho API Query
+        const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=${partnerCode}&requestId=${requestId}`;
+        const signature = crypto.createHmac('sha256', secretKey)
+            .update(rawSignature)
+            .digest('hex');
+
+        const requestBody = JSON.stringify({
+            partnerCode,
+            requestId,
+            orderId,
+            lang,
+            signature
+        });
+
+        const options = {
+            method: "POST",
+            url: "https://test-payment.momo.vn/v2/gateway/api/query",
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(requestBody)
+            },
+            data: requestBody
+        };
+
+        try {
+            const result = await axios(options);
+            const { resultCode, message } = result.data;
+
+            if (resultCode === 0) {
+                paymentStatus = "success";
+                paymentMessage = "Thanh toán thành công qua MoMo.";
+                // Cập nhật trạng thái đơn hàng nếu cần
+                await Order.updateOne({ _id: order.id }, { paymentStatus: "completed" });
+            } else {
+                paymentStatus = "failed";
+                await Order.updateOne({ _id: order.id }, { paymentStatus: "failed" });
+                paymentMessage = `Thanh toán thất bại: ${message}`;
+            }
+        } catch (error) {
+            paymentStatus = "error";
+            paymentMessage = "Không thể kiểm tra trạng thái thanh toán. Vui lòng thử lại sau.";
+        }
+    } else if (order.paymentType === "zalopay") {
+        // Thêm logic kiểm tra trạng thái cho ZaloPay nếu cần
+        paymentMessage = "Thanh toán qua ZaloPay. Vui lòng kiểm tra trạng thái giao dịch.";
+    } else {
+        paymentStatus = "success"; // COD không cần kiểm tra trạng thái
+        paymentMessage = "Đơn hàng đã được đặt thành công (Thanh toán khi nhận hàng).";
+    }
+
+    for(const product of order.products){
+        const productInfo= await Product.findOne({_id: product.product_id})
+        product.productInfo= productInfo;
+        console.log(product)
+
+        product.productInfo= productInfo;
+    
+        productHepler.priceNewProduct(product);
+        product.priceFormat= Number(product.priceNew).toLocaleString("vi-VN");
+        // console.log(product.priceNew);
+
+        product.totalPrice= product.priceNew * product.quantity;
+        product.totalPriceFormat= product.totalPrice.toLocaleString("vi-VN");
+    }
+
+    order.totalPriceFormat= order.totalPrice.toLocaleString("vi-VN");
+    // console.log(order.totalPrice);
+
     return res.render('client/pages/checkout/success', {
         pageTitle: 'Thanh toán thành công',
         order: order,
+        paymentMessage,
+        paymentStatus
     });
 };

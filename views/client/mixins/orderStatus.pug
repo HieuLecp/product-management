@@ -11,3 +11,19 @@ mixin orderStatus(status)
         span(class=`status ${status}`) Đã nhận
     if status == "cancelled"
         span(class=`status ${status}`) Đã huỷ
+
+mixin paymentStatus(status)
+    if status == "pending"
+        span(class=`status ${status}`) Chờ thanh toán
+    if status == "completed"
+        span(class=`status ${status}`) Đã thanh toán
+    if status == "failed"
+        span(class=`status ${status}`) Chưa thanh toán
+
+mixin paymentType(type)
+    if type == "cod"
+        span(class=`status ${status}`) Thanh toán khi nhận hàng
+    if type == "momo"
+        span(class=`status ${status}`) momoPay
+    if type == "zalopay"
+        span(class=`status ${status}`) zaloPay

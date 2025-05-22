@@ -28,7 +28,9 @@ block main
                                     th stt
                                     th ngày đặt
                                     th tổng tiền
-                                    th trạng thái
+                                    th trạng thái đơn
+                                    th Phương thức thanh toán
+                                    th trạng thái thanh toán
                                     th hành động
                             tbody
                                 tr
@@ -38,6 +40,11 @@ block main
                                     td
                                         +orderStatus(order.status)
                                         //- span(class=`status ${order.status}`) #{order.status}
+                                    td.paymentType
+                                        +paymentType(order.paymentType)
+                                    td.paymentStatus
+                                        if(order.paymentStatus)
+                                            +paymentStatus(order.paymentStatus)
                                     td.action-cell
                                         button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem 
                                         if order.status != "cancelled" && order.status != "completed"

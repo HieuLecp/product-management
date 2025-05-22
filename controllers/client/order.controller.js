@@ -49,7 +49,9 @@ module.exports.listOrder= async (req, res) => {
                 createdAt: new Date(order.createdAt).toLocaleString('vi-VN'),
                 totalPrice: order.totalPrice.toLocaleString("vi-VN"),
                 status: order.status,
-                products: productsInOrder
+                products: productsInOrder,
+                paymentType: order.paymentType,
+                paymentStatus: order.paymentStatus
             });
         }
     }

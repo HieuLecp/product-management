@@ -69,7 +69,8 @@ module.exports.index = async (req, res) => {
         const productSolds = await Product.find({
             deleted: false,
             status: 'active'
-        }).sort({ sold: -1 }).limit(5).select('thumbnail title sold');
+        }).sort({ sold: -1 }).limit(5);
+        productHepler.priceNewProducts(productSolds);
 
         // Lấy banner từ database
         const banners = await Banner.find({ status: 'active' }).sort({ createdAt: -1 });

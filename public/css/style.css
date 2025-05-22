@@ -281,7 +281,8 @@ html, body {
 /* product-item */
 /* Cấu trúc tổng thể */
 .section-products-featured, 
-.section-products-new {
+.section-products-new,
+.section-products-sold {
     margin: 40px auto;
     padding: 30px;
     border: 2px solid #ddd;
@@ -292,14 +293,16 @@ html, body {
 }
 
 .section-products-featured .container, 
-.section-products-new .container {
+.section-products-new .container,
+.section-products-sold .container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .section-products-featured .container .box-head, 
-.section-products-new .container .box-head{
+.section-products-new .container .box-head,
+.section-products-sold .container .box-head{
     font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 20px;
@@ -2654,3 +2657,4 @@ label {
 }
 
 /* end botchat */
+
