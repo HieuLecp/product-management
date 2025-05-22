@@ -1,0 +1,70 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert
+
+block main
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .container.mb-5
+
+        .row.mt-4
+            .col-12
+                .card.shadow-sm.rounded
+                    .card-header.bg-success.text-white
+                        h4.text-center Danh sách câu hỏi
+                    .card-body
+                        if questions.length > 0
+                            table.table.table-striped.table-hover.text-center.align-middle
+                                thead
+                                    tr
+                                        th STT
+                                        th Nội dung câu hỏi
+                                        th Người hỏi
+                                        th Trạng thái
+                                        th Câu trả lời
+                                        th Hành động
+                                tbody
+                                    each question, index in questions
+                                        tr
+                                            td #{index + 1}
+                                            td #{question.content}
+                                            td #{question.userName}
+                                            td
+                                                if question.status === 'pending'
+                                                    span.badge.bg-warning Đang chờ
+                                                else if question.status === 'answered'
+                                                    span.badge.bg-success Đã trả lời
+                                                else
+                                                    span.badge.bg-secondary Đã đóng
+                                            td #{question.answer || 'Chưa có câu trả lời'}
+                                            td
+                                                if question.status === 'pending'
+                                                    button.btn.btn-primary.btn-sm.rounded-pill(data-bs-toggle="modal" data-bs-target=`#answerModal-${question._id}`) Trả lời
+                                                else
+                                                    button.btn.btn-secondary.btn-sm.rounded-pill(disabled) Đã xử lý
+
+                        else
+                            p.text-center.text-muted Chưa có câu hỏi nào.
+
+        // Modal trả lời câu hỏi
+        each question in questions
+            if question.status === 'pending'
+                .modal.fade(id=`answerModal-${question._id}` tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true")
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                h5.modal-title(id="answerModalLabel") Trả lời câu hỏi
+                                button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                            .modal-body
+                                form(action=`/admin/questions/answer/${question._id}` method="POST")
+                                    .mb-3
+                                        label(for="answer" class="form-label fw-bold") Câu trả lời
+                                        textarea(name="answer" id="answer" class="form-control" rows="4" placeholder="Nhập câu trả lời..." required)
+                                    .text-end
+                                        button(type="submit" class="btn btn-success rounded-pill") Gửi câu trả lời
+
+    style.
+        .table th, .table td { vertical-align: middle; }
+        .card { border-radius: 10px; }
+        .badge { font-size: 0.9rem; padding: 5px 10px; }
+        .btn-sm { padding: 5px 10px; }

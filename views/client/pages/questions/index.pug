@@ -1,0 +1,65 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head
+include ../../mixins/alert
+
+block main
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .container.mb-5
+        .row
+            .col-12
+                +box-head("Giải đáp thắc mắc", "bg-gradient text-white rounded-top")
+
+        // Form gửi câu hỏi
+        .row.mt-4
+            .col-12
+                .card.shadow-sm.rounded
+                    .card-header.bg-success.text-white
+                        h4.text-center Đặt câu hỏi của bạn
+                    .card-body
+                        form(action="/questions/create" method="POST")
+                            .mb-3
+                                label(for="content" class="form-label fw-bold text-success") Nội dung câu hỏi
+                                textarea(name="content" id="content" class="form-control" rows="3" placeholder="Nhập câu hỏi của bạn..." required)
+                            .text-end
+                                button(type="submit" class="btn btn-success rounded-pill") Gửi câu hỏi
+
+        // Danh sách câu hỏi đã trả lời
+        .row.mt-4
+            .col-12
+                .card.shadow-sm.rounded
+                    .card-header.bg-success.text-white
+                        h4.text-center Danh sách câu hỏi
+                    .card-body
+                        if questions.length > 0
+                            each question in questions
+                                .question-item.mb-3.p-3.rounded.bg-light.border.border-success
+                                    .d-flex.align-items-center.mb-2
+                                        i.bi.bi-question-circle-fill.me-2.fs-5.text-success
+                                        p.mb-0.fw-bold.text-success Câu hỏi: #{question.content}
+                                    .d-flex.align-items-center
+                                        i.bi.bi-person-fill.me-2.fs-5.text-muted
+                                        p.mb-0.fw-medium Đặt bởi: #{question.userName}
+                                    if question.status === 'answered'
+                                        .d-flex.align-items-center.mt-2
+                                            i.bi.bi-check-circle-fill.me-2.fs-5.text-success
+                                            p.mb-0.fw-medium Trả lời: #{question.answer}
+                                        .d-flex.align-items-center.mt-1
+                                            i.bi.bi-person-check-fill.me-2.fs-5.text-muted
+                                            p.mb-0.fw-medium Trả lời bởi: #{question.answeredBy ? question.answeredBy.fullName : 'Admin'}
+                                            small.ms-2.text-muted (#{question.answeredAt.toLocaleDateString('vi-VN')})
+                        else
+                            p.text-center.text-muted Chưa có câu hỏi nào được trả lời.
+
+    style.
+        .question-item {
+            transition: all 0.3s ease;
+        }
+        .question-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: #28a745 !important;
+        }
+        .card { border-radius: 10px; }
+        .form-control:focus { border-color: #28a745; box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }

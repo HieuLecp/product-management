@@ -30,6 +30,9 @@
             if(role.permissions.includes("roles_view"))
                 li 
                     a(href=`${prefixAdmin}/roles`) Quản lí Nhóm quyền
+            if(role.permissions.includes("roles_view"))
+                li 
+                    a(href=`${prefixAdmin}/questions`) Giải đáp thắc mắc
             if(role.permissions.includes("roles_permissions"))
                 li 
                     a(href=`${prefixAdmin}/roles/permissions`) Phân quyền

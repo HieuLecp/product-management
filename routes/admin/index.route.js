@@ -18,6 +18,7 @@ const blogCategoryRouter= require("./blog-category.route");
 const blogRouter= require("./blog.route");
 const settingRouter = require("./setting.route");
 const bannerRouter = require("./banner.route");
+const questionRouter = require("./question.route")
 
 const site_key = process.env.SITE_KEY;
 const secret_key = process.env.SECRET_KEY;
@@ -94,5 +95,10 @@ module.exports = (app) => {
     app.use(PATH_ADMIN + '/banner', 
         authMiddleware.requireAuth, 
         bannerRouter
+    );
+
+    app.use(PATH_ADMIN + '/questions', 
+        authMiddleware.requireAuth, 
+        questionRouter
     );
 }
