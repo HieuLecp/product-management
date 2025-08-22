@@ -29,7 +29,8 @@ const orderSchema = new mongoose.Schema(
             default: 'pending'
         },
         paymentType: String,
-        paymentStatus: String
+        paymentStatus: String,
+        app_trans_id: String
     }, 
     {
         timestamps : true
