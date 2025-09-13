@@ -20,15 +20,18 @@ module.exports.index =  async (req, res) => {
                 const productInfo= await Product.findOne({_id: productId});
 
                 productHepler.priceNewProduct(productInfo);
-
                 item.productInfo= productInfo;
 
-                item.totalPrice= item.quantity * productInfo.priceNew;
+                item.productInfo.priceNewFormat= Number(item.productInfo.priceNew).toLocaleString("vi-VN");
+
+                item.totalPrice= (item.quantity * productInfo.priceNew);
+                item.totalPriceFormat= item.totalPrice.toLocaleString("vi-VN");
                 
             }
         }
 
-        cart.totalPrice= cart.products.reduce((sum, item) => sum + item.totalPrice , 0);
+        cart.totalPrice= cart.products.reduce((sum, item) => sum + Number(item.totalPrice) , 0);
+        cart.totalPriceFormat= cart.totalPrice.toLocaleString("vi-VN");
 
         res.render("client/pages/cart/index", {
             pageTitle : "Giỏ hàng",
@@ -88,7 +91,7 @@ module.exports.addCart =  async (req, res) => {
     }
 
     req.flash("success", "Đã thêm sản phẩm vào giỏ hàng");
-    res.redirect("back")
+    return res.redirect("back")
     // res.send("ok");
 };
 

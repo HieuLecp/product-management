@@ -1,0 +1,74 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head
+include ../../mixins/product-layout
+include ../../mixins/alert
+include ../../mixins/orderStatus
+include ../../mixins/filter
+
+block main
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .container.mb-3
+        .row 
+            .col-12 
+                +box-head("Danh sách đơn hàng")
+
+        .row   
+            .col-12 
+                +filterOrder()
+
+                if(orders.length > 0)
+
+                    h4(class="mb-2") Danh sách đơn hàng đã mua
+                    each order, index in orderDetails
+                        table.history-table
+                            thead
+                                tr
+                                    th stt
+                                    th ngày đặt
+                                    th tổng tiền
+                                    th trạng thái
+                                    th hành động
+                            tbody
+                                tr
+                                    td.text-center #{index + 1}
+                                    td #{order.createdAt} 
+                                    td.total-price #{order.totalPrice}
+                                    td
+                                        +orderStatus(order.status)
+                                        //- span(class=`status ${order.status}`) #{order.status}
+                                    td.action-cell
+                                        button.view-details-btn(onclick=`toggleDetails('${order.orderId}')`) Xem 
+                                        if order.status != "cancelled" && order.status != "delivered"
+                                            button.cancel-order-btn(
+                                                order-id= order.orderId
+                                                button-cancel-order
+                                            ) Hủy đơn
+                                                form(
+                                                    action=""
+                                                    method="POST"
+                                                    id= "button-cancel-order"
+                                                    data-path= `/user/info/list-order/cancel`
+                                                )
+                                            button.delivered-order-btn(
+                                                    order-id= order.orderId 
+                                                    button-delivered-order
+                                                ) Đã nhận 
+                                                    form(
+                                                        action=""
+                                                        method="POST"
+                                                        id= "button-delivered-order"
+                                                        data-path= `/user/info/list-order/completed`
+                                                    )
+                        div.details-container.hidden(id=`details-${order.orderId}`)
+                            h3.details-order Chi tiết đơn hàng
+                            div(id=`details-content-${order.orderId}`)
+       
+
+    script(src="/js/user.js")
+    script.
+      // Nhúng dữ liệu orderDetails vào trang
+        window.orderDetails = JSON.parse('!{JSON.stringify(orderDetails).replace(/<\/script/g, "<\\/script")}');
+
+    link(href='https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' rel='stylesheet')

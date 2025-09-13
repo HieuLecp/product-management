@@ -1,9 +1,10 @@
 mixin filterStatus(filterStatus)
-    each item in filterStatus 
-        button(
-            class=`btn btn-sm ml-1 btn-outline-success ${item.class}`
-            button-status = item.status
-        ) #{item.name}
+    each item in filterStatus
+        if(item.status != "cancelled")
+            button(
+                class=`btn btn-sm ml-1 btn-outline-success ${item.class}`
+                button-status = item.status
+            ) #{item.name}
     //- a(
     //-     href=`${prefixAdmin}/products/bin`
     //-     class="btn btn-sm ml-1 btn-outline-success"

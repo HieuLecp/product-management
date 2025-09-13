@@ -1,0 +1,15 @@
+mixin dashboard(product)
+    .dashboard.my5
+        .container.mx-auto.p-4
+            .flex.justify-between.items-center.bg-white.p-4.rounded-lg.shadow-md
+                h1.text-2xl.font-bold.text-gray-700 Dashboard
+
+            .mt-6.p-4.bg-white.rounded-lg.shadow-md
+                h2.text-xl.font-bold.text-gray-700 Sản phẩm bán chạy nhất
+                ul.mt-2
+                each product in productSolds
+                    li.text-gray-600 #{product.title} - Đã bán: #{product.sold}
+
+            .mt-6.p-4.bg-white.rounded-lg.shadow-md
+                h2.text-xl.font-bold.text-gray-700 Tổng doanh thu trong ngày
+                p.text-green-500.text-lg.font-semibold #{revenue} VND

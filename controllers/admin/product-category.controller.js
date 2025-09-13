@@ -9,7 +9,7 @@ const filterStatusHelper = require("../../helpers/filterStatus");
 module.exports.index = async (req, res) => {
     // console.log(req.query.status);
 
-    const filterStatus = filterStatusHelper(req.query);
+    const filterStatus = filterStatusHelper.products(req.query);
 
     let find={
         deleted: false,

@@ -1,4 +1,4 @@
-module.exports= (query) => {
+module.exports.products= (query) => {
     let filterStatus = [
         {
             name: "Tất cả",
@@ -28,4 +28,56 @@ module.exports= (query) => {
     }
 
     return filterStatus;
-}
+};
+
+module.exports.orders= (query) => {
+    let filterStatus = [
+        {
+            name: "Tất cả",
+            status: "",
+            class: ""
+        },
+        {
+            name: "Chờ xác nhận",
+            status: "pending",
+            class: ""
+        },
+        {
+            name: "Đã duyệt",
+            status: "approved",
+            class: ""
+        },
+        {
+            name: "Đang chuẩn bị",
+            status: "processing",
+            class: ""
+        },
+        {
+            name: "Đang giao",
+            status: "shipped",
+            class: ""
+        },
+        {
+            name: "Đã giao",
+            status: "delivered",
+            class: ""
+        },
+        {
+            name: "Đã huỷ",
+            status: "cancelled",
+            class: ""
+        }
+    ]
+
+    if(query.status){
+        const index = filterStatus.findIndex(item => item.status == query.status);
+        filterStatus[index].class="active";
+    }
+    else{
+        // filterStatus[0].class="active";
+        const index = filterStatus.findIndex(item => item.status == "");
+        filterStatus[index].class="active";
+    }
+
+    return filterStatus;
+};

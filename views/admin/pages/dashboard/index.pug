@@ -1,56 +1,104 @@
 extends ../../layouts/default
 
-block main 
-    h1 Trang tổng quan
+block main
+    h1 Dashboard
+
+    - var bestProduct = statistic.products && statistic.products.length > 0 ? statistic.products[0] : {};
+    - var thumbnail = bestProduct.thumbnail || '';
+    - var title = bestProduct.title || 'Không có sản phẩm';
+    - var sold = bestProduct.sold || 0;
+    - var revenueDay = statistic.totalRevenue ? statistic.totalRevenue.inDay || 0 : 0;
+    - var revenueMonth = statistic.totalRevenue ? statistic.totalRevenue.inMonth || 0 : 0;
+    - var userTotal = statistic.user ? statistic.user.total || 0 : 0;
+    - var userOnline = statistic.user ? statistic.user.statusOnline || 0 : 0;
+    - var recentProduct = statistic.recentlyUpdatedProducts && statistic.recentlyUpdatedProducts.length > 0 ? statistic.recentlyUpdatedProducts[0] : {};
+    - var recentTitle = recentProduct.title || 'Chưa có sản phẩm vừa bán';
+    - var recentSold = recentProduct.sold || 0;
+    - var orderPlacementRateDay = (statistic.orderPlacementRate && statistic.orderPlacementRate.inDay) ? statistic.orderPlacementRate.inDay : 0;
+    - var orderPlacementRateMonth = (statistic.orderPlacementRate && statistic.orderPlacementRate.inMonth) ? statistic.orderPlacementRate.inMonth : 0;
+    - var lowStockProducts = Array.isArray(statistic.lowStockProducts) ? statistic.lowStockProducts : [];
 
 
-    .row.mt-4 
-        .col-12 
-            .card.mb-4 
-                .card-header Thông tin tài khoản
-                .card-body 
-                    if(user.avatar)
-                        img(
-                            src= user.avatar
-                            style= "height: 100px; margin-bottom: 15px"
-                        )
-                    if(user.fullName)
-                        p Họ tên: <b>#{user.fullName}</b>
-                    if(user.email)
-                        p Email: <b>#{user.email}</b>
-                    if(user.phone)
-                        p Số điện thoại: <b>#{user.phone}</b>
-                    if(role.title)
-                        p Phân quyền: <b>#{role.title}</b>
-                        
-        .col-6 
-            .card.mb-4 
-                .card-header Danh mục sản phẩm
-                .card-body 
-                    p Số lượng: <b>#{statistic.categoryProduct.total}</b>
-                    p Hoạt động: <b>#{statistic.categoryProduct.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.categoryProduct.inactive}</b>
-                    
-        .col-6 
-            .card.mb-4 
-                .card-header Sản phẩm
-                .card-body 
-                    p Số lượng: <b>#{statistic.product.total}</b>
-                    p Hoạt động: <b>#{statistic.product.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.product.inactive}</b>
+    .dashboard
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Tổng quan
+                    .card-body.stats
+                        .stat-card.blue
+                            h3 Sản phẩm bán chạy nhất
+                            img#bestProductThumbnail(src=thumbnail, alt='', width="80", height="auto")
+                            h3#bestProductTitle
+                                b= title
+                            h3 Đã bán: <b><span id="bestProductSold"> #{sold} </span></b>
 
-        .col-6 
-            .card.mb-4 
-                .card-header Tài khoản admin
-                .card-body 
-                    p Số lượng: <b>#{statistic.account.total}</b>
-                    p Hoạt động: <b>#{statistic.account.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.account.inactive}</b>
+                        .stat-card.orange
+                            h3 Tỷ lệ đặt hàng
+                            h3 Trong ngày: <b><span id="orderPlacementRateDay"> #{orderPlacementRateDay} </span> Đơn</b>
+                            h3 Trong tháng: <b><span id="orderPlacementRateMonth"> #{orderPlacementRateMonth} </span> Đơn</b>
 
-        .col-6 
-            .card.mb-4 
-                .card-header Tài khoản client
-                .card-body 
-                    p Số lượng: <b>#{statistic.user.total}</b>
-                    p Hoạt động: <b>#{statistic.user.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.user.inactive}</b>
+                        //- .stat-card.orange
+                        //-     h3 Tỷ lệ đặt hàng
+                        //-     h3 Trong ngày: 
+                        //-         b 
+                        //-             <span id="orderPlacementRateDay"> #{orderPlacementRateDay}
+                        //-             |  đơn
+                        //-     h3 Trong tháng: 
+                        //-         b
+                        //-             <span id="orderPlacementRateMonth"> #{orderPlacementRateMonth}
+                        //-             |  đơn
+
+                        .stat-card.purple
+                            h3 Doanh thu
+                            h3 Trong ngày: <b><span id="revenueDay"> #{revenueDay} </span> VND</b>
+                            h3 Trong tháng: <b><span id="revenueMonth">#{revenueMonth} </span> VND</b>
+
+                        .stat-card.red
+                            h3 Số lượng người dùng
+                            h3 Tất cả: <b><span id="userTotal"> #{userTotal} </span></b>
+                            h3 Đang truy cập: <b><span id="userOnline"> #{userOnline} </span></b>
+
+
+        // Danh sách sản phẩm tồn kho thấp
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Sản phẩm sắp hết hàng
+                    .card-body
+                        if lowStockProducts.length > 0
+                            ul
+                                each product in lowStockProducts
+                                    li
+                                        a(href=`${prefixAdmin}/products/detail/${product._id}` class="lowStockProduct") #{product.title}
+                                        |  - Còn: 
+                                        span= product.stock
+                                        |  sản phẩm
+
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Thống kê doanh thu theo ngày
+                    .card-body
+                        canvas#revenueChart(width="400" height="200")
+
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Thống kê theo hãng
+                    .card-body
+                        canvas#categorySalesChart(width="400" height="400")
+
+        .row.mt-4
+            .col-10
+                .card.mb-4
+                    .card-header Thống kê theo phương thức thanh toán
+                    .card-body
+                        canvas#paymentMethodChart(width="400" height="400")
+
+
+block script
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js")
+    script.
+        // Truyền dữ liệu statistic từ controller vào JavaScript
+        const initialStatistic = !{JSON.stringify(statistic)};
+    script(src="/admin/js/dashboard.js")

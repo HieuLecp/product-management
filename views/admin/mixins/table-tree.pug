@@ -2,12 +2,12 @@ mixin table-tree(items, level = 1)
     each item, index in items
         - const prefix = Array(level + 1).join("-- ")
         tr
-            //- td 
-            //-     input(
-            //-         type="checkbox"
-            //-         name="id"
-            //-         value=item.id  
-            //-     )
+            td 
+                input(
+                    type="checkbox"
+                    name="id"
+                    value=item.id  
+                )
             td #{item.index}
             td 
                 img(src=item.thumbnail, 
@@ -64,6 +64,12 @@ mixin table-tree(items, level = 1)
                         data-id = item.id 
                         button-delete
                     ) Xoá
+                    form(
+                        action="" 
+                        method="POST"
+                        id= "form-delete-product-category"
+                        data-path= `${prefixAdmin}/products-category/delete`
+                    )
         if item.children && item.children.length > 0
             +table-tree(item.children, level + 1)
 
@@ -96,5 +102,6 @@ mixin table-tree-blogs(items, level = 1)
                         data-id = item.id 
                         button-delete
                     ) Xoá
+                    
         if item.children && item.children.length > 0
             +table-tree-blogs(item.children, level + 1)

@@ -21,6 +21,7 @@ module.exports.index= async (req, res) => {
         const infoUser= await User.findOne({
             _id: chat.user_id
         }).select("fullName");
+        // console.log(infoUser);
 
         chat.infoUser= infoUser;
     }

@@ -38,11 +38,11 @@ block main
                     )
                         thead 
                             tr 
-                                //- th 
-                                //-     input(
-                                //-         type="checkbox"
-                                //-         name="checkall"
-                                //-         ) 
+                                th 
+                                    input(
+                                        type="checkbox"
+                                        name="checkall"
+                                        ) 
                                 th STT 
                                 th Hình ảnh
                                 th Tiêu đề
@@ -55,12 +55,5 @@ block main
                             
 
 
-        form(
-            action="" 
-            method="POST"
-            id= "form-delete-item"
-            data-path= `${prefixAdmin}/products-category/delete`
-        )
-
-        script(src="/admin/js/product.js")
+        script(src="/admin/js/product-category.js")
 

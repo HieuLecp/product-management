@@ -2,12 +2,12 @@
 const buttonDelete = document.querySelectorAll("[button-delete]");
 // console.log(buttonDelete);
 if(buttonDelete.length > 0){
-    const formDeleteItem = document.querySelector("#form-delete-item");
+    const formDeleteItem = document.querySelector("#form-delete-product-category");
     const path = formDeleteItem.getAttribute("data-path");
 
     buttonDelete.forEach(button => {
         button.addEventListener("click", () => {
-            const isconfirm = confirm("Bạn có chắc chắn muốn xoá sản phẩm này?");
+            const isconfirm = confirm("Bạn có chắc chắn muốn xoá danh mục này?");
             if(isconfirm){
                 const id = button.getAttribute("data-id");
 

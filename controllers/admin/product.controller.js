@@ -9,13 +9,14 @@ const searchHepler = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
 const createTree = require("../../helpers/createTree");
 
+const productCategoryHepler  = require("../../helpers/product-category");
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
     // console.log(req.query.status);
 
     try{
-        const filterStatus = filterStatusHelper(req.query);
+        const filterStatus = filterStatusHelper.products(req.query);
         // console.log(filterStatus);
 
         let find = {
@@ -83,7 +84,8 @@ module.exports.index = async (req, res) => {
                 updatedBy.accountFullName = userUpdated.fullName;
             }
             
-            // console.log(item);
+            item.priceFormat= item.price.toLocaleString("vi-VN");
+            // console.log(item.priceFormat);
             
         }
 
@@ -209,6 +211,14 @@ module.exports.createItem = async (req, res) => {
         req.body.price = parseInt(req.body.price);
         req.body.discountPercentage = parseInt(req.body.discountPercentage);
         req.body.stock = parseInt(req.body.stock);
+        let category
+
+        if(req.body.product_category_id){
+            category= await ProductCategory.findOne({_id: req.body.product_category_id});
+            req.body.brand= category.title;
+        } else{
+            req.body.brand= "Laptop";
+        }
 
         if(req.body.position == ""){
             const countProducts = await Product.countDocuments();
@@ -271,7 +281,16 @@ module.exports.editItem = async (req, res) => {
         req.body.price = parseInt(req.body.price);
         req.body.discountPercentage = parseInt(req.body.discountPercentage);
         req.body.stock = parseInt(req.body.stock);
-        req.body.position = parseInt(req.body.position);    
+        req.body.position = parseInt(req.body.position); 
+        
+        let category;
+
+        if(req.body.product_category_id){
+            category= await ProductCategory.findOne({_id: req.body.product_category_id});
+            brand= category.title;
+        } else{
+            brand= "Laptop";
+        }
         
         if(req.file){
             req.body.thumbnail = `${req.body.thumbnail}`;
@@ -285,6 +304,7 @@ module.exports.editItem = async (req, res) => {
 
             await Product.updateOne({_id : id},{
                 ...req.body,
+                brand: brand,
                 $push: {updatedBy: updatedBy}
             });
 
@@ -322,19 +342,21 @@ module.exports.detail = async (req, res) => {
             product.category= category;
         }
 
-         // TT người tạo
-         const user= await Accounts.findOne({_id: product.createdBy.account_id});
-         if(user){
-             product.accountFullName= user.fullName;
-         }
-         // TT người chỉnh sửa gần nhất
-         // console.log(item.updatedBy.slice(-1)[0]);
-         const updatedBy = product.updatedBy.slice(-1)[0]
-         if(updatedBy){
-             const userUpdated= await Accounts.findOne({_id: updatedBy.account_id});
- 
-             updatedBy.accountFullName = userUpdated.fullName;
-         }
+        // TT người tạo
+        const user= await Accounts.findOne({_id: product.createdBy.account_id});
+        if(user){
+            product.accountFullName= user.fullName;
+        }
+        // TT người chỉnh sửa gần nhất
+        // console.log(item.updatedBy.slice(-1)[0]);
+        const updatedBy = product.updatedBy.slice(-1)[0]
+        if(updatedBy){
+            const userUpdated= await Accounts.findOne({_id: updatedBy.account_id});
+
+            updatedBy.accountFullName = userUpdated.fullName;
+        }
+
+        product.priceFormat= product.price.toLocaleString("vi-VN");
     
         res.render("admin/pages/products/detail", {
             pageTitle : product.title,
@@ -376,7 +398,7 @@ module.exports.deleteItem = async (req, res) => {
 // [GET] /admin/products/bin
 module.exports.bin = async (req, res) => {
 
-    const filterStatus = filterStatusHelper(req.query);
+    const filterStatus = filterStatusHelper.products(req.query);
 
     let find = {
         deleted: true

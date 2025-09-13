@@ -1,0 +1,27 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head
+include ../../mixins/product-layout
+include ../../mixins/alert
+
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    .section-products-featured.my5
+        .container
+            .row 
+                .col-12 
+                    if(productFeatured.length > 0)
+                        +box-head("Sản phẩm nổi bật")
+                    
+            +product-grid(productFeatured)
+
+    .section-products-featured.my5
+        .container
+            .row 
+                .col-12 
+                    if(productNew.length > 0)
+                        +box-head("Sản phẩm mới")
+                    
+            +product-grid(productNew)

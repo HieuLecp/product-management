@@ -8,6 +8,7 @@ const Authcontroller = require("../../controllers/admin/auth.controller")
 const dashboardRouter = require("./dashboard.route");
 const productRouter = require("./product.route");
 const productCategoryRouter = require("./product-category.route");
+const orderRouter = require("./order.route");
 const roleRouter = require("./role.route");
 const accountRouter = require("./account.route");
 const authRouter = require("./auth.route");
@@ -43,6 +44,11 @@ module.exports = (app) => {
         authMiddleware.requireAuth, 
         productCategoryRouter
     );
+
+    app.use(PATH_ADMIN + '/orders',
+        authMiddleware.requireAuth,
+        orderRouter
+    )
 
     app.use(PATH_ADMIN + '/blogs-category', 
         authMiddleware.requireAuth, 

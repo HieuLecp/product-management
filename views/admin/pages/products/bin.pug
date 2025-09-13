@@ -3,7 +3,7 @@ include ../../mixins/filterStatus
 include ../../mixins/search
 include ../../mixins/alert
 include ../../mixins/pagination
-include ../../mixins/formChangeMultiBin
+include ../../mixins/formChangeMulti
 
 block main 
     +alert-success(5000)
@@ -48,7 +48,7 @@ block main
                                         height= "auto"
                                     )
                                 td #{item.title }
-                                td #{item.price}$
+                                td #{item.price} #{"(vnd)"}
                                 td 
                                     input(
                                         type= "number"
@@ -67,7 +67,7 @@ block main
                                         button(
                                             class = "btn btn-primary btn-sm"
                                             data-id = item.id 
-                                            button-restore
+                                            button-restore-bin
                                         ) Khôi phục
                                     if(role.permissions.includes("products-bin_delete"))
                                         button(
@@ -98,6 +98,5 @@ block main
             id= "form-delete-item-bin"
             data-path= `${prefixAdmin}/products/bin/delete`
         )
-
 
     script(src="/admin/js/bin.js")
